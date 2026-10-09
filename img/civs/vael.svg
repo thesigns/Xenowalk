@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <!-- Vael: a singing crystal -->
+  <g fill="none" stroke="#8fe9ff" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M256 68 L328 164 V348 L256 444 L184 348 V164 Z" fill="#8fe9ff" fill-opacity="0.18" stroke-width="22"/>
+    <path d="M184 164 L256 220 L328 164 M256 220 V444" stroke-width="16"/>
+    <path d="M120 180 C88 230 88 282 120 332 M392 180 C424 230 424 282 392 332" stroke-width="20"/>
+  </g>
+</svg>

@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <radialGradient id="living-map-leaf" cx="256" cy="352" r="260" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#6dffa8" stop-opacity="0.3"/>
+      <stop offset="1" stop-color="#6dffa8" stop-opacity="0.06"/>
+    </radialGradient>
+  </defs>
+  <g fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Stalk -->
+    <path d="M256 352 C252 380 262 404 250 428 C246 436 236 438 232 430" stroke="#e9f2ff" stroke-width="4"/>
+    <!-- Fan-shaped membrane with a scalloped rim -->
+    <path d="M256 352 C222 318 150 262 100 196 Q106 166 128 150 Q144 124 170 114 Q192 98 220 100 C238 104 250 124 256 140 C262 124 274 104 292 100 Q320 98 342 114 Q368 124 384 150 Q406 166 412 196 C362 262 290 318 256 352 Z" fill="url(#living-map-leaf)" stroke="#e9f2ff" stroke-width="4"/>
+    <!-- Veins: the routes it grew -->
+    <path d="M256 346 C236 300 196 250 164 200 L130 170 M164 200 L172 132 M256 346 C248 300 232 230 222 172 L206 118 M222 172 L236 126 M256 346 C276 300 316 250 348 200 L340 132 M348 200 L382 170 M290 172 L272 126" stroke="#6dffa8" stroke-width="1.5" opacity="0.55"/>
+    <path d="M256 346 C264 300 280 230 290 172 L306 118" stroke="#6dffa8" stroke-width="3"/>
+    <!-- Living systems along the way -->
+    <g fill="#6dffa8" fill-opacity="0.3" stroke="#6dffa8" stroke-width="2">
+      <circle cx="164" cy="200" r="6"/>
+      <circle cx="222" cy="172" r="6"/>
+      <circle cx="290" cy="172" r="7"/>
+      <circle cx="348" cy="200" r="6"/>
+    </g>
+    <g fill="#9fb1c8" stroke="none" opacity="0.7">
+      <circle cx="130" cy="170" r="3"/>
+      <circle cx="172" cy="132" r="3"/>
+      <circle cx="206" cy="118" r="3"/>
+      <circle cx="236" cy="126" r="3"/>
+      <circle cx="272" cy="126" r="3"/>
+      <circle cx="340" cy="132" r="3"/>
+      <circle cx="382" cy="170" r="3"/>
+    </g>
+    <!-- Origin and destination -->
+    <circle cx="256" cy="340" r="5" fill="#e9f2ff" stroke="none"/>
+    <circle cx="306" cy="118" r="10" stroke="#6dffa8" stroke-width="2"/>
+    <circle cx="306" cy="118" r="4" fill="#e9f2ff" stroke="none"/>
+  </g>
+</svg>

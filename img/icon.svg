@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <!-- App icon: the emblem on deep space, safe inside the round mask phones apply. -->
+  <defs>
+    <radialGradient id="icon-space" cx="0.5" cy="0.42" r="0.7">
+      <stop offset="0" stop-color="#0d1a30"/>
+      <stop offset="1" stop-color="#03050a"/>
+    </radialGradient>
+  </defs>
+  <rect width="512" height="512" fill="url(#icon-space)"/>
+  <g fill="#e9f2ff" opacity="0.7">
+    <circle cx="96" cy="112" r="2.5"/>
+    <circle cx="420" cy="90" r="2"/>
+    <circle cx="440" cy="400" r="2.5"/>
+    <circle cx="70" cy="380" r="1.8"/>
+  </g>
+  <g fill="none" stroke-linecap="round" stroke-linejoin="round" transform="translate(56 56) scale(0.78)">
+    <path d="M70 300 C70 230 460 160 460 212" stroke="#5fe6ff" stroke-width="5" opacity="0.4"/>
+    <circle cx="256" cy="256" r="122" fill="#070b14" stroke="#e9f2ff" stroke-width="7"/>
+    <path d="M150 210 C200 190 300 186 360 204 M136 262 C200 246 316 246 376 262 M150 312 C210 300 300 298 362 312" stroke="#5fe6ff" stroke-width="4" opacity="0.55"/>
+    <path d="M460 212 C460 284 52 368 52 300 C52 268 116 236 196 214" stroke="#5fe6ff" stroke-width="8"/>
+    <g transform="translate(420 248) rotate(-112)">
+      <path d="M0 -30 L22 26 L0 13 L-22 26 Z" fill="#03050a" stroke="#e9f2ff" stroke-width="7"/>
+    </g>
+  </g>
+</svg>

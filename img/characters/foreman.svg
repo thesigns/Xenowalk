@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <radialGradient id="foreman-glow" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#ffb24d" stop-opacity="0.3"/>
+      <stop offset="1" stop-color="#ffb24d" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="foreman-beam" x1="0" y1="1" x2="0" y2="0">
+      <stop offset="0" stop-color="#ffb24d" stop-opacity="0.26"/>
+      <stop offset="1" stop-color="#ffb24d" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="foreman-shell" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffb24d" stop-opacity="0.2"/>
+      <stop offset="1" stop-color="#ffb24d" stop-opacity="0.06"/>
+    </linearGradient>
+  </defs>
+  <g fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Exo-suit shoulders -->
+    <path d="M20 520 C24 448 70 404 150 386 L200 376 H312 L362 386 C442 404 488 448 492 520 Z" fill="#0a101b" fill-opacity="0.6" stroke="#e9f2ff" stroke-width="4"/>
+    <path d="M48 470 C70 432 104 412 146 402 L166 436 C124 446 96 466 80 494 Z M464 470 C442 432 408 412 366 402 L346 436 C388 446 416 466 432 494 Z" fill="#ffb24d" fill-opacity="0.08" stroke="#9fb1c8" stroke-width="2.5"/>
+    <path d="M100 452 h0 M126 436 h0 M412 452 h0 M386 436 h0" stroke="#ffb24d" stroke-width="6"/>
+    <!-- Hydraulic pistons -->
+    <path d="M156 385 L134 412 M356 385 L378 412" stroke="#9fb1c8" stroke-width="4"/>
+    <path d="M182 364 L162 389 L150 380 L170 355 Z M330 364 L350 389 L362 380 L342 355 Z" fill="#ffb24d" fill-opacity="0.12" stroke="#e9f2ff" stroke-width="2.5"/>
+    <!-- Armored collar yoke -->
+    <path d="M154 396 C150 348 172 320 206 312 L216 366 C240 378 272 378 296 366 L306 312 C340 320 362 348 358 396 C330 410 182 410 154 396 Z" fill="#0a101b" fill-opacity="0.6" stroke="#e9f2ff" stroke-width="4"/>
+    <path d="M170 352 L208 346 M342 352 L304 346 M166 376 L212 370 M346 376 L300 370" stroke="#61748d" stroke-width="2"/>
+    <!-- Thick neck -->
+    <path d="M220 324 L218 368 M292 324 L294 368" stroke="#e9f2ff" stroke-width="4"/>
+    <!-- Broad face, boxed beard -->
+    <path d="M182 186 C180 232 182 270 194 296 C206 320 232 338 256 338 C280 338 306 320 318 296 C330 270 332 232 330 186" fill="#0a101b" fill-opacity="0.6" stroke="#e9f2ff" stroke-width="4"/>
+    <path d="M190 252 C194 300 222 330 256 332 C290 330 318 300 322 252 C312 270 296 282 282 284 H230 C216 282 200 270 190 252 Z" fill="#ffb24d" fill-opacity="0.08" stroke="#9fb1c8" stroke-width="2"/>
+    <path d="M226 274 C238 264 274 264 286 274 C276 280 266 280 256 276 C246 280 236 280 226 274 Z" fill="#9fb1c8" fill-opacity="0.2" stroke="#e9f2ff" stroke-width="2.5"/>
+    <path d="M244 296 H268" stroke="#e9f2ff" stroke-width="2.5"/>
+    <!-- Heavy brows, narrow eyes, broad nose -->
+    <path d="M206 204 L246 208 M306 204 L266 208" stroke="#e9f2ff" stroke-width="4"/>
+    <path d="M214 222 C222 216 236 216 244 222 C236 226 222 226 214 222 Z M298 222 C290 216 276 216 268 222 C276 226 290 226 298 222 Z" stroke="#e9f2ff" stroke-width="2"/>
+    <circle cx="229" cy="221.5" r="3" fill="#e9f2ff" stroke="none"/>
+    <circle cx="283" cy="221.5" r="3" fill="#e9f2ff" stroke="none"/>
+    <path d="M256 222 L246 254 C252 260 262 260 268 254" stroke="#9fb1c8" stroke-width="2"/>
+    <!-- Hard hat with wide brim -->
+    <path d="M178 170 C176 110 212 74 256 74 C300 74 336 110 334 170 Z" fill="url(#foreman-shell)" stroke="#e9f2ff" stroke-width="4"/>
+    <path d="M244 76 C240 104 240 140 242 168 M268 76 C272 104 272 140 270 168" stroke="#9fb1c8" stroke-width="2"/>
+    <path d="M160 172 C168 166 178 166 184 168 C222 178 290 178 328 168 C334 166 344 166 352 172 C356 184 344 192 330 190 C290 198 222 198 182 190 C168 192 156 184 160 172 Z" fill="#0a101b" fill-opacity="0.6" stroke="#e9f2ff" stroke-width="4"/>
+    <!-- Floodlamp, tilted up, throwing a cone of light -->
+    <path d="M236 104 L186 0 H326 L276 104 Z" fill="url(#foreman-beam)" stroke="none"/>
+    <path d="M236 104 L198 24 M276 104 L314 24" stroke="#ffb24d" stroke-width="1.5" opacity="0.45"/>
+    <ellipse cx="256" cy="124" rx="60" ry="40" fill="url(#foreman-glow)" stroke="none"/>
+    <path d="M226 144 L232 106 H280 L286 144 Z" fill="#0a101b" fill-opacity="0.6" stroke="#e9f2ff" stroke-width="3"/>
+    <ellipse cx="256" cy="110" rx="24" ry="8" fill="#ffb24d" fill-opacity="0.6" stroke="#ffb24d" stroke-width="2"/>
+    <path d="M232 128 H280 M216 150 L226 144 M296 150 L286 144" stroke="#9fb1c8" stroke-width="2"/>
+  </g>
+</svg>

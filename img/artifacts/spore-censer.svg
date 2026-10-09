@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="spore-censer-pod" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#6dffa8" stop-opacity="0.3"/>
+      <stop offset="0.7" stop-color="#6dffa8" stop-opacity="0.1"/>
+      <stop offset="1" stop-color="#6dffa8" stop-opacity="0.06"/>
+    </linearGradient>
+  </defs>
+  <g fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Hanging tendrils -->
+    <circle cx="256" cy="94" r="12" stroke="#e9f2ff" stroke-width="4"/>
+    <path d="M256 106 C240 150 214 190 204 226 M256 106 V218 M256 106 C272 150 298 190 308 226" stroke="#9fb1c8" stroke-width="2.5"/>
+    <!-- Seed pod -->
+    <path d="M200 232 C152 258 150 352 214 384 C236 394 276 394 298 384 C360 352 360 258 312 232" fill="url(#spore-censer-pod)" stroke="#e9f2ff" stroke-width="4"/>
+    <path d="M228 240 C202 276 206 350 232 386 M256 244 V392 M284 240 C310 276 306 350 280 386" stroke="#9fb1c8" stroke-width="2" opacity="0.6"/>
+    <!-- Crown of the pod -->
+    <path d="M206 226 L208 210 L222 220 M238 218 L246 204 L254 216 M258 216 L266 204 L274 218 M290 220 L304 210 L306 226" stroke="#6dffa8" stroke-width="2"/>
+    <ellipse cx="256" cy="230" rx="58" ry="13" fill="#6dffa8" fill-opacity="0.25" stroke="#e9f2ff" stroke-width="4"/>
+    <!-- Glowing pores -->
+    <g fill="#6dffa8" fill-opacity="0.3" stroke="#6dffa8" stroke-width="2">
+      <circle cx="200" cy="300" r="5"/>
+      <circle cx="308" cy="276" r="5"/>
+      <circle cx="272" cy="338" r="4"/>
+      <circle cx="238" cy="268" r="3.5"/>
+    </g>
+    <!-- Drifting spores -->
+    <path d="M194 294 C164 282 168 236 142 220 M314 270 C344 262 346 236 370 220" stroke="#6dffa8" stroke-width="2" opacity="0.55"/>
+    <g fill="#6dffa8" fill-opacity="0.25" stroke="#6dffa8" stroke-width="2">
+      <circle cx="138" cy="196" r="8"/>
+      <circle cx="160" cy="154" r="5"/>
+      <circle cx="122" cy="236" r="4"/>
+      <circle cx="374" cy="196" r="7"/>
+      <circle cx="352" cy="150" r="5"/>
+      <circle cx="392" cy="238" r="4"/>
+    </g>
+    <circle cx="186" cy="124" r="2.5" fill="#e9f2ff" stroke="none"/>
+    <circle cx="330" cy="120" r="2.5" fill="#e9f2ff" stroke="none"/>
+    <!-- Root threads -->
+    <path d="M236 390 C230 408 246 414 238 432 M256 394 C256 410 264 418 258 436 M276 390 C284 404 270 414 278 430" stroke="#9fb1c8" stroke-width="2"/>
+  </g>
+</svg>

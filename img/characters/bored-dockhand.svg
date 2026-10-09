@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="bored-dockhand-visor" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#5fe6ff" stop-opacity="0.34"/>
+      <stop offset="1" stop-color="#5fe6ff" stop-opacity="0.08"/>
+    </linearGradient>
+    <linearGradient id="bored-dockhand-shell" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#5fe6ff" stop-opacity="0.16"/>
+      <stop offset="1" stop-color="#5fe6ff" stop-opacity="0.04"/>
+    </linearGradient>
+  </defs>
+  <g fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Work suit, harness straps -->
+    <path d="M48 520 C54 450 102 410 178 392 L212 384 H300 L334 392 C410 410 458 450 464 520 Z" fill="#0a101b" fill-opacity="0.6" stroke="#e9f2ff" stroke-width="4"/>
+    <path d="M200 390 L182 520 M312 390 L330 520" stroke="#9fb1c8" stroke-width="2"/>
+    <path d="M188 436 L204 438 L200 466 L184 464 Z M324 436 L308 438 L312 466 L328 464 Z" fill="#5fe6ff" fill-opacity="0.3" stroke="#5fe6ff" stroke-width="1.5"/>
+    <path d="M108 438 C128 422 150 414 170 408 M404 438 C384 422 362 414 342 408" stroke="#61748d" stroke-width="2"/>
+    <!-- Neck and collar ring -->
+    <path d="M222 328 L217 382 M290 328 L295 382" stroke="#e9f2ff" stroke-width="4"/>
+    <path d="M194 392 C218 372 294 372 318 392 C294 408 218 408 194 392 Z" fill="#5fe6ff" fill-opacity="0.08" stroke="#9fb1c8" stroke-width="2.5"/>
+    <!-- Face, wide jaw -->
+    <path d="M190 214 C188 258 194 294 212 318 C226 336 240 342 256 342 C272 342 286 336 300 318 C318 294 324 258 322 214" fill="#0a101b" fill-opacity="0.6" stroke="#e9f2ff" stroke-width="4"/>
+    <!-- Ear protectors -->
+    <rect x="144" y="212" width="40" height="74" rx="17" fill="#0a101b" fill-opacity="0.6" stroke="#e9f2ff" stroke-width="4"/>
+    <rect x="328" y="212" width="40" height="74" rx="17" fill="#0a101b" fill-opacity="0.6" stroke="#e9f2ff" stroke-width="4"/>
+    <path d="M155 228 V270 M357 228 V270" stroke="#61748d" stroke-width="2"/>
+    <circle cx="170" cy="272" r="3.5" fill="#5fe6ff" fill-opacity="0.6" stroke="none"/>
+    <!-- Helmet shell and rim -->
+    <path d="M170 200 C168 132 206 92 256 92 C306 92 344 132 342 200 Z" fill="url(#bored-dockhand-shell)" stroke="#e9f2ff" stroke-width="4"/>
+    <path d="M256 94 V198" stroke="#61748d" stroke-width="2"/>
+    <path d="M178 160 C214 150 298 150 334 160" stroke="#5fe6ff" stroke-width="2"/>
+    <path d="M290 128 H312 M294 138 H316" stroke="#5fe6ff" stroke-width="1.5" opacity="0.6"/>
+    <path d="M168 198 H344 C352 198 352 214 344 214 H168 C160 214 160 198 168 198 Z" fill="#0a101b" fill-opacity="0.6" stroke="#e9f2ff" stroke-width="3"/>
+    <!-- Half-lidded eyes behind the visor -->
+    <path d="M208 236 H242 M270 236 H304" stroke="#e9f2ff" stroke-width="2.5"/>
+    <path d="M212 238 C220 244 232 244 240 238 M272 238 C280 244 292 244 300 238" stroke="#9fb1c8" stroke-width="1.5"/>
+    <path d="M221 237 C221 242 231 242 231 237 Z M281 237 C281 242 291 242 291 237 Z" fill="#e9f2ff" stroke="#e9f2ff" stroke-width="1.5"/>
+    <!-- Visor, cracked -->
+    <path d="M188 214 H324 C324 236 318 252 306 260 C282 268 230 268 206 260 C194 252 188 236 188 214 Z" fill="url(#bored-dockhand-visor)" stroke="#5fe6ff" stroke-width="2.5"/>
+    <path d="M302 216 L292 230 L301 240 L290 252 L295 263 M292 230 L278 235 M301 240 L314 247" stroke="#e9f2ff" stroke-width="1.5"/>
+    <!-- Nose, chewing mouth, toothpick -->
+    <path d="M258 266 L263 282 L252 285" stroke="#9fb1c8" stroke-width="2"/>
+    <path d="M234 302 C246 304 262 303 274 298" stroke="#e9f2ff" stroke-width="2.5"/>
+    <path d="M294 286 C300 292 300 300 294 306" stroke="#61748d" stroke-width="2"/>
+    <path d="M270 300 L318 287" stroke="#9fb1c8" stroke-width="3"/>
+    <path d="M318 287 L325 282 M318 287 L326 289" stroke="#9fb1c8" stroke-width="1.5"/>
+  </g>
+</svg>

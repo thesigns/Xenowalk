@@ -1,0 +1,106 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <!-- Human industrial world -->
+  <defs>
+    <linearGradient id="human-industrial-day" gradientUnits="userSpaceOnUse" x1="128.8" y1="176.5" x2="215.1" y2="230.5">
+      <stop offset="0" stop-color="#62b6ff" stop-opacity="0.34"/>
+      <stop offset="0.6" stop-color="#62b6ff" stop-opacity="0.12"/>
+      <stop offset="1" stop-color="#62b6ff" stop-opacity="0.03"/>
+    </linearGradient>
+    <linearGradient id="human-industrial-lit" gradientUnits="userSpaceOnUse" x1="128.8" y1="176.5" x2="383.2" y2="335.5">
+      <stop offset="0" stop-color="#62b6ff"/>
+      <stop offset="1" stop-color="#62b6ff" stop-opacity="0.35"/>
+    </linearGradient>
+    <clipPath id="human-industrial-clip"><circle cx="256" cy="256" r="149"/></clipPath>
+    <linearGradient id="human-industrial-night" gradientUnits="userSpaceOnUse" x1="383.2" y1="335.5" x2="128.8" y2="176.5">
+      <stop offset="0" stop-color="#e9f2ff"/>
+      <stop offset="0.35" stop-color="#62b6ff"/>
+      <stop offset="1" stop-color="#62b6ff" stop-opacity="0.25"/>
+    </linearGradient>
+  </defs>
+  <g fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Orbital ring, far side -->
+    <path stroke="#62b6ff" stroke-width="14" opacity="0.12" d="M465.6 203.7A216 59.5 -14 0 0 241.6 198.2A216 59.5 -14 0 0 46.4 308.3"/>
+    <path stroke="#62b6ff" stroke-width="1.5" opacity="0.8" d="M455.4 206.3A205.5 56.6 -14 0 0 242.3 201A205.5 56.6 -14 0 0 56.6 305.7
+         M475.8 201.2A226.5 62.4 -14 0 0 240.9 195.4A226.5 62.4 -14 0 0 36.2 310.8"/>
+    <g transform="translate(444.9 185.9) rotate(19.6)">
+      <path d="M-21 -4h11v8h-11z M10 -4h11v8h-11z" stroke="#9fb1c8" stroke-width="1.5"/>
+      <path d="M-10 0l4 -6h12l4 6l-4 6h-12z" fill="#62b6ff" fill-opacity="0.3" stroke="#e9f2ff" stroke-width="2"/>
+      <circle cy="-9" r="2" fill="#62b6ff"/>
+    </g>
+    <g transform="translate(64.2 275) rotate(318.1)">
+      <path d="M-21 -4h11v8h-11z M10 -4h11v8h-11z" stroke="#9fb1c8" stroke-width="1.5"/>
+      <path d="M-10 0l4 -6h12l4 6l-4 6h-12z" fill="#62b6ff" fill-opacity="0.3" stroke="#e9f2ff" stroke-width="2"/>
+      <circle cy="-9" r="2" fill="#62b6ff"/>
+    </g>
+    <!-- Planet body -->
+    <circle cx="256" cy="256" r="150" fill="#070b14"/>
+    <path fill="url(#human-industrial-day)" d="M335.5 128.8A150 150 0 0 0 128.8 176.5A150 150 0 0 0 176.5 383.2A150 48.2 -58 0 1 215.1 230.5A150 48.2 -58 0 1 335.5 128.8Z"/>
+    <g clip-path="url(#human-industrial-clip)">
+      <!-- Survey grid -->
+      <path stroke="url(#human-industrial-lit)" stroke-width="1.5" opacity="0.4" d="M226 403A75 21 -14 0 0 352 371M151 363A130 36 -14 0 0 399 301
+           M110 292A150 41 -14 0 0 266 296A150 41 -14 0 0 402 220
+           M113 211A130 36 -14 0 0 247 221A130 36 -14 0 0 361 149
+           M160 141A75 21 -14 0 0 231 155A75 21 -14 0 0 286 109M209 114A150 37 72 0 1 221 116
+           M182 125A150 102 61 0 1 221 116M126 181A150 139 30 0 1 221 116M177 383A150 139 -58 0 1 221 116
+           M252 406A150 102 -89 0 1 221 116M281 404A150 37 80 0 1 223 284A150 37 80 0 1 221 116
+           M303 398A150 37 72 0 0 298 265A150 37 72 0 0 221 116M330 387A150 102 61 0 0 221 116
+           M386 331A150 139 30 0 0 221 116M335 129A150 139 -58 0 0 221 116M260 106A150 102 -89 0 0 221 116
+           M231 108A150 37 80 0 0 221 116"/>
+      <!-- City grids on the night side -->
+      <path stroke="url(#human-industrial-night)" stroke-width="1" opacity="0.6" d="M297 387A96 27 -14 0 0 370 353M310 377A106 29 -14 0 0 379 341M318 367A115 32 -14 0 0 386 330
+           M309 362A123 34 -14 0 0 390 320M317 350A130 36 -14 0 0 396 307M303 345A136 37 -14 0 0 398 297
+           M279 341A141 39 -14 0 0 401 282M267 333A145 40 -14 0 0 404 266M253 324A148 41 -14 0 0 404 255
+           M264 309A149 41 -14 0 0 404 236M286 291A150 41 -14 0 0 401 227M299 274A149 41 -14 0 0 397 217
+           M300 259A148 41 -14 0 0 391 207M284 251A145 40 -14 0 0 387 192M274 240A141 39 -14 0 0 377 187
+           M270 228A136 37 -14 0 0 371 174M242 222A130 36 -14 0 0 362 165M237 210A123 34 -14 0 0 351 159
+           M231 199A115 32 -14 0 0 341 150M244 184A106 29 -14 0 0 330 143M254 170A96 27 -14 0 0 314 141
+           M305 376A150 25 73 0 0 256 181M313 381A150 37 72 0 0 262 173M319 384A150 49 70 0 0 264 160
+           M324 385A150 61 69 0 0 272 158M335 375A150 72 67 0 0 286 165M347 359A150 83 65 0 0 297 167
+           M354 357A150 93 63 0 0 308 168M359 356A150 102 61 0 0 318 168M360 359A150 110 58 0 0 320 160
+           M360 363A150 118 55 0 0 308 143M361 363A150 125 50 0 0 306 137M375 346A150 131 45 0 0 312 136
+           M380 341A150 135 39 0 0 327 140M386 331A150 139 30 0 0 325 135M398 304A150 142 19 0 0 335 138
+           M406 265A150 144 4 0 0 335 134"/>
+      <path stroke="url(#human-industrial-night)" stroke-width="1.5" d="M327 291A149 41 -14 0 0 367 273M326 285A150 41 -14 0 0 366 267M325 279A150 41 -14 0 0 365 261
+           M323 273A150 41 -14 0 0 363 255M321 267A150 41 -14 0 0 361 249M320 261A149 41 -14 0 0 359 243
+           M318 254A148 41 -14 0 0 357 237M327 291L318 254M333 289L323 252M338 287L328 250M344 285L334 248
+           M349 282L339 246M354 280L344 243M358 278L348 241M363 275L353 239M367 273L357 237
+           M296 355A131 36 -14 0 0 328 345M295 350A134 37 -14 0 0 328 340M294 346A137 38 -14 0 0 327 335
+           M293 341A140 38 -14 0 0 327 330M292 335A142 39 -14 0 0 327 324M296 355L292 335M301 354L298 334
+           M307 352L304 332M312 350L310 330M317 348L316 328M323 347L321 326M328 345L327 324
+           M348 208A140 39 -14 0 0 364 197M344 202A138 38 -14 0 0 360 191M341 196A135 37 -14 0 0 356 186
+           M337 191A132 36 -14 0 0 352 181M334 185A129 35 -14 0 0 348 176M348 208L334 185M351 205L337 183
+           M355 203L340 181M358 201L343 179M361 199L346 177M392 276A146 40 -14 0 0 399 269
+           M391 270A147 41 -14 0 0 399 263M391 264A149 41 -14 0 0 398 257M390 258A149 41 -14 0 0 397 251
+           M389 252A150 41 -14 0 0 396 245M392 276L389 252M394 274L391 250M396 272L394 247M399 270L396 245
+           M357 351A115 32 -14 0 0 370 344M359 346A119 33 -14 0 0 372 339M360 342A123 34 -14 0 0 374 334
+           M362 337A127 35 -14 0 0 375 329M357 351L362 336M361 349L366 334M364 347L369 332M367 345L373 330
+           M370 344L376 328M276 211A129 36 -14 0 0 294 205M274 205A126 35 -14 0 0 291 199
+           M271 200A122 34 -14 0 0 289 194M276 211L269 195M281 210L274 193M286 208L279 192M291 206L284 190"/>
+      <path stroke="url(#human-industrial-night)" stroke-width="2.5" d="M344 264A150 86 -68 0 1 307 342M344 264A150 88 -73 0 0 349 191M344 264A150 11 0 0 0 397 259
+           M307 342A150 71 22 0 0 365 337M349 191A150 62 -12 0 0 257 193"/>
+      <path stroke="#e9f2ff" stroke-width="4" d="M366 267h0M352.3 274h0M356.9 251h0M325.1 258.5h0M321.4 266.8h0M352.7 238.8h0M364.6 260.9h0
+           M342.3 278.5h0M354.9 244.9h0M361.2 248.7h0M354.1 259.5h0M300.8 348.8h0M327.6 339.9h0
+           M309.8 330.1h0M322.6 346.7h0M301.5 353.5h0M333.7 185.5h0M341.1 196.3h0M351.2 189.9h0
+           M343.4 179.4h0M397 251.3h0M395.9 245.2h0M396.2 265.8h0M357.4 350.9h0M369 340.7h0M365.8 342.6h0
+           M285.8 194.7h0M281.1 196.4h0"/>
+    </g>
+    <!-- Limb -->
+    <path stroke="#62b6ff" stroke-width="2" opacity="0.6" d="M268.5 113.6A143 143 0 0 0 133.5 329.7"/>
+    <circle cx="256" cy="256" r="150" stroke="#e9f2ff" stroke-width="3"/>
+    <!-- Space elevators and orbital ring, near side -->
+    <path stroke="#9fb1c8" stroke-width="2" d="M210.8 306.8L190.8 329.1M353.5 265.3L396.4 269.4"/>
+    <path stroke="#62b6ff" stroke-width="14" opacity="0.12" d="M46.4 308.3A216 59.5 -14 0 0 270.4 313.8A216 59.5 -14 0 0 465.6 203.7"/>
+    <path stroke="#62b6ff" stroke-width="1.5" opacity="0.8" d="M56.6 305.7A205.5 56.6 -14 0 0 269.7 311A205.5 56.6 -14 0 0 455.4 206.3
+         M36.2 310.8A226.5 62.4 -14 0 0 271.1 316.6A226.5 62.4 -14 0 0 475.8 201.2"/>
+    <g transform="translate(190.8 329.1) rotate(-7.8)">
+      <path d="M-26.2 -5h13.8v10h-13.8z M12.5 -5h13.8v10h-13.8z" stroke="#9fb1c8" stroke-width="1.5"/>
+      <path d="M-12.5 0l5 -7.5h15l5 7.5l-5 7.5h-15z" fill="#62b6ff" fill-opacity="0.3" stroke="#e9f2ff" stroke-width="2"/>
+      <circle cy="-11.2" r="2" fill="#62b6ff"/>
+    </g>
+    <g transform="translate(396.4 269.4) rotate(-26.4)">
+      <path d="M-26.2 -5h13.8v10h-13.8z M12.5 -5h13.8v10h-13.8z" stroke="#9fb1c8" stroke-width="1.5"/>
+      <path d="M-12.5 0l5 -7.5h15l5 7.5l-5 7.5h-15z" fill="#62b6ff" fill-opacity="0.3" stroke="#e9f2ff" stroke-width="2"/>
+      <circle cy="-11.2" r="2" fill="#62b6ff"/>
+    </g>
+  </g>
+</svg>

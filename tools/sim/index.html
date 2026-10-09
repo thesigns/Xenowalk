@@ -1,0 +1,622 @@
+<meta charset="utf-8">
+<title>Xenowalk Economy Sim</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+  /* Layout: a ship's console. Parameters in a side rail, results stacked as
+     readouts; one dark vector look on purpose, like the game itself. */
+  :root {
+    color-scheme: dark;
+    --bg: #07090d;
+    --panel: #0d1219;
+    --line: #1c2633;
+    --fg: #e4ebf3;
+    --muted: #8796a8;
+    --accent: #ffb547;
+    --series: #3987e5;
+    --series-band: rgba(57, 135, 229, 0.16);
+    --baseline: #8796a8;
+    --negative: #d95926;
+    --font-display: 'Chakra Petch', 'Segoe UI', system-ui, sans-serif;
+    --font-sans: 'IBM Plex Sans', 'Segoe UI', system-ui, sans-serif;
+    --font-mono: 'IBM Plex Mono', ui-monospace, Consolas, monospace;
+  }
+  * { box-sizing: border-box; }
+  body { background: var(--bg); color: var(--fg); font: 14px/1.5 var(--font-sans); padding-inline: 16px; padding-block: 0 48px; }
+  table { font: inherit; color: inherit; border-collapse: collapse; }
+  h1, h2, h3 { font-family: var(--font-display); font-weight: 600; text-wrap: balance; margin: 0; }
+  h1 { font-size: 22px; letter-spacing: 0.04em; }
+  h2 { font-size: 15px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); }
+  .hint { color: var(--muted); font-size: 13px; max-width: 68ch; margin: 4px 0 0; }
+  .num { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+
+  header { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 24px; padding-block: 20px 16px; border-bottom: 1px solid var(--line); }
+  header .title { display: flex; flex-direction: column; min-width: 0; }
+  header .title span { color: var(--muted); font-size: 13px; }
+  .toolbar { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-left: auto; }
+  button, select, input { font: inherit; color: var(--fg); }
+  button { background: transparent; border: 1px solid var(--line); border-radius: 3px; padding: 6px 12px; cursor: pointer; font-family: var(--font-display); font-weight: 500; letter-spacing: 0.04em; }
+  button:hover { border-color: var(--muted); }
+  button:focus-visible, input:focus-visible, select:focus-visible, summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+  button.primary { background: var(--accent); border-color: var(--accent); color: #1a1205; }
+  button.primary:disabled { opacity: 0.5; cursor: progress; }
+  button[aria-pressed="true"] { border-color: var(--accent); color: var(--accent); }
+  .status { display: flex; align-items: center; gap: 10px; padding-block: 10px; color: var(--muted); font-size: 13px; flex-wrap: wrap; }
+  .status b { color: var(--fg); font-weight: 500; }
+  .key { display: inline-block; width: 14px; height: 2px; vertical-align: middle; margin-right: 6px; }
+  .key.cur { background: var(--series); }
+  .key.base { background: var(--baseline); }
+  progress { width: 120px; height: 4px; appearance: none; border: 0; background: var(--line); }
+  progress::-webkit-progress-bar { background: var(--line); }
+  progress::-webkit-progress-value { background: var(--accent); }
+  progress::-moz-progress-bar { background: var(--accent); }
+
+  .layout { display: grid; grid-template-columns: minmax(0, 300px) minmax(0, 1fr); gap: 28px; align-items: start; }
+  @media (max-width: 860px) { .layout { grid-template-columns: minmax(0, 1fr); } }
+
+  aside { position: sticky; top: env(safe-area-inset-top, 0px); max-height: 100vh; overflow-y: auto; padding-block: 8px 24px; }
+  @media (max-width: 860px) { aside { position: static; max-height: none; } }
+  details.group { border-bottom: 1px solid var(--line); }
+  details.group summary { cursor: pointer; padding-block: 10px; font-family: var(--font-display); font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; font-size: 12px; color: var(--muted); list-style: none; display: flex; justify-content: space-between; }
+  details.group summary::after { content: '+'; }
+  details.group[open] summary::after { content: '−'; }
+  details.group summary::-webkit-details-marker { display: none; }
+  .field { display: grid; grid-template-columns: minmax(0, 1fr) 112px; gap: 8px; align-items: center; padding-block: 3px; }
+  .field label { font-size: 13px; color: var(--fg); min-width: 0; }
+  .field label small { color: var(--muted); font-size: 11px; margin-left: 4px; }
+  .field.wide { grid-template-columns: minmax(0, 1fr); gap: 2px; }
+  .field input, .field select { width: 100%; background: var(--panel); border: 1px solid var(--line); border-radius: 3px; padding: 4px 6px; font-family: var(--font-mono); font-size: 13px; }
+  .field select { font-family: var(--font-sans); }
+  .field.changed input, .field.changed select { border-color: var(--accent); }
+  .fields { padding-block: 0 12px; }
+  .field[hidden] { display: none; }
+
+  main { display: flex; flex-direction: column; gap: 36px; padding-block: 8px; min-width: 0; }
+  section { display: flex; flex-direction: column; gap: 12px; min-width: 0; }
+
+  .glance { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1px; background: var(--line); border: 1px solid var(--line); }
+  .glance div { background: var(--bg); padding: 12px 14px; display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+  .glance .label { color: var(--muted); font-size: 12px; letter-spacing: 0.04em; }
+  .glance .value { font-family: var(--font-mono); font-size: 18px; font-variant-numeric: tabular-nums; }
+  .glance .base { font-family: var(--font-mono); font-size: 12px; color: var(--muted); }
+
+  .scroll { overflow-x: auto; }
+  table.data { width: 100%; }
+  table.data th, table.data td { padding: 6px 8px; text-align: right; border-bottom: 1px solid var(--line); white-space: nowrap; }
+  table.data th { color: var(--muted); font-weight: 500; font-size: 12px; }
+  table.data th:first-child, table.data td:first-child { text-align: left; }
+  table.data td.plot { width: 40%; min-width: 200px; padding-block: 0; }
+  table.data td.plot svg { display: block; width: 100%; height: 22px; }
+  .ticks { position: relative; height: 16px; }
+  .ticks span { position: absolute; transform: translateX(-50%); font-family: var(--font-mono); font-size: 11px; }
+  .ticks span:first-child { transform: none; }
+  table.data .muted { color: var(--muted); }
+
+  .heat td { text-align: center; padding: 10px 6px; font-family: var(--font-mono); font-size: 12px; border: 2px solid var(--bg); min-width: 76px; }
+  .heat td b { display: block; font-size: 14px; font-weight: 500; }
+  .heat td.target { outline: 2px solid var(--accent); outline-offset: -2px; }
+  .heat th { padding: 6px; color: var(--muted); font-weight: 500; font-size: 12px; text-align: center; }
+  .heat th.row { text-align: right; }
+  .seg { display: inline-flex; border: 1px solid var(--line); border-radius: 3px; }
+  .seg button { border: 0; border-radius: 0; padding: 4px 10px; font-size: 12px; }
+
+  .charts { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; }
+  .chart { position: relative; min-width: 0; }
+  .chart h3 { font-size: 13px; font-weight: 500; color: var(--fg); letter-spacing: 0.03em; margin-bottom: 4px; }
+  .chart svg { display: block; width: 100%; height: auto; overflow: visible; }
+  .chart text { font-family: var(--font-mono); font-size: 10px; fill: var(--muted); }
+  .tip { position: absolute; pointer-events: none; background: var(--panel); border: 1px solid var(--line); padding: 6px 8px; font-family: var(--font-mono); font-size: 12px; white-space: nowrap; z-index: 2; }
+  .tip .muted { color: var(--muted); }
+
+  .bars { display: grid; grid-template-columns: max-content minmax(0, 1fr) max-content; gap: 6px 12px; align-items: center; }
+  .bars .name { font-size: 13px; }
+  .bars .track { position: relative; height: 26px; }
+  .bars .bar { position: absolute; height: 10px; border-radius: 2px; }
+  .bars .bar.cur { top: 2px; }
+  .bars .bar.base { top: 15px; height: 6px; background: var(--baseline); opacity: 0.7; }
+  .bars .zero { position: absolute; top: 0; bottom: 0; width: 1px; background: var(--muted); }
+  .bars .val { font-family: var(--font-mono); font-size: 12px; text-align: right; line-height: 1.3; }
+  .bars .val span { display: block; color: var(--muted); }
+
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+
+<header>
+  <div class="title">
+    <h1>Xenowalk Economy Sim</h1>
+    <span>Simulated captains walking for months, to tune the numbers in the GDD</span>
+  </div>
+  <div class="toolbar">
+    <button type="button" id="preset-gdd" data-preset="GDD v0.1">GDD v0.1</button>
+    <button type="button" id="preset-proposal" data-preset="Proposal v0.2">Proposal v0.2</button>
+    <button type="button" id="keep">Keep as baseline</button>
+    <button type="button" class="primary" id="run">Run</button>
+  </div>
+</header>
+<div class="status" id="status">
+  <progress id="progress" max="1" value="0"></progress>
+  <span id="status-text">Starting…</span>
+</div>
+
+<div class="layout">
+  <aside id="form" aria-label="Parameters"></aside>
+  <main>
+    <section>
+      <h2>A typical walk</h2>
+      <div class="glance" id="glance"></div>
+    </section>
+
+    <section>
+      <div>
+        <h2>Milestones</h2>
+        <p class="hint">Day on which simulated players reach each goal, walking as set in Walker. Line: 10th to 90th percentile, dot: median. Grey: baseline median.</p>
+      </div>
+      <div class="scroll"><table class="data" id="milestones"></table></div>
+    </section>
+
+    <section>
+      <div style="display:flex;flex-wrap:wrap;gap:8px 16px;align-items:end;justify-content:space-between">
+        <div>
+          <h2>Walking habits</h2>
+          <p class="hint" id="sweep-hint">Median result after 90 days for each walk length and frequency. The goal is one hour a day (outlined): it should beat shorter walks clearly, and longer walks should add little.</p>
+        </div>
+        <div class="seg" role="group" aria-label="Show">
+          <button type="button" id="sweep-earned" aria-pressed="true">Credits earned</button>
+          <button type="button" id="sweep-artifacts" aria-pressed="false">Artifacts</button>
+          <button type="button" id="sweep-which" aria-pressed="false">Baseline</button>
+        </div>
+      </div>
+      <div class="scroll"><table class="heat" id="sweep"></table></div>
+    </section>
+
+    <section>
+      <div>
+        <h2>Over time</h2>
+        <p class="hint">Median with the band from the 10th to the 90th percentile. Credits earned counts everything spent on ships and Coords, so buying does not look like a loss.</p>
+      </div>
+      <div class="charts" id="charts"></div>
+    </section>
+
+    <section>
+      <div>
+        <h2>Where credits come from</h2>
+        <p class="hint">Average per player per day over the whole run. Containers: goods found, valued at neutral price, minus what the containers cost.</p>
+      </div>
+      <div class="bars" id="income"></div>
+    </section>
+
+    <section>
+      <div>
+        <h2>Farming check</h2>
+        <p class="hint">The same hour a day for 30 days, spent on a loop through own systems or walking back and forth between the two closest. Farming should not pay better.</p>
+      </div>
+      <div class="scroll"><table class="data" id="farming"></table></div>
+    </section>
+  </main>
+</div>
+
+<script type="module">
+import { PARAM_GROUPS, PRESETS, DEFAULTS, SWEEP_MINUTES, SWEEP_PER_WEEK } from './engine.js';
+
+const $ = (id) => document.getElementById(id);
+const worker = new Worker(new URL('./worker.js', import.meta.url), { type: 'module' });
+const state = { current: null, baseline: null, label: 'GDD v0.1', sweepMetric: 'earned', sweepBaseline: false, running: false };
+const ALL_PARAMS = PARAM_GROUPS.flatMap((g) => g.params);
+
+const fmt = (x, digits = 0) => (Number.isFinite(x) ? x.toLocaleString('en-US', { maximumFractionDigits: digits, minimumFractionDigits: digits }) : '–');
+const compact = (x) => {
+  if (!Number.isFinite(x)) return '–';
+  const a = Math.abs(x);
+  if (a >= 1e6) return (x / 1e6).toFixed(a >= 1e7 ? 0 : 1) + 'M';
+  if (a >= 1e3) return (x / 1e3).toFixed(a >= 1e4 ? 0 : 1) + 'K';
+  return Math.round(x).toString();
+};
+const el = (tag, attrs = {}, html = '') => Object.assign(document.createElement(tag), attrs, html ? { innerHTML: html } : {});
+const svgEl = (tag, attrs = {}) => {
+  const node = document.createElementNS('http://www.w3.org/2000/svg', tag);
+  for (const [k, v] of Object.entries(attrs)) node.setAttribute(k, v);
+  return node;
+};
+
+// ---------------------------------------------------------------- form
+
+function buildForm() {
+  const form = $('form');
+  PARAM_GROUPS.forEach((group, gi) => {
+    const details = el('details', { className: 'group', open: gi < 2 || group.title === 'Run' });
+    details.append(el('summary', {}, group.title));
+    const fields = el('div', { className: 'fields' });
+    for (const p of group.params) {
+      const wrap = el('div', { className: 'field' + (p.list || p.options ? ' wide' : '') });
+      wrap.dataset.key = p.key;
+      if (p.model) wrap.dataset.model = p.model;
+      const id = 'p-' + p.key;
+      wrap.append(el('label', { htmlFor: id }, `${p.label}${p.unit ? ` <small>${p.unit}</small>` : ''}`));
+      let input;
+      if (p.options) {
+        input = el('select', { id });
+        for (const [value, text] of p.options) input.append(el('option', { value }, text));
+      } else if (p.list) {
+        input = el('input', { id, type: 'text', spellcheck: false });
+      } else {
+        input = el('input', { id, type: 'number', step: String(p.step ?? 1) });
+      }
+      input.addEventListener('input', onFormEdit);
+      wrap.append(input);
+      fields.append(wrap);
+    }
+    details.append(fields);
+    form.append(details);
+  });
+}
+
+function setForm(values) {
+  for (const p of ALL_PARAMS) {
+    const v = values[p.key];
+    $('p-' + p.key).value = p.scale ? String(+(v * p.scale).toFixed(4)) : String(v);
+  }
+  markChanges();
+}
+
+function readForm() {
+  const out = {};
+  for (const p of ALL_PARAMS) {
+    const raw = $('p-' + p.key).value;
+    if (p.options || p.list) out[p.key] = raw;
+    else out[p.key] = Number(raw) / (p.scale ?? 1);
+  }
+  return out;
+}
+
+// Outline what differs from GDD v0.1, and hide fields of the market model not in use.
+function markChanges() {
+  const values = readForm();
+  for (const p of ALL_PARAMS) {
+    const wrap = $('p-' + p.key).closest('.field');
+    const differs = String(values[p.key]).replace(/\s/g, '') !== String(DEFAULTS[p.key]).replace(/\s/g, '');
+    wrap.classList.toggle('changed', differs && p.key !== 'players' && p.key !== 'days' && p.key !== 'seed');
+    if (p.model) wrap.hidden = p.model !== values.marketModel;
+  }
+}
+
+function onFormEdit() {
+  markChanges();
+  if (!state.label.endsWith('(edited)')) state.label += ' (edited)';
+  updatePresetButtons(null);
+}
+
+function applyPreset(name) {
+  setForm({ ...DEFAULTS, ...PRESETS[name] });
+  state.label = name;
+  updatePresetButtons(name);
+}
+
+function updatePresetButtons(name) {
+  for (const b of document.querySelectorAll('[data-preset]')) b.setAttribute('aria-pressed', String(b.dataset.preset === name));
+}
+
+// ---------------------------------------------------------------- running
+
+let nextId = 0;
+function runSim(params) {
+  const id = ++nextId;
+  return new Promise((resolve) => {
+    const onMessage = ({ data }) => {
+      if (data.id !== id) return;
+      if (data.progress !== undefined) $('progress').value = data.progress;
+      if (data.result) {
+        worker.removeEventListener('message', onMessage);
+        resolve(data.result);
+      }
+    };
+    worker.addEventListener('message', onMessage);
+    worker.postMessage({ id, params });
+  });
+}
+
+async function run() {
+  if (state.running) return;
+  state.running = true;
+  $('run').disabled = true;
+  const label = state.label;
+  setStatus(`Running ${label}…`);
+  const result = await runSim(readForm());
+  state.current = { label, ...result };
+  state.running = false;
+  $('run').disabled = false;
+  $('progress').value = 1;
+  render();
+}
+
+function setStatus(text) {
+  $('status-text').innerHTML = text;
+}
+
+// ---------------------------------------------------------------- rendering
+
+function render() {
+  const cur = state.current;
+  const base = state.baseline;
+  if (!cur) return;
+  const m = cur.main;
+  setStatus(
+    `<span><span class="key cur"></span><b>${cur.label}</b></span>` +
+      (base ? `<span><span class="key base"></span>baseline: ${base.label}</span>` : '') +
+      `<span>${m.players} players × ${m.days} days, ${cur.params.walkMinutes} min walk ${cur.params.walksPerWeek}× a week</span>`
+  );
+  renderGlance(cur, base);
+  renderMilestones(cur, base);
+  renderSweep();
+  renderCharts(cur, base);
+  renderIncome(cur, base);
+  renderFarming(cur, base);
+}
+
+function renderGlance(cur, base) {
+  const items = [
+    ['Walk', (r) => `${fmt(r.main.perWalk.minutes)} min · ${fmt(r.main.perWalk.km, 1)} km`],
+    ['Stops and events per walk', (r) => `${fmt(r.main.perWalk.stops, 1)} · ${fmt(r.main.perWalk.events, 1)}`],
+    ['Phone out per walk', (r) => `${fmt(r.main.perWalk.stops * r.params.stopMinutes)} min`],
+    ['Start with identical markets', (r) => `${fmt(r.main.start.identical * 100)}%`],
+    ['Credits earned, day 30', (r) => compact(r.main.earned[1][Math.min(29, r.main.days - 1)])],
+    ['Credits earned, last day', (r) => compact(r.main.earned[1][r.main.days - 1])],
+  ];
+  $('glance').replaceChildren(
+    ...items.map(([label, f]) => {
+      const box = el('div');
+      box.append(el('span', { className: 'label' }, label), el('span', { className: 'value' }, f(cur)));
+      if (base) box.append(el('span', { className: 'base' }, 'baseline ' + f(base)));
+      return box;
+    })
+  );
+}
+
+function renderMilestones(cur, base) {
+  const days = Math.max(cur.main.days, base?.main.days ?? 0);
+  const x = (d) => 4 + (d / days) * 292;
+  const table = $('milestones');
+  table.replaceChildren();
+  const head = el('tr');
+  head.append(el('th', {}, 'Goal'), el('th', {}, 'Reached'), el('th', {}, 'Median day'));
+  if (base) head.append(el('th', {}, 'Baseline'));
+  const axis = el('th', { className: 'plot' });
+  const ticks = el('div', { className: 'ticks' });
+  const step = days > 200 ? 60 : 30;
+  for (let d = 0; d <= days; d += step) {
+    const t = el('span', {}, String(d));
+    t.style.left = (x(d) / 300) * 100 + '%';
+    ticks.append(t);
+  }
+  axis.append(ticks);
+  head.append(axis);
+  table.append(head);
+
+  cur.main.milestones.forEach((ms, i) => {
+    const bm = base?.main.milestones[i];
+    const tr = el('tr');
+    tr.append(el('td', {}, ms.label), el('td', { className: 'num' }, `${fmt(ms.share * 100)}%`), el('td', { className: 'num' }, ms.share >= 0.5 ? fmt(ms.days[1]) : '–'));
+    if (base) tr.append(el('td', { className: 'num muted' }, bm && bm.share >= 0.5 ? fmt(bm.days[1]) : '–'));
+    const td = el('td', { className: 'plot' });
+    const svg = svgEl('svg', { viewBox: '0 0 300 22', preserveAspectRatio: 'none' });
+    for (let d = step; d < days; d += step) svg.append(svgEl('line', { x1: x(d), x2: x(d), y1: 0, y2: 22, stroke: 'var(--line)', 'stroke-width': 1, 'vector-effect': 'non-scaling-stroke' }));
+    if (bm && bm.share >= 0.5) svg.append(svgEl('rect', { x: x(bm.days[1]) - 3, y: 8, width: 6, height: 6, fill: 'var(--baseline)', transform: `rotate(45 ${x(bm.days[1])} 11)` }));
+    if (ms.share > 0) {
+      const hi = Number.isFinite(ms.days[2]) ? ms.days[2] : days;
+      svg.append(svgEl('line', { x1: x(ms.days[0]), x2: x(hi), y1: 11, y2: 11, stroke: 'var(--series)', 'stroke-width': 2, 'stroke-linecap': 'round', 'vector-effect': 'non-scaling-stroke' }));
+      if (ms.share >= 0.5) svg.append(svgEl('circle', { cx: x(ms.days[1]), cy: 11, r: 4, fill: 'var(--series)', stroke: 'var(--bg)', 'stroke-width': 2 }));
+    }
+    const title = svgEl('title');
+    title.textContent = `${ms.label}: day ${fmt(ms.days[0])}–${fmt(ms.days[2])}, median ${fmt(ms.days[1])}`;
+    svg.append(title);
+    td.append(svg);
+    tr.append(td);
+    table.append(tr);
+  });
+}
+
+// Sequential blue, dark (low) to light (high), for the dark surface.
+const RAMP = ['#104281', '#184f95', '#1c5cab', '#256abf', '#2a78d6', '#3987e5', '#5598e7', '#6da7ec', '#86b6ef', '#9ec5f4', '#b7d3f6', '#cde2fb'];
+
+function renderSweep() {
+  const run = state.sweepBaseline && state.baseline ? state.baseline : state.current;
+  $('sweep-which').disabled = !state.baseline;
+  const cells = run.grid.cells;
+  const key = state.sweepMetric;
+  const max = Math.max(...cells.map((c) => c[key]), 1);
+  const table = $('sweep');
+  table.replaceChildren();
+  const head = el('tr');
+  head.append(el('th', { className: 'row' }, run.label));
+  for (const m of SWEEP_MINUTES) head.append(el('th', {}, `${m} min`));
+  table.append(head);
+  for (const perWeek of SWEEP_PER_WEEK) {
+    const tr = el('tr');
+    tr.append(el('th', { className: 'row' }, perWeek === 7 ? 'every day' : `${perWeek}× a week`));
+    for (const minutes of SWEEP_MINUTES) {
+      const c = cells.find((x) => x.minutes === minutes && x.perWeek === perWeek);
+      const t = Math.max(0, c[key]) / max;
+      const color = RAMP[Math.min(RAMP.length - 1, Math.floor(t * RAMP.length))];
+      const td = el('td', { className: minutes === 60 && perWeek === 7 ? 'target' : '' });
+      td.style.background = color;
+      td.style.color = t > 0.55 ? '#0b1a2e' : '#f2f6fb';
+      const main = key === 'earned' ? compact(c.earned) : fmt(c.artifacts, Number.isInteger(c.artifacts) ? 0 : 1);
+      const sub = key === 'earned' ? `${fmt(c.artifacts, Number.isInteger(c.artifacts) ? 0 : 1)} art.` : compact(c.earned);
+      td.innerHTML = `<b>${main}</b>${sub}`;
+      td.title = `${minutes} min, ${perWeek}× a week: ${fmt(c.earned)} credits, ${c.artifacts} artifacts after ${run.grid.days} days`;
+      tr.append(td);
+    }
+    table.append(tr);
+  }
+}
+
+// Top of the y axis: four equal steps of a round size (whole steps for counts).
+function niceMax(v, whole) {
+  if (v <= 0) return 4;
+  const raw = v / 4;
+  const p = Math.pow(10, Math.floor(Math.log10(raw)));
+  let step = [1, 2, 2.5, 5, 10].map((k) => k * p).find((s) => s >= raw);
+  if (whole) step = Math.max(1, Math.ceil(step));
+  return step * 4;
+}
+
+function lineChart(title, cur, base, key, format) {
+  const wrap = el('div', { className: 'chart' });
+  wrap.append(el('h3', {}, title));
+  const W = 360, H = 180, L = 40, R = 8, T = 8, B = 22;
+  const band = cur.main[key];
+  const days = Math.max(cur.main.days, base?.main.days ?? 0);
+  const ymax = niceMax(Math.max(...band[2], ...(base ? base.main[key][1] : [0])), key !== 'earned');
+  const x = (d) => L + (d / Math.max(1, days - 1)) * (W - L - R);
+  const y = (v) => T + (1 - v / ymax) * (H - T - B);
+  const svg = svgEl('svg', { viewBox: `0 0 ${W} ${H}`, role: 'img', 'aria-label': title });
+  for (let i = 0; i <= 4; i++) {
+    const v = (ymax / 4) * i;
+    svg.append(svgEl('line', { x1: L, x2: W - R, y1: y(v), y2: y(v), stroke: 'var(--line)', 'stroke-width': 1 }));
+    const t = svgEl('text', { x: L - 6, y: y(v) + 3, 'text-anchor': 'end' });
+    t.textContent = format(v);
+    svg.append(t);
+  }
+  const step = days > 200 ? 60 : 30;
+  for (let d = 0; d < days; d += step) {
+    const t = svgEl('text', { x: x(d), y: H - 6, 'text-anchor': 'middle' });
+    t.textContent = d === 0 ? 'day 1' : d;
+    svg.append(t);
+  }
+  const path = (arr) => arr.map((v, d) => `${d ? 'L' : 'M'}${x(d).toFixed(1)},${y(v).toFixed(1)}`).join('');
+  const area = band[2].map((v, d) => `${d ? 'L' : 'M'}${x(d).toFixed(1)},${y(v).toFixed(1)}`).join('') + band[0].map((v, d) => `L${x(band[0].length - 1 - d).toFixed(1)},${y(band[0][band[0].length - 1 - d]).toFixed(1)}`).join('') + 'Z';
+  svg.append(svgEl('path', { d: area, fill: 'var(--series-band)', stroke: 'none' }));
+  if (base) svg.append(svgEl('path', { d: path(base.main[key][1]), fill: 'none', stroke: 'var(--baseline)', 'stroke-width': 1.5, 'stroke-linejoin': 'round' }));
+  svg.append(svgEl('path', { d: path(band[1]), fill: 'none', stroke: 'var(--series)', 'stroke-width': 2, 'stroke-linejoin': 'round', 'stroke-linecap': 'round' }));
+  const last = band[1].length - 1;
+  svg.append(svgEl('circle', { cx: x(last), cy: y(band[1][last]), r: 4, fill: 'var(--series)', stroke: 'var(--bg)', 'stroke-width': 2 }));
+
+  const cross = svgEl('line', { y1: T, y2: H - B, stroke: 'var(--muted)', 'stroke-width': 1, visibility: 'hidden' });
+  const dot = svgEl('circle', { r: 4, fill: 'var(--series)', stroke: 'var(--bg)', 'stroke-width': 2, visibility: 'hidden' });
+  const hit = svgEl('rect', { x: L, y: T, width: W - L - R, height: H - T - B, fill: 'transparent' });
+  svg.append(cross, dot, hit);
+  const tip = el('div', { className: 'tip', hidden: true });
+  hit.addEventListener('pointermove', (e) => {
+    const rect = svg.getBoundingClientRect();
+    const sx = ((e.clientX - rect.left) / rect.width) * W;
+    const d = Math.max(0, Math.min(band[1].length - 1, Math.round(((sx - L) / (W - L - R)) * (days - 1))));
+    cross.setAttribute('x1', x(d));
+    cross.setAttribute('x2', x(d));
+    dot.setAttribute('cx', x(d));
+    dot.setAttribute('cy', y(band[1][d]));
+    cross.setAttribute('visibility', 'visible');
+    dot.setAttribute('visibility', 'visible');
+    tip.hidden = false;
+    tip.innerHTML = `Day ${d + 1}<br>${format(band[1][d], true)} <span class="muted">(${format(band[0][d], true)}–${format(band[2][d], true)})</span>` + (base && base.main[key][1][d] !== undefined ? `<br><span class="muted">baseline ${format(base.main[key][1][d], true)}</span>` : '');
+    const px = (x(d) / W) * rect.width;
+    tip.style.left = Math.min(px + 12, rect.width - tip.offsetWidth) + 'px';
+    tip.style.top = '28px';
+  });
+  hit.addEventListener('pointerleave', () => {
+    cross.setAttribute('visibility', 'hidden');
+    dot.setAttribute('visibility', 'hidden');
+    tip.hidden = true;
+  });
+  wrap.append(svg, tip);
+  return wrap;
+}
+
+function renderCharts(cur, base) {
+  const int = (v, exact) => (exact ? fmt(v, Number.isInteger(v) ? 0 : 1) : fmt(v));
+  $('charts').replaceChildren(
+    lineChart('Credits earned', cur, base, 'earned', (v, exact) => (exact ? fmt(v) : compact(v))),
+    lineChart('Systems', cur, base, 'systems', int),
+    lineChart('Artifacts', cur, base, 'artifacts', int)
+  );
+}
+
+function incomeRows(r) {
+  const pp = r.main.perPlayer;
+  const days = r.main.days;
+  return [
+    ['Trade', pp.trade / days],
+    ['Missions', pp.missions / days],
+    ['Containers', (pp.containerValue - pp.containerSpend) / days],
+    ['Dice', pp.dice / days],
+  ];
+}
+
+function renderIncome(cur, base) {
+  const rows = incomeRows(cur);
+  const baseRows = base ? incomeRows(base) : null;
+  const all = [...rows, ...(baseRows ?? [])].map((r) => r[1]);
+  const lo = Math.min(0, ...all);
+  const hi = Math.max(0, ...all);
+  const pos = (v) => ((v - lo) / (hi - lo || 1)) * 100;
+  const box = $('income');
+  box.replaceChildren();
+  rows.forEach(([name, v], i) => {
+    const track = el('div', { className: 'track' });
+    track.append(el('div', { className: 'zero' }));
+    track.lastChild.style.left = pos(0) + '%';
+    const bar = (value, cls) => {
+      const b = el('div', { className: 'bar ' + cls });
+      b.style.left = Math.min(pos(0), pos(value)) + '%';
+      b.style.width = Math.max(0.4, Math.abs(pos(value) - pos(0))) + '%';
+      if (cls === 'cur') b.style.background = value < 0 ? 'var(--negative)' : 'var(--series)';
+      return b;
+    };
+    track.append(bar(v, 'cur'));
+    if (baseRows) track.append(bar(baseRows[i][1], 'base'));
+    box.append(el('span', { className: 'name' }, name), track, el('span', { className: 'val' }, `${fmt(v)}/day` + (baseRows ? `<span>${fmt(baseRows[i][1])}</span>` : '')));
+  });
+}
+
+function renderFarming(cur, base) {
+  const table = $('farming');
+  table.replaceChildren();
+  const head = el('tr');
+  head.append(el('th', {}, 'Route'), el('th', {}, 'Events per walk'), el('th', {}, 'Artifacts'), el('th', {}, 'Credits earned'));
+  table.append(head);
+  const rows = [
+    ['Loop', 'loop'],
+    ['Back and forth', 'pingpong'],
+  ];
+  for (const [name, k] of rows) {
+    const f = cur.farming[k];
+    const b = base?.farming[k];
+    const tr = el('tr');
+    const cell = (v, bv, d) => el('td', { className: 'num' }, fmt(v, d) + (b ? ` <span class="muted">/ ${fmt(bv, d)}</span>` : ''));
+    tr.append(el('td', {}, name), cell(f.eventsPerWalk, b?.eventsPerWalk, 1), cell(f.artifacts, b?.artifacts, 1), cell(f.earned, b?.earned, 0));
+    table.append(tr);
+  }
+}
+
+// ---------------------------------------------------------------- wiring
+
+buildForm();
+for (const b of document.querySelectorAll('[data-preset]')) b.addEventListener('click', () => applyPreset(b.dataset.preset));
+$('run').addEventListener('click', run);
+$('keep').addEventListener('click', () => {
+  if (!state.current) return;
+  state.baseline = state.current;
+  render();
+});
+const setSweep = (metric) => {
+  state.sweepMetric = metric;
+  $('sweep-earned').setAttribute('aria-pressed', String(metric === 'earned'));
+  $('sweep-artifacts').setAttribute('aria-pressed', String(metric === 'artifacts'));
+  if (state.current) renderSweep();
+};
+$('sweep-earned').addEventListener('click', () => setSweep('earned'));
+$('sweep-artifacts').addEventListener('click', () => setSweep('artifacts'));
+$('sweep-which').addEventListener('click', () => {
+  state.sweepBaseline = !state.sweepBaseline;
+  $('sweep-which').setAttribute('aria-pressed', String(state.sweepBaseline));
+  renderSweep();
+});
+
+// Open on a real comparison: GDD v0.1 as the baseline, the proposal as current.
+(async () => {
+  applyPreset('GDD v0.1');
+  await run();
+  state.baseline = state.current;
+  applyPreset('Proposal v0.2');
+  await run();
+})();
+</script>

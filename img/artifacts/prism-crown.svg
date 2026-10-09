@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="prism-crown-crystal" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffd479" stop-opacity="0.34"/>
+      <stop offset="0.6" stop-color="#ffd479" stop-opacity="0.12"/>
+      <stop offset="1" stop-color="#ffd479" stop-opacity="0.06"/>
+    </linearGradient>
+  </defs>
+  <g fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Back rim of the circlet -->
+    <path d="M140 296 C186 272 326 272 372 296" stroke="#9fb1c8" stroke-width="2" opacity="0.6"/>
+    <!-- Outer prisms -->
+    <path d="M124 222 L158 240 L174 309 H150 L130 258 Z M388 222 L354 240 L338 309 H362 L382 258 Z" fill="url(#prism-crown-crystal)" stroke="#e9f2ff" stroke-width="4"/>
+    <path d="M124 222 L146 254 L162 306 M130 258 L146 254 L158 240 M388 222 L366 254 L350 306 M382 258 L366 254 L354 240" stroke="#ffd479" stroke-width="1.5" opacity="0.6"/>
+    <!-- Middle prisms -->
+    <path d="M170 156 L206 198 L218 313 H184 L158 212 Z M342 156 L306 198 L294 313 H328 L354 212 Z" fill="url(#prism-crown-crystal)" stroke="#e9f2ff" stroke-width="4"/>
+    <path d="M170 156 L188 212 L201 312 M158 212 L188 212 L206 198 M342 156 L324 212 L311 312 M354 212 L324 212 L306 198" stroke="#ffd479" stroke-width="2" opacity="0.7"/>
+    <!-- Central prism -->
+    <path d="M256 108 L290 172 L284 316 H228 L222 172 Z" fill="url(#prism-crown-crystal)" stroke="#e9f2ff" stroke-width="4"/>
+    <path d="M256 108 V316 M222 172 L256 196 L290 172" stroke="#ffd479" stroke-width="2"/>
+    <path d="M256 196 L232 300 M256 196 L280 300" stroke="#ffd479" stroke-width="1.5" opacity="0.5"/>
+    <!-- Circlet band -->
+    <path d="M140 296 C186 322 326 322 372 296 V330 C326 358 186 358 140 330 Z" fill="#ffd479" fill-opacity="0.2" stroke="#e9f2ff" stroke-width="4"/>
+    <path d="M150 312 C194 336 318 336 362 312" stroke="#9fb1c8" stroke-width="1.5" opacity="0.6"/>
+    <path d="M256 320 L265 332 L256 344 L247 332 Z M196 314 L203 324 L196 334 L189 324 Z M316 314 L323 324 L316 334 L309 324 Z" fill="#ffd479" fill-opacity="0.3" stroke="#ffd479" stroke-width="2"/>
+    <!-- Light caught at the apexes -->
+    <path d="M256 92 V72 M238 102 L224 90 M274 102 L288 90" stroke="#ffd479" stroke-width="3"/>
+    <path d="M162 140 L156 126 M350 140 L356 126 M114 208 L106 198 M398 208 L406 198" stroke="#ffd479" stroke-width="2" opacity="0.6"/>
+    <circle cx="256" cy="108" r="5" fill="#e9f2ff" stroke="none"/>
+  </g>
+</svg>

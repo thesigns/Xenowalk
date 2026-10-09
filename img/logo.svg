@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <!-- The Xenowalk emblem: a world, its orbit, and a ship whose dotted wake
+       turns into footsteps. -->
+  <defs>
+    <linearGradient id="logo-planet" x1="0.2" y1="0.1" x2="0.8" y2="0.9">
+      <stop offset="0" stop-color="#5fe6ff" stop-opacity="0.45"/>
+      <stop offset="0.55" stop-color="#5fe6ff" stop-opacity="0.06"/>
+      <stop offset="1" stop-color="#5fe6ff" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+  <g fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Orbit, the back half behind the planet -->
+    <path d="M70 300 C70 230 460 160 460 212" stroke="#5fe6ff" stroke-width="3" opacity="0.4"/>
+    <!-- Planet -->
+    <circle cx="256" cy="256" r="122" fill="#070b14" stroke="#e9f2ff" stroke-width="5"/>
+    <circle cx="256" cy="256" r="122" fill="url(#logo-planet)"/>
+    <path d="M150 210 C200 190 300 186 360 204 M136 262 C200 246 316 246 376 262 M150 312 C210 300 300 298 362 312" stroke="#5fe6ff" stroke-width="2.5" opacity="0.55"/>
+    <path d="M206 140 C178 196 178 316 206 372 M306 140 C334 196 334 316 306 372" stroke="#9fb1c8" stroke-width="2" opacity="0.45"/>
+    <!-- Orbit, the front half -->
+    <path d="M460 212 C460 284 52 368 52 300 C52 268 116 236 196 214" stroke="#5fe6ff" stroke-width="5"/>
+    <!-- Footsteps fading into the orbit -->
+    <g fill="#5fe6ff" stroke="none">
+      <ellipse cx="92" cy="420" rx="9" ry="14" transform="rotate(-30 92 420)" opacity="0.35"/>
+      <ellipse cx="124" cy="398" rx="9" ry="14" transform="rotate(-20 124 398)" opacity="0.5"/>
+      <ellipse cx="140" cy="440" rx="9" ry="14" transform="rotate(-30 140 440)" opacity="0.25"/>
+      <circle cx="160" cy="372" r="6" opacity="0.7"/>
+      <circle cx="186" cy="356" r="5" opacity="0.85"/>
+    </g>
+    <!-- The ship riding the orbit -->
+    <g transform="translate(420 248) rotate(-112)">
+      <path d="M0 -26 L19 22 L0 11 L-19 22 Z" fill="#03050a" stroke="#e9f2ff" stroke-width="5"/>
+      <path d="M0 -8 V6" stroke="#5fe6ff" stroke-width="3"/>
+    </g>
+    <circle cx="214" cy="198" r="7" fill="#e9f2ff" stroke="none"/>
+  </g>
+</svg>

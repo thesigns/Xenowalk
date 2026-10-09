@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <radialGradient id="scrap-merchant-lens" cx="0.4" cy="0.4" r="0.6">
+      <stop offset="0" stop-color="#ffb24d" stop-opacity="0.45"/>
+      <stop offset="1" stop-color="#ffb24d" stop-opacity="0.1"/>
+    </radialGradient>
+  </defs>
+  <g fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Patched suit -->
+    <path d="M50 520 C56 452 104 412 180 394 L214 386 H298 L332 394 C408 412 456 452 462 520 Z" fill="#0a101b" fill-opacity="0.6" stroke="#e9f2ff" stroke-width="4"/>
+    <rect x="108" y="430" width="50" height="38" rx="3" transform="rotate(-16 133 449)" fill="#ffb24d" fill-opacity="0.1" stroke="#ffb24d" stroke-width="1.5" stroke-dasharray="4 5"/>
+    <rect x="346" y="448" width="40" height="30" rx="3" transform="rotate(10 366 463)" stroke="#9fb1c8" stroke-width="1.5" stroke-dasharray="4 5"/>
+    <path d="M100 464 C120 438 150 420 180 412 M412 464 C392 438 362 420 332 412" stroke="#61748d" stroke-width="2"/>
+    <!-- Neck, padded collar -->
+    <path d="M226 332 L222 384 M286 332 L290 384" stroke="#e9f2ff" stroke-width="4"/>
+    <path d="M190 396 C212 370 300 370 322 396 C300 410 212 410 190 396 Z" fill="#ffb24d" fill-opacity="0.08" stroke="#9fb1c8" stroke-width="2.5"/>
+    <!-- Ears and face -->
+    <path d="M196 222 C186 220 181 232 185 246 C188 256 194 259 199 256 M316 222 C326 220 331 232 327 246 C324 256 318 259 313 256" stroke="#e9f2ff" stroke-width="3"/>
+    <path d="M196 196 C192 252 198 292 214 316 C228 334 242 342 256 342 C270 342 284 334 298 316 C314 292 320 252 316 196" fill="#0a101b" fill-opacity="0.6" stroke="#e9f2ff" stroke-width="4"/>
+    <!-- Ragged crop of hair -->
+    <path d="M194 200 C186 176 188 158 196 146 L202 134 L212 138 L220 120 L234 126 L246 110 L258 120 L272 108 L282 122 L298 118 L302 134 L312 136 C322 152 326 176 318 200" fill="#ffb24d" fill-opacity="0.08" stroke="#e9f2ff" stroke-width="3"/>
+    <!-- Squinting eyes, heavy brows -->
+    <path d="M208 202 L244 205 M304 202 L268 205" stroke="#e9f2ff" stroke-width="3"/>
+    <path d="M212 216 C222 210 236 210 244 216 C236 220 222 220 212 216 Z M300 216 C290 210 276 210 268 216 C276 220 290 220 300 216 Z" stroke="#e9f2ff" stroke-width="2"/>
+    <circle cx="228" cy="215.5" r="3" fill="#e9f2ff" stroke="none"/>
+    <circle cx="284" cy="215.5" r="3" fill="#e9f2ff" stroke="none"/>
+    <path d="M207 222 L200 226 M305 222 L312 226" stroke="#61748d" stroke-width="1.5"/>
+    <!-- Welding goggles pushed up -->
+    <path d="M190 160 H200 M312 160 H322 M248 162 H264" stroke="#9fb1c8" stroke-width="5"/>
+    <circle cx="224" cy="162" r="25" fill="url(#scrap-merchant-lens)" stroke="#e9f2ff" stroke-width="4"/>
+    <circle cx="288" cy="162" r="25" fill="url(#scrap-merchant-lens)" stroke="#e9f2ff" stroke-width="4"/>
+    <circle cx="224" cy="162" r="16" stroke="#ffb24d" stroke-width="2"/>
+    <circle cx="288" cy="162" r="16" stroke="#ffb24d" stroke-width="2"/>
+    <path d="M214 152 C217 148 221 147 225 147 M278 152 C281 148 285 147 289 147" stroke="#e9f2ff" stroke-width="2" opacity="0.7"/>
+    <!-- Rebreather: straps, snout, front canister -->
+    <path d="M226 250 L197 240 M286 250 L315 240" stroke="#9fb1c8" stroke-width="3"/>
+    <path d="M226 242 C238 234 274 234 286 242 L296 286 C292 310 276 324 256 326 C236 324 220 310 216 286 Z" fill="#0a101b" fill-opacity="0.6" stroke="#e9f2ff" stroke-width="4"/>
+    <path d="M240 250 L256 244 L272 250 M224 270 C232 274 240 276 246 276 M288 270 C280 274 272 276 266 276" stroke="#61748d" stroke-width="2"/>
+    <circle cx="256" cy="298" r="19" fill="#ffb24d" fill-opacity="0.12" stroke="#e9f2ff" stroke-width="3"/>
+    <circle cx="256" cy="298" r="10" stroke="#ffb24d" stroke-width="2"/>
+    <path d="M249 298 H263 M256 291 V305" stroke="#ffb24d" stroke-width="1.5"/>
+    <!-- Scavenged side canister and hose -->
+    <rect x="290" y="284" width="24" height="38" rx="8" transform="rotate(-32 302 303)" fill="#0a101b" fill-opacity="0.6" stroke="#e9f2ff" stroke-width="3"/>
+    <path d="M296 296 L314 286 M300 306 L318 296" stroke="#ffb24d" stroke-width="1.5"/>
+    <path d="M318 316 C330 336 334 360 326 390" stroke="#9fb1c8" stroke-width="12" stroke-linecap="butt" stroke-dasharray="2 6"/>
+    <path d="M318 316 C330 336 334 360 326 390" stroke="#ffb24d" stroke-width="1.5"/>
+  </g>
+</svg>

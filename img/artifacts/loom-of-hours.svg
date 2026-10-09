@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="loom-of-hours-cloth" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#7aa2ff" stop-opacity="0.12"/>
+      <stop offset="1" stop-color="#7aa2ff" stop-opacity="0.3"/>
+    </linearGradient>
+  </defs>
+  <g fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Frame: two posts, two beams -->
+    <path d="M144 112 H158 V404 H144 Z M354 112 H368 V404 H354 Z M136 124 H376 V140 H136 Z M136 372 H376 V388 H136 Z" fill="#7aa2ff" fill-opacity="0.12"/>
+    <path d="M144 124 V112 H158 V124 M144 140 V372 M158 140 V372 M144 388 V404 H158 V388 M354 124 V112 H368 V124 M354 140 V372 M368 140 V372 M354 388 V404 H368 V388" stroke="#e9f2ff" stroke-width="3"/>
+    <path d="M136 124 H376 V140 H136 Z M136 372 H376 V388 H136 Z" stroke="#e9f2ff" stroke-width="4"/>
+    <!-- Warp drawn to a waist: the hours yet to come pass through one point -->
+    <path d="M172 140 H340 L272 256 H240 Z" fill="#7aa2ff" fill-opacity="0.06"/>
+    <path d="M172 140 L240 256 M193 140 L244 256 M214 140 L248 256 M235 140 L252 256 M256 140 V256 M277 140 L260 256 M298 140 L264 256 M319 140 L268 256 M340 140 L272 256" stroke="#7aa2ff" stroke-width="1.5" opacity="0.5"/>
+    <path d="M240 256 L172 372 M244 256 L193 372 M248 256 L214 372 M252 256 L235 372 M256 256 V372 M260 256 L277 372 M264 256 L298 372 M268 256 L319 372 M272 256 L340 372" stroke="#7aa2ff" stroke-width="1.5"/>
+    <!-- Cloth already woven: the hours that are done -->
+    <path d="M222 286 H290 L340 372 H172 Z" fill="url(#loom-of-hours-cloth)"/>
+    <path d="M222 286 H290" stroke="#e9f2ff" stroke-width="2"/>
+    <path d="M208 310 H304 M197 330 H315 M185 350 H327" stroke="#9fb1c8" stroke-width="1.5" opacity="0.7"/>
+    <path d="M214 300 H298 M191 340 H321 M179 360 H333" stroke="#7aa2ff" stroke-width="2.5"/>
+    <!-- Shuttle: the present moment -->
+    <path d="M190 256 Q256 232 322 256 Q256 280 190 256 Z" fill="#7aa2ff" fill-opacity="0.3" stroke="#e9f2ff" stroke-width="3"/>
+    <path d="M230 256 H282" stroke="#7aa2ff" stroke-width="2"/>
+    <circle cx="256" cy="256" r="4" fill="#e9f2ff" stroke="none"/>
+  </g>
+</svg>

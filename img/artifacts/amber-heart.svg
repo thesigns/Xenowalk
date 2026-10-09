@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <radialGradient id="amber-heart-core" cx="0.55" cy="0.6" r="0.6">
+      <stop offset="0" stop-color="#6dffa8" stop-opacity="0.36"/>
+      <stop offset="0.6" stop-color="#6dffa8" stop-opacity="0.14"/>
+      <stop offset="1" stop-color="#6dffa8" stop-opacity="0.06"/>
+    </radialGradient>
+  </defs>
+  <g fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Heart body, set in amber -->
+    <path d="M204 178 C168 192 148 236 152 284 C156 338 204 388 262 416 C292 404 344 364 362 314 C380 266 372 212 334 190 C314 180 292 182 278 192 C262 180 230 170 204 178 Z" fill="url(#amber-heart-core)" stroke="#e9f2ff" stroke-width="4"/>
+    <!-- Grown vessels across its surface -->
+    <path d="M276 200 C268 244 280 292 262 360 M272 262 C300 270 320 290 330 312 M270 302 C248 312 236 330 232 352" stroke="#6dffa8" stroke-width="2"/>
+    <path d="M182 246 C178 278 186 310 204 336" stroke="#e9f2ff" stroke-width="2" opacity="0.6"/>
+    <!-- Bubbles caught in the resin, and the spark that still beats -->
+    <g stroke="#9fb1c8" stroke-width="1.5" opacity="0.7">
+      <circle cx="206" cy="280" r="5"/>
+      <circle cx="320" cy="250" r="4"/>
+      <circle cx="226" cy="372" r="3.5"/>
+      <circle cx="334" cy="340" r="3"/>
+    </g>
+    <circle cx="282" cy="318" r="16" fill="#6dffa8" fill-opacity="0.3" stroke="#6dffa8" stroke-width="2.5"/>
+    <circle cx="282" cy="318" r="5" fill="#e9f2ff" stroke="none"/>
+    <!-- Aorta arch with its three branches -->
+    <path d="M262 112 V92 M286 108 V84 M310 114 V94" stroke="#e9f2ff" stroke-width="4"/>
+    <g fill="#6dffa8" fill-opacity="0.3" stroke="#6dffa8" stroke-width="2">
+      <circle cx="262" cy="86" r="5"/>
+      <circle cx="286" cy="78" r="5"/>
+      <circle cx="310" cy="88" r="5"/>
+    </g>
+    <path d="M236 198 C232 150 240 116 278 110 C316 104 346 126 346 164 V184 H316 V166 C316 154 304 146 292 146 C278 146 270 160 270 198 Q253 204 236 198 Z" fill="#6dffa8" fill-opacity="0.2" stroke="#e9f2ff" stroke-width="4"/>
+    <!-- Pulmonary trunk -->
+    <path d="M204 222 C196 196 186 176 168 160 L190 140 C206 158 222 184 232 214 Q218 226 204 222 Z" fill="#6dffa8" fill-opacity="0.2" stroke="#e9f2ff" stroke-width="4"/>
+    <ellipse cx="179" cy="150" rx="15" ry="6" transform="rotate(-42 179 150)" fill="#6dffa8" fill-opacity="0.3" stroke="#6dffa8" stroke-width="2"/>
+    <!-- Its pulse -->
+    <path d="M124 252 C110 284 112 324 130 354 M392 240 C408 272 408 316 390 348" stroke="#6dffa8" stroke-width="3"/>
+    <path d="M98 238 C80 278 82 330 104 366 M418 226 C438 266 438 322 416 362" stroke="#6dffa8" stroke-width="2" opacity="0.5"/>
+  </g>
+</svg>

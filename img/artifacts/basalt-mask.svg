@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="basalt-mask-stone" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#b3a6d9" stop-opacity="0.3"/>
+      <stop offset="0.55" stop-color="#b3a6d9" stop-opacity="0.12"/>
+      <stop offset="1" stop-color="#b3a6d9" stop-opacity="0.05"/>
+    </linearGradient>
+  </defs>
+  <g fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Faceted basalt face -->
+    <path d="M200 84 H312 L350 126 L358 206 L338 318 L290 404 L256 424 L222 404 L174 318 L154 206 L162 126 Z" fill="url(#basalt-mask-stone)" stroke="#e9f2ff" stroke-width="4"/>
+    <!-- Cheek planes catching the light -->
+    <path d="M154 206 L206 266 L174 318 Z" fill="#b3a6d9" fill-opacity="0.14" stroke="#b3a6d9" stroke-width="1.5" opacity="0.6"/>
+    <path d="M358 206 L306 266 L338 318" stroke="#b3a6d9" stroke-width="1.5" opacity="0.6"/>
+    <path d="M162 126 L196 168 M350 126 L316 168 M174 318 L222 404 M338 318 L290 404" stroke="#9fb1c8" stroke-width="1.5" opacity="0.45"/>
+    <!-- Brow ridge and long nose -->
+    <path d="M170 178 L236 190 L256 182 L276 190 L342 178" stroke="#9fb1c8" stroke-width="2"/>
+    <path d="M250 196 L240 300 L256 312 L272 300 L262 196" fill="#b3a6d9" fill-opacity="0.12" stroke="#9fb1c8" stroke-width="2"/>
+    <!-- Closed eyes, carved tear channels -->
+    <path d="M188 216 Q213 234 238 216 M274 216 Q299 234 324 216" stroke="#b3a6d9" stroke-width="3"/>
+    <path d="M213 230 V296 M299 230 V296" stroke="#b3a6d9" stroke-width="1.5" opacity="0.5"/>
+    <!-- Sealed mouth -->
+    <path d="M224 350 H288" stroke="#b3a6d9" stroke-width="3"/>
+    <path d="M256 368 V392" stroke="#9fb1c8" stroke-width="1.5" opacity="0.5"/>
+    <!-- Black star on the brow -->
+    <path d="M256 106 L262 124 L278 130 L262 136 L256 154 L250 136 L234 130 L250 124 Z" fill="#b3a6d9" fill-opacity="0.3" stroke="#b3a6d9" stroke-width="2"/>
+    <!-- Old fracture -->
+    <path d="M298 84 L290 104 L298 118 L288 138" stroke="#9fb1c8" stroke-width="1.5"/>
+    <circle cx="256" cy="130" r="3.5" fill="#e9f2ff" stroke="none"/>
+  </g>
+</svg>

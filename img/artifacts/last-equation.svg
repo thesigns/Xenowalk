@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="last-equation-pan" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#7aa2ff" stop-opacity="0.3"/>
+      <stop offset="1" stop-color="#7aa2ff" stop-opacity="0.08"/>
+    </linearGradient>
+  </defs>
+  <g fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Level gauge: the needle has not moved -->
+    <path d="M220 124 Q256 100 292 124" stroke="#7aa2ff" stroke-width="2"/>
+    <path d="M238 116 L236 110 M274 116 L276 110" stroke="#7aa2ff" stroke-width="1.5" opacity="0.6"/>
+    <path d="M256 140 V104" stroke="#e9f2ff" stroke-width="2.5"/>
+    <!-- Post and foot -->
+    <path d="M248 154 H264 V372 H248 Z" fill="#7aa2ff" fill-opacity="0.16" stroke="#e9f2ff" stroke-width="4"/>
+    <path d="M196 412 L222 372 H290 L316 412 Z" fill="#7aa2ff" fill-opacity="0.2" stroke="#e9f2ff" stroke-width="4"/>
+    <!-- Beam, graduated -->
+    <path d="M116 140 H396 V154 H116 Z" fill="#7aa2ff" fill-opacity="0.2" stroke="#e9f2ff" stroke-width="4"/>
+    <path d="M136 132 V140 M166 132 V140 M196 132 V140 M226 132 V140 M286 132 V140 M316 132 V140 M346 132 V140 M376 132 V140" stroke="#9fb1c8" stroke-width="1.5"/>
+    <circle cx="256" cy="147" r="5" fill="#e9f2ff" stroke="none"/>
+    <!-- Cords -->
+    <path d="M146 154 L90 300 M146 154 L202 300 M366 154 L310 300 M366 154 L422 300" stroke="#9fb1c8" stroke-width="2"/>
+    <!-- Left pan: every number, stacked four, three, two, one -->
+    <path d="M84 300 H208 C202 324 180 334 146 334 C112 334 90 324 84 300 Z" fill="url(#last-equation-pan)" stroke="#e9f2ff" stroke-width="4"/>
+    <path d="M122 288 h0.1 M138 288 h0.1 M154 288 h0.1 M170 288 h0.1 M130 273 h0.1 M146 273 h0.1 M162 273 h0.1 M138 258 h0.1 M154 258 h0.1 M146 243 h0.1" stroke="#7aa2ff" stroke-width="10"/>
+    <!-- Right pan: nothing, and the beam stays level -->
+    <path d="M304 300 H428 C422 324 400 334 366 334 C332 334 310 324 304 300 Z" fill="url(#last-equation-pan)" stroke="#e9f2ff" stroke-width="4"/>
+    <circle cx="366" cy="284" r="13" stroke="#7aa2ff" stroke-width="3"/>
+  </g>
+</svg>

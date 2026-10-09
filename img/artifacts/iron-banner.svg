@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="iron-banner-plate" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ff7a59" stop-opacity="0.26"/>
+      <stop offset="1" stop-color="#ff7a59" stop-opacity="0.08"/>
+    </linearGradient>
+  </defs>
+  <g fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Pole below the banner -->
+    <path d="M250 331 V430 L256 444 L262 430 V331" fill="#ff7a59" fill-opacity="0.08" stroke="#e9f2ff" stroke-width="4"/>
+    <!-- Spearhead and crossbar -->
+    <path d="M256 68 L272 94 L262 102 V116 H250 V102 L240 94 Z" fill="#ff7a59" fill-opacity="0.2" stroke="#e9f2ff" stroke-width="4"/>
+    <path d="M146 116 H366 L356 132 H156 Z" fill="#ff7a59" fill-opacity="0.1" stroke="#e9f2ff" stroke-width="4"/>
+    <circle cx="200" cy="140" r="6" stroke="#9fb1c8" stroke-width="2"/>
+    <circle cx="312" cy="140" r="6" stroke="#9fb1c8" stroke-width="2"/>
+    <!-- Hanging chains with ember weights -->
+    <path d="M160 133 V146 M352 133 V146" stroke="#9fb1c8" stroke-width="2"/>
+    <ellipse cx="160" cy="153" rx="4.5" ry="7" stroke="#9fb1c8" stroke-width="2"/>
+    <ellipse cx="160" cy="166" rx="4.5" ry="7" stroke="#9fb1c8" stroke-width="2"/>
+    <ellipse cx="352" cy="153" rx="4.5" ry="7" stroke="#9fb1c8" stroke-width="2"/>
+    <ellipse cx="352" cy="166" rx="4.5" ry="7" stroke="#9fb1c8" stroke-width="2"/>
+    <path d="M160 174 L166 186 L160 198 L154 186 Z M352 174 L358 186 L352 198 L346 186 Z" fill="#ff7a59" fill-opacity="0.25" stroke="#ff7a59" stroke-width="2"/>
+    <!-- Three hinged plates, notched tail torn, one plate holed -->
+    <path fill-rule="evenodd" fill="url(#iron-banner-plate)" stroke="#e9f2ff" stroke-width="4" d="M176 146 H336 V362 L256 328 L216 345 L206 336 L192 352 L176 346 Z
+      M296 298 L308 294 L316 304 L310 316 L298 314 Z"/>
+    <path d="M292 293 L309 287 L323 303 L315 321 L294 320 Z" stroke="#ff7a59" stroke-width="1.5" opacity="0.7"/>
+    <path d="M176 196 H336 M176 288 H336" stroke="#9fb1c8" stroke-width="2"/>
+    <path d="M194 190 H208 V202 H194 Z M304 190 H318 V202 H304 Z M194 282 H208 V294 H194 Z M304 282 H318 V294 H304 Z" stroke="#9fb1c8" stroke-width="2"/>
+    <circle cx="188" cy="160" r="3.5" stroke="#9fb1c8" stroke-width="2"/>
+    <circle cx="324" cy="160" r="3.5" stroke="#9fb1c8" stroke-width="2"/>
+    <circle cx="188" cy="310" r="3.5" stroke="#9fb1c8" stroke-width="2"/>
+    <!-- Sigil: shield and twin chevrons -->
+    <path d="M256 212 L286 222 L282 256 L256 278 L230 256 L226 222 Z" fill="#ff7a59" fill-opacity="0.25" stroke="#ff7a59" stroke-width="3"/>
+    <path d="M240 246 L256 232 L272 246 M240 262 L256 248 L272 262" stroke="#ff7a59" stroke-width="3"/>
+  </g>
+</svg>

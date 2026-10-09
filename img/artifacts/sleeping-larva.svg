@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="sleeping-larva-body" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#6dffa8" stop-opacity="0.3"/>
+      <stop offset="0.6" stop-color="#6dffa8" stop-opacity="0.12"/>
+      <stop offset="1" stop-color="#6dffa8" stop-opacity="0.06"/>
+    </linearGradient>
+  </defs>
+  <g fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Curled body, head tucked toward the tail -->
+    <path d="M136 193 C143 183 158 158 174 146 C189 134 209 124 229 119 C248 114 271 114 291 119 C311 123 332 133 348 146 C364 159 378 177 387 195 C396 213 401 236 401 256 C401 276 396 298 387 315 C379 333 365 350 350 362 C335 374 316 383 298 387 C281 391 260 391 243 387 C227 382 209 371 199 359 C189 347 184 324 182 314 C181 303 185 297 189 294 C194 291 202 292 208 295 C215 298 219 309 226 313 C233 317 242 320 250 319 C258 319 266 315 273 311 C279 307 284 301 288 296 C292 290 294 284 295 278 C296 272 296 266 295 260 C294 255 292 250 289 245 C286 241 282 237 278 234 C274 231 270 228 265 227 C260 225 254 224 249 224 C243 225 237 226 232 228 C226 230 221 237 216 239 Q204 250 194 252 A35 35 0 1 1 146 210 Q142 200 136 193 Z" fill="url(#sleeping-larva-body)" stroke="#e9f2ff" stroke-width="4"/>
+    <!-- Segments -->
+    <path d="M233 227 Q195 192 178 143 M252 224 Q232 172 240 117 M269 228 Q275 171 308 123 M283 237 Q314 189 364 162 M292 252 Q341 224 396 222 M296 270 Q349 267 397 289 M292 290 Q336 309 366 347 M278 307 Q305 341 313 383 M255 319 Q263 354 253 389 M228 314 Q221 342 202 362" stroke="#9fb1c8" stroke-width="2" opacity="0.7"/>
+    <!-- Glow spots along the back -->
+    <g fill="#6dffa8" fill-opacity="0.3" stroke="#6dffa8" stroke-width="2">
+      <circle cx="215" cy="148" r="5"/>
+      <circle cx="271" cy="141" r="5.5"/>
+      <circle cx="324" cy="160" r="5.5"/>
+      <circle cx="363" cy="202" r="5.5"/>
+      <circle cx="377" cy="257" r="5"/>
+      <circle cx="365" cy="311" r="5"/>
+      <circle cx="329" cy="353" r="4.5"/>
+      <circle cx="280" cy="373" r="4"/>
+    </g>
+    <!-- Head: neck fold, closed eye, mandibles, folded legs -->
+    <path d="M146 210 A35 35 0 0 1 194 252" stroke="#9fb1c8" stroke-width="2"/>
+    <path d="M138 236 Q146 247 158 244" stroke="#6dffa8" stroke-width="2.5"/>
+    <path d="M136 264 Q130 276 142 280 M154 280 Q154 290 164 287" stroke="#9fb1c8" stroke-width="2"/>
+    <path d="M224 230 L238 239 M238 224 L248 237 M253 222 L257 238" stroke="#9fb1c8" stroke-width="2"/>
+    <!-- Slow breath of a long sleep -->
+    <path d="M206 98 C236 86 276 86 306 98" stroke="#6dffa8" stroke-width="3"/>
+    <path d="M222 80 C244 72 268 72 290 80" stroke="#6dffa8" stroke-width="2" opacity="0.5"/>
+  </g>
+</svg>

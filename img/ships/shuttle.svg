@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 320">
+  <!-- Shuttle, hold 10 -->
+  <defs>
+    <linearGradient id="shuttle-hull" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#5fe6ff" stop-opacity="0.16"/>
+      <stop offset="1" stop-color="#5fe6ff" stop-opacity="0.06"/>
+    </linearGradient>
+    <linearGradient id="shuttle-plume" x1="1" y1="0" x2="0" y2="0">
+      <stop offset="0" stop-color="#5fe6ff" stop-opacity="0.32"/>
+      <stop offset="1" stop-color="#5fe6ff" stop-opacity="0"/>
+    </linearGradient>
+    <radialGradient id="shuttle-glow">
+      <stop offset="0" stop-color="#e9f2ff"/>
+      <stop offset="0.5" stop-color="#5fe6ff" stop-opacity="0.9"/>
+      <stop offset="1" stop-color="#5fe6ff" stop-opacity="0.35"/>
+    </radialGradient>
+  </defs>
+  <g fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Exhaust -->
+    <path fill="url(#shuttle-plume)" d="M62 188L149 133L156 134L163 145L169 163L172 184L171 201L166 209Z"/>
+    <!-- Hull panels -->
+    <path fill="url(#shuttle-hull)" d="M175 114L185 96L223 68L333 52L415 77L475 105L491 122L502 137L501 152L492 179L400 221L286 247L229 228L190 191L177 158Z
+         M138 133L147 112L202 112L217 123L228 158L229 194L220 209L168 229L153 213L141 174Z
+         M312 210L424 186L433 270L432 278L380 292L312 226Z
+         M201 140L213 133L311 116L311 130L213 147L202 146Z"/>
+    <path fill="#5fe6ff" fill-opacity="0.08" d="M226 127L185 96L223 68L285 108ZM241 167L226 127L285 108L307 164ZM285 108L223 68L333 52L405 88Z
+         M307 164L285 108L405 88L429 140ZM429 140L405 88L475 105L494 139Z
+         M494 139L475 105L491 122L502 137ZM163 126L176 167L203 162L192 128Z
+         M147 112L163 126L192 128L178 116ZM312 210L424 186L433 270L380 283Z"/>
+    <!-- Glass -->
+    <path fill="#5fe6ff" fill-opacity="0.3" d="M338 52L360 35L374 28L412 44L443 60L458 78L471 101L471 104L457 101L427 93L400 85L338 54Z"/>
+    <path fill="#5fe6ff" fill-opacity="0.55" d="M359.7 174.6C359.8 167.5 354.5 162.9 348 164.3C341.5 165.6 336.1 172.3 336 179.4C336 186.4 341.2 191 347.8 189.7C354.3 188.3 359.7 181.6 359.7 174.6Z
+         M398.2 166.7C398.4 159.8 393.4 155.3 387.1 156.6C380.8 157.8 375.6 164.5 375.4 171.4C375.3 178.3 380.3 182.8 386.6 181.6C392.9 180.3 398.1 173.6 398.2 166.7Z"/>
+    <!-- Facets -->
+    <path stroke="#9fb1c8" stroke-width="1.5" opacity="0.75" d="M226 127L185 96M226 127L285 108L223 68M229 228L242 216L308 231L286 247
+         M242 216L241 167L307 164L308 231L315 230M226 127L241 167M400 85L400 82L428 66L427 93
+         M400 82L385 74L412 44L428 66L458 78L457 101M385 74L351 57L374 28M351 57L338 52
+         M380 292L380 283L433 270M312 210L380 283M163 126L176 167L203 162L192 128ZL147 112
+         M176 167L179 211L205 199L203 162L224 159M179 211L168 229
+         M285 108L307 164L429 140L427 205L492 179L494 139L429 140L405 88L333 52
+         M285 108L405 88L475 105L494 139L502 137M196 214L205 199L225 195M178 116L192 128L212 124"/>
+    <path stroke="#9fb1c8" stroke-width="2" d="M338 52L338 54L400 85L427 93L457 101L471 104M178 116L198 113M312 210L424 186L425 204
+         M312 226L312 210M321 235L312 226"/>
+    <!-- Details -->
+    <path stroke="#9fb1c8" stroke-width="2" d="M256 86L255 40"/>
+    <!-- Outline -->
+    <path stroke="#e9f2ff" stroke-width="4" d="M211 211L229 228L286 247L324 238M426 208L466 189
+         M492 179L501 152L502 137L491 122L475 105L471 104L471 101L458 78L443 60L412 44L374 28L360 35L338 52
+         M425 204L433 270L432 278L380 292L321 235M185 96L223 68L333 52L338 53M185 96L175 114L175 116
+         M168 229L196 214L216 210M168 229L153 213L141 174L138 133L147 112L178 116"/>
+    <!-- Engines -->
+    <path fill="url(#shuttle-glow)" stroke="#5fe6ff" stroke-width="2" d="M155.5 129.3C164.1 137.5 172.1 162.7 173.4 185.5C174.7 208.3 168.7 220.1 160.1 211.9C151.5 203.7 143.5 178.5 142.2 155.7C140.9 132.9 146.9 121.1 155.5 129.3Z"/>
+    <path stroke="#e9f2ff" stroke-width="1.5" opacity="0.8" d="M157 148C161 152 166 166 166 179C167 191 164 198 159 193C154 189 150 175 149 163C149 150 152 144 157 148Z"/>
+    <!-- Lights -->
+    <g fill="#5fe6ff" stroke="none">
+      <circle cx="405" cy="277" r="3.5"/>
+      <circle cx="255" cy="40" r="3"/>
+    </g>
+  </g>
+</svg>

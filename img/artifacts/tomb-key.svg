@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="tomb-key-bow" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#b3a6d9" stop-opacity="0.3"/>
+      <stop offset="1" stop-color="#b3a6d9" stop-opacity="0.1"/>
+    </linearGradient>
+  </defs>
+  <!-- Drawn upright, laid diagonally -->
+  <g fill="none" stroke-linecap="round" stroke-linejoin="round" transform="rotate(-45 256 256)">
+    <!-- Bow: octagon pierced by a black star -->
+    <path fill-rule="evenodd" fill="url(#tomb-key-bow)" stroke="#e9f2ff" stroke-width="4" d="M229 82 H283 L322 121 V175 L283 214 H229 L190 175 V121 Z M256 112 L267 137 L292 148 L267 159 L256 184 L245 159 L220 148 L245 137 Z"/>
+    <path d="M234 95 H278 L309 126 V170 L278 201 H234 L203 170 V126 Z" stroke="#9fb1c8" stroke-width="2"/>
+    <path d="M256 112 L267 137 L292 148 L267 159 L256 184 L245 159 L220 148 L245 137 Z" stroke="#b3a6d9" stroke-width="2"/>
+    <!-- Collar -->
+    <path d="M232 214 H280 V228 H232 Z" fill="#b3a6d9" fill-opacity="0.2" stroke="#e9f2ff" stroke-width="4"/>
+    <path d="M240 236 H272" stroke="#b3a6d9" stroke-width="3"/>
+    <!-- Shaft -->
+    <path d="M246 228 V412 Q246 424 256 424 Q266 424 266 412 V228" fill="#b3a6d9" fill-opacity="0.14" stroke="#e9f2ff" stroke-width="4"/>
+    <path d="M256 248 V316" stroke="#b3a6d9" stroke-width="1.5" opacity="0.6"/>
+    <!-- Bit: the stepped profile of a tomb door -->
+    <path d="M266 330 H296 V344 H318 V378 H300 V392 H318 V408 H266" fill="#b3a6d9" fill-opacity="0.2" stroke="#e9f2ff" stroke-width="4"/>
+    <path d="M280 344 V398 M300 352 V370" stroke="#b3a6d9" stroke-width="2"/>
+  </g>
+</svg>

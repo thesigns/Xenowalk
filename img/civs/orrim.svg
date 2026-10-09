@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <!-- Orrim: the war shield and its twin chevrons -->
+  <g fill="none" stroke="#ff7a59" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M112 104 H400 L384 300 L256 440 L128 300 Z" fill="#ff7a59" fill-opacity="0.18" stroke-width="24"/>
+    <path d="M192 228 L256 176 L320 228 M192 316 L256 264 L320 316" stroke-width="24"/>
+  </g>
+</svg>

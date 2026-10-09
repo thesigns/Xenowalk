@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <!-- Thal: the black star sinking into the stone horizon -->
+  <g fill="none" stroke="#b3a6d9" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M234 352 Q198 276 112 262 Q236 242 256 92 Q276 242 400 262 Q314 276 278 352 Z" fill="#b3a6d9" fill-opacity="0.3" stroke-width="20"/>
+    <path d="M104 352 H408" stroke-width="24"/>
+    <path d="M176 416 H336" stroke-width="24"/>
+  </g>
+</svg>

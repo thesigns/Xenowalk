@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="smuggler-skin" x1="0.2" y1="1" x2="0.8" y2="0">
+      <stop offset="0" stop-color="#6dffa8" stop-opacity="0.04"/>
+      <stop offset="0.5" stop-color="#6dffa8" stop-opacity="0.1"/>
+      <stop offset="1" stop-color="#6dffa8" stop-opacity="0.24"/>
+    </linearGradient>
+  </defs>
+  <g fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Jacket, asymmetric high collar -->
+    <path d="M56 520 C62 452 110 414 190 400 L226 392 H290 L326 400 C404 414 450 452 456 520 Z" fill="#0a101b" fill-opacity="0.6" stroke="#e9f2ff" stroke-width="4"/>
+    <path d="M190 400 C194 370 206 350 226 340 L230 392 Z M326 400 C324 382 314 366 298 358 L290 392" fill="#6dffa8" fill-opacity="0.06" stroke="#9fb1c8" stroke-width="2.5"/>
+    <path d="M288 394 L236 520" stroke="#6dffa8" stroke-width="2"/>
+    <path d="M279 418 h0 M268 444 h0 M258 470 h0" stroke="#6dffa8" stroke-width="6"/>
+    <path d="M112 452 C134 428 160 416 190 408 M400 452 C378 428 354 416 326 408" stroke="#61748d" stroke-width="2"/>
+    <!-- Neck -->
+    <path d="M234 336 L230 394 M304 300 L292 394" stroke="#e9f2ff" stroke-width="4"/>
+    <!-- Head: face turned slightly, long skull swept back -->
+    <path d="M246 340 C222 336 204 312 198 280 C192 254 192 226 198 196 C204 166 220 140 246 120 C286 92 336 60 384 42 C414 30 440 46 428 74 C414 106 366 138 342 170 C328 192 324 220 322 250 C318 290 290 336 246 340 Z" fill="url(#smuggler-skin)" stroke="#e9f2ff" stroke-width="4"/>
+    <path d="M244 146 C290 112 340 80 404 54" stroke="#6dffa8" stroke-width="1.5" opacity="0.5"/>
+    <circle cx="256" cy="148" r="3.5" fill="#6dffa8" fill-opacity="0.6" stroke="none"/>
+    <circle cx="284" cy="126" r="3" fill="#6dffa8" fill-opacity="0.55" stroke="none"/>
+    <circle cx="313" cy="105" r="2.5" fill="#6dffa8" fill-opacity="0.5" stroke="none"/>
+    <circle cx="342" cy="86" r="2" fill="#6dffa8" fill-opacity="0.45" stroke="none"/>
+    <path d="M334 184 C352 160 384 128 410 96" stroke="#61748d" stroke-width="1.5"/>
+    <path d="M200 252 C210 272 222 284 236 290 M318 236 C314 262 304 280 290 290" stroke="#6dffa8" stroke-width="1.5" opacity="0.5"/>
+    <!-- Eyes, heavy lids -->
+    <path d="M204 226 C214 212 234 208 246 218 C236 230 216 234 204 226 Z M268 216 C280 206 300 206 310 214 C302 226 282 228 268 216 Z" fill="#6dffa8" fill-opacity="0.5" stroke="#6dffa8" stroke-width="2"/>
+    <path d="M201 219 C214 204 236 200 249 211 M265 209 C280 198 302 198 313 208" stroke="#e9f2ff" stroke-width="2.5"/>
+    <path d="M226 215 V228 M290 211 V222" stroke="#0a101b" stroke-opacity="0.6" stroke-width="3"/>
+    <!-- Scar across the left eye -->
+    <path d="M212 180 L222 205 M232 234 L244 264" stroke="#e9f2ff" stroke-width="2.5" opacity="0.85"/>
+    <path d="M211 190 L221 186 M235 244 L245 240 M239 254 L249 250" stroke="#e9f2ff" stroke-width="1.5" opacity="0.7"/>
+    <!-- Nose slits, one-sided smirk -->
+    <path d="M250 262 L248 270 M262 262 L264 270" stroke="#9fb1c8" stroke-width="2"/>
+    <path d="M230 300 C242 302 256 302 268 298 L278 290" stroke="#e9f2ff" stroke-width="2.5"/>
+  </g>
+</svg>

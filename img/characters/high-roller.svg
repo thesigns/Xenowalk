@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="high-roller-crest" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#b77dff" stop-opacity="0.32"/>
+      <stop offset="1" stop-color="#b77dff" stop-opacity="0.06"/>
+    </linearGradient>
+    <linearGradient id="high-roller-skin" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#b77dff" stop-opacity="0.14"/>
+      <stop offset="1" stop-color="#b77dff" stop-opacity="0.04"/>
+    </linearGradient>
+  </defs>
+  <g fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Robe, gold trim, beaded chain, medallion -->
+    <path d="M56 520 C62 452 110 414 190 400 L228 392 H284 L322 400 C402 414 450 452 456 520 Z" fill="#0a101b" fill-opacity="0.6" stroke="#e9f2ff" stroke-width="4"/>
+    <path d="M196 402 C212 432 232 444 256 446 C280 444 300 432 316 402" stroke="#ffd479" stroke-width="2"/>
+    <path d="M164 424 C190 488 322 488 348 424" stroke="#ffd479" stroke-width="4" stroke-dasharray="0.1 9"/>
+    <circle cx="256" cy="478" r="13" fill="#ffd479" fill-opacity="0.12" stroke="#ffd479" stroke-width="2.5"/>
+    <path d="M256 469 L263 478 L256 487 L249 478 Z" fill="#b77dff" fill-opacity="0.6" stroke="none"/>
+    <path d="M108 456 C130 430 156 416 188 408 M404 456 C382 430 356 416 324 408" stroke="#61748d" stroke-width="2"/>
+    <!-- Long neck with stacked gold rings -->
+    <path d="M238 332 L232 396 M274 332 L280 396" stroke="#e9f2ff" stroke-width="4"/>
+    <path d="M235 350 C246 357 266 357 277 350 M234 364 C245 371 267 371 278 364 M233 378 C244 385 268 385 279 378" stroke="#ffd479" stroke-width="3"/>
+    <!-- Long ears with gold drops -->
+    <path d="M206 204 C188 212 176 232 168 264 C184 256 198 242 208 232" fill="url(#high-roller-skin)" stroke="#e9f2ff" stroke-width="3"/>
+    <path d="M306 204 C324 212 336 232 344 264 C328 256 314 242 304 232" fill="url(#high-roller-skin)" stroke="#e9f2ff" stroke-width="3"/>
+    <path d="M168 264 V284 M344 264 V284" stroke="#ffd479" stroke-width="2"/>
+    <path d="M168 284 C161 294 162 304 168 306 C174 304 175 294 168 284 Z M344 284 C337 294 338 304 344 306 C350 304 351 294 344 284 Z" fill="#ffd479" fill-opacity="0.45" stroke="#ffd479" stroke-width="2"/>
+    <!-- Narrow face -->
+    <path d="M206 162 C200 212 206 262 226 302 C238 326 248 338 256 340 C264 338 274 326 286 302 C306 262 312 212 306 162" fill="url(#high-roller-skin)" stroke="#e9f2ff" stroke-width="4"/>
+    <path d="M212 242 C216 262 226 276 238 282 M300 242 C296 262 286 276 274 282" stroke="#b77dff" stroke-width="1.5" opacity="0.6"/>
+    <!-- Tall crest -->
+    <path d="M206 164 C188 140 176 114 176 84 Q199 73 204 36 Q233 43 256 20 Q279 43 308 36 Q313 73 336 84 C336 114 324 140 306 164" fill="url(#high-roller-crest)" stroke="#e9f2ff" stroke-width="4"/>
+    <path d="M256 150 L182 90 M256 150 L207 44 M256 150 V30 M256 150 L305 44 M256 150 L330 90" stroke="#b77dff" stroke-width="1.5" opacity="0.7"/>
+    <path d="M212 122 L219 112 M224 94 L234 89 M250 81 H262 M278 89 L288 94 M293 112 L300 122" stroke="#ffd479" stroke-width="3"/>
+    <circle cx="176" cy="84" r="5" fill="#ffd479" fill-opacity="0.5" stroke="#ffd479" stroke-width="2"/>
+    <circle cx="204" cy="36" r="5" fill="#ffd479" fill-opacity="0.5" stroke="#ffd479" stroke-width="2"/>
+    <circle cx="256" cy="20" r="5" fill="#ffd479" fill-opacity="0.5" stroke="#ffd479" stroke-width="2"/>
+    <circle cx="308" cy="36" r="5" fill="#ffd479" fill-opacity="0.5" stroke="#ffd479" stroke-width="2"/>
+    <circle cx="336" cy="84" r="5" fill="#ffd479" fill-opacity="0.5" stroke="#ffd479" stroke-width="2"/>
+    <!-- Gold circlet and gem -->
+    <path d="M207 170 C232 180 280 180 305 170 M206 184 C232 194 280 194 306 184" stroke="#ffd479" stroke-width="2.5"/>
+    <path d="M256 174 L265 186 L256 198 L247 186 Z" fill="#b77dff" fill-opacity="0.6" stroke="#ffd479" stroke-width="2"/>
+    <!-- Haughty eyes -->
+    <path d="M212 224 C222 216 236 216 246 222 C236 228 222 230 212 224 Z M300 224 C290 216 276 216 266 222 C276 228 290 230 300 224 Z" fill="#b77dff" fill-opacity="0.55" stroke="#b77dff" stroke-width="2"/>
+    <path d="M208 218 C222 208 238 210 248 218 M304 218 C290 208 274 210 264 218" stroke="#e9f2ff" stroke-width="2.5"/>
+    <!-- Nose, disdainful mouth -->
+    <path d="M256 208 V262 L249 268" stroke="#9fb1c8" stroke-width="2"/>
+    <path d="M241 299 C249 296 263 296 271 299" stroke="#e9f2ff" stroke-width="2.5"/>
+  </g>
+</svg>

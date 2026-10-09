@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1, user-scalable=no">
+  <meta name="theme-color" content="#03050a">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="description" content="A walking game: your favorite places become star systems, and every walk between them is a trade run.">
+  <title>Xenowalk</title>
+  <link rel="icon" href="img/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="img/icon.svg">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oxanium:wght@400;500;600;700;800&display=swap">
+  <link rel="stylesheet" href="css/style.css">
+  <script type="module" src="js/main.js"></script>
+</head>
+<body>
+  <canvas id="map" aria-label="Galaxy map"></canvas>
+  <div class="vignette" aria-hidden="true"></div>
+
+  <header class="topbar">
+    <button type="button" class="icon-button" id="menu-button" aria-label="Menu">
+      <svg class="icon" aria-hidden="true"><use href="img/icons.svg#i-menu"/></svg>
+    </button>
+    <div class="credits" id="credits" aria-live="polite">
+      <svg class="icon" aria-hidden="true"><use href="img/icons.svg#i-credits"/></svg>
+      <span class="value" id="credits-value">0</span>
+      <span class="unit">cr</span>
+    </div>
+    <button type="button" class="gps" id="gps" aria-label="GPS signal">
+      <span class="bars"><i></i><i></i><i></i></span>
+      <span class="label" id="gps-label">GPS</span>
+    </button>
+  </header>
+
+  <div class="ticker" id="ticker" role="status"></div>
+  <div class="toasts" id="toasts" aria-live="polite"></div>
+
+  <div class="map-hud" id="map-hud">
+    <div class="map-tools">
+      <button type="button" class="icon-button round" id="zoom-in" aria-label="Zoom in"><svg class="icon"><use href="img/icons.svg#i-zoom-in"/></svg></button>
+      <button type="button" class="icon-button round" id="zoom-out" aria-label="Zoom out"><svg class="icon"><use href="img/icons.svg#i-zoom-out"/></svg></button>
+      <button type="button" class="icon-button round" id="recenter" aria-label="Back to my position" hidden><svg class="icon"><use href="img/icons.svg#i-recenter"/></svg></button>
+    </div>
+    <div class="scale" id="scale"><span class="bar"></span><span class="text"></span></div>
+    <button type="button" class="action" id="action">
+      <svg class="icon" aria-hidden="true"><use href="img/icons.svg#i-discover"/></svg>
+      <span class="action-text">
+        <span class="action-title">Discover System</span>
+        <span class="action-detail">Waiting for GPS</span>
+      </span>
+    </button>
+  </div>
+
+  <main class="sheet" id="sheet" hidden>
+    <section class="page" id="page-cargo" hidden></section>
+    <section class="page" id="page-codex" hidden></section>
+    <section class="page" id="page-system" hidden></section>
+  </main>
+
+  <nav class="tabs" id="tabs" aria-label="Pages">
+    <button type="button" data-tab="cargo"><svg class="icon"><use href="img/icons.svg#i-cargo"/></svg><span class="tab-label">Cargo</span><span class="tab-value" id="tab-cargo">0/10</span></button>
+    <button type="button" data-tab="codex"><svg class="icon"><use href="img/icons.svg#i-codex"/></svg><span class="tab-label">Codex</span><span class="tab-value" id="tab-codex">0/36</span></button>
+    <button type="button" data-tab="system"><svg class="icon"><use href="img/icons.svg#i-system"/></svg><span class="tab-label">System</span><span class="tab-value" id="tab-system">Deep Space</span></button>
+    <button type="button" data-tab="map" class="active"><svg class="icon"><use href="img/icons.svg#i-map"/></svg><span class="tab-label">Map</span><span class="tab-value" id="tab-map">Galaxy</span></button>
+  </nav>
+
+  <div class="dialogs" id="dialogs"></div>
+
+  <section class="start" id="start" hidden>
+    <div class="start-inner">
+      <img class="start-logo" src="img/logo.svg" alt="">
+      <h1 class="start-title">Xenowalk</h1>
+      <p class="start-tagline">Your places are star systems.<br>Your walks are trade runs.</p>
+      <div class="start-safety">
+        <svg class="icon" aria-hidden="true"><use href="img/icons.svg#i-warning"/></svg>
+        <p>Space is safe. Streets aren't. Keep your eyes on the road and look at the screen only when you stop in a system.</p>
+      </div>
+      <div class="start-buttons">
+        <button type="button" class="button primary" id="continue-game" hidden>Continue</button>
+        <button type="button" class="button" id="new-game">New game</button>
+      </div>
+      <details class="start-world">
+        <summary>World ID</summary>
+        <p>Captains with the same World ID get the same sectors around their starting points.</p>
+        <input type="text" id="world-id" maxlength="32" spellcheck="false" autocomplete="off">
+      </details>
+      <p class="start-version" id="start-version"></p>
+    </div>
+  </section>
+
+  <section class="debug" id="debug" hidden>
+    <div class="debug-row"><b>GPS</b> <span data-field="source"></span> · <span data-field="signal"></span></div>
+    <div class="debug-row" data-field="position"></div>
+    <div class="debug-row" data-field="last-reading"></div>
+    <div class="debug-row" data-field="stats"></div>
+    <div class="debug-row" data-field="game"></div>
+    <div class="debug-row"><b>Time</b> <span data-field="time"></span></div>
+    <div class="debug-buttons">
+      <button type="button" data-speed="1">1×</button>
+      <button type="button" data-speed="60">60×</button>
+      <button type="button" data-speed="3600">3600×</button>
+      <button type="button" id="reset-time">Reset</button>
+      <button type="button" id="next-day">+1 day</button>
+      <button type="button" id="add-credits">+5k cr</button>
+      <button type="button" id="use-gps" hidden>Use GPS</button>
+    </div>
+    <div class="debug-row muted">Tap the map to move there.</div>
+  </section>
+</body>
+</html>

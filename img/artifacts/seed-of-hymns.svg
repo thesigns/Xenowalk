@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="seed-of-hymns-husk" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#8fe9ff" stop-opacity="0.3"/>
+      <stop offset="1" stop-color="#8fe9ff" stop-opacity="0.07"/>
+    </linearGradient>
+  </defs>
+  <g fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Roots -->
+    <path d="M256 404 C252 420 242 428 228 434 M256 404 V440 M256 404 C260 420 270 428 284 434" stroke="#9fb1c8" stroke-width="2" opacity="0.7"/>
+    <!-- Sprout: stem, crystal leaves, bud -->
+    <path d="M256 230 C256 210 253 192 256 162" stroke="#e9f2ff" stroke-width="4"/>
+    <path d="M256 190 L214 148 L150 128 L188 180 Z" fill="#8fe9ff" fill-opacity="0.2" stroke="#e9f2ff" stroke-width="4"/>
+    <path d="M256 178 L296 120 L360 104 L326 162 Z" fill="#8fe9ff" fill-opacity="0.2" stroke="#e9f2ff" stroke-width="4"/>
+    <path d="M256 190 L150 128 M256 178 L360 104" stroke="#8fe9ff" stroke-width="2" opacity="0.75"/>
+    <path d="M256 134 L264 150 L256 164 L248 150 Z" fill="#8fe9ff" fill-opacity="0.3" stroke="#8fe9ff" stroke-width="2"/>
+    <!-- The seed, cut like a gem -->
+    <path d="M256 228 L300 256 L320 306 L304 362 L256 404 L208 362 L192 306 L212 256 Z" fill="url(#seed-of-hymns-husk)" stroke="#e9f2ff" stroke-width="4"/>
+    <path d="M256 228 L288 316 L256 404 L224 316 Z" fill="#8fe9ff" fill-opacity="0.14" stroke="#8fe9ff" stroke-width="2"/>
+    <path d="M192 306 L224 316 M288 316 L320 306 M212 256 L224 316 M300 256 L288 316" stroke="#8fe9ff" stroke-width="1.5" opacity="0.6"/>
+    <!-- It hums -->
+    <circle cx="256" cy="316" r="22" stroke="#8fe9ff" stroke-width="1.5" opacity="0.5"/>
+    <circle cx="256" cy="316" r="11" stroke="#8fe9ff" stroke-width="2"/>
+    <circle cx="256" cy="316" r="4" fill="#e9f2ff" stroke="none"/>
+    <path d="M168 290 C156 312 156 340 168 362 M344 290 C356 312 356 340 344 362" stroke="#8fe9ff" stroke-width="2" opacity="0.5"/>
+    <!-- Notes drifting up -->
+    <path d="M206 84 L212 93 L206 102 L200 93 Z M304 70 L309 78 L304 86 L299 78 Z" fill="#8fe9ff" fill-opacity="0.25" stroke="#8fe9ff" stroke-width="1.5"/>
+    <circle cx="238" cy="112" r="3" fill="#e9f2ff" stroke="none"/>
+  </g>
+</svg>

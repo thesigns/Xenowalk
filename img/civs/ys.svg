@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <!-- Ys: the endless loop, divided -->
+  <g fill="none" stroke="#7aa2ff" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M256 256 C200 160 64 160 64 256 C64 352 200 352 256 256 C312 160 448 160 448 256 C448 352 312 352 256 256 Z" fill="#7aa2ff" fill-opacity="0.2" stroke-width="22"/>
+    <circle cx="256" cy="124" r="26" fill="#7aa2ff" stroke="none"/>
+    <circle cx="256" cy="388" r="26" fill="#7aa2ff" stroke="none"/>
+  </g>
+</svg>

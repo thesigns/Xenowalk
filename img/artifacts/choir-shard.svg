@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="choir-shard-glass" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#8fe9ff" stop-opacity="0.32"/>
+      <stop offset="0.65" stop-color="#8fe9ff" stop-opacity="0.1"/>
+      <stop offset="1" stop-color="#8fe9ff" stop-opacity="0.05"/>
+    </linearGradient>
+  </defs>
+  <g fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Lesser voices: two shards leaning out from behind the spire -->
+    <path d="M225 369 L182 215 L150 182 L140 226 L194 420 L226 420" fill="#8fe9ff" fill-opacity="0.12" stroke="#e9f2ff" stroke-width="4"/>
+    <path d="M287 369 L330 215 L362 182 L372 226 L318 420 L286 420" fill="#8fe9ff" fill-opacity="0.12" stroke="#e9f2ff" stroke-width="4"/>
+    <path d="M150 182 L166 219 L212 420 M140 226 L166 219 L182 215" stroke="#8fe9ff" stroke-width="2" opacity="0.7"/>
+    <path d="M362 182 L346 219 L300 420 M372 226 L346 219 L330 215" stroke="#8fe9ff" stroke-width="2" opacity="0.7"/>
+    <!-- The lead voice -->
+    <path d="M256 66 L294 128 L286 420 L226 420 L218 128 Z" fill="url(#choir-shard-glass)" stroke="#e9f2ff" stroke-width="4"/>
+    <path d="M256 66 L274 136 L272 420 L238 420 L240 136 Z" fill="#8fe9ff" fill-opacity="0.12" stroke="#8fe9ff" stroke-width="2"/>
+    <path d="M218 128 L240 136 M274 136 L294 128" stroke="#8fe9ff" stroke-width="2" opacity="0.7"/>
+    <path d="M248 206 H264 M248 306 H264" stroke="#8fe9ff" stroke-width="1.5" opacity="0.6"/>
+    <!-- Plinth -->
+    <path d="M164 420 H348" stroke="#e9f2ff" stroke-width="4"/>
+    <path d="M188 434 H324" stroke="#9fb1c8" stroke-width="2" opacity="0.6"/>
+    <!-- Harmonics -->
+    <path d="M116 166 C104 186 104 212 116 232 M396 166 C408 186 408 212 396 232" stroke="#8fe9ff" stroke-width="3"/>
+    <path d="M94 150 C76 178 76 220 94 248 M418 150 C436 178 436 220 418 248" stroke="#8fe9ff" stroke-width="2" opacity="0.5"/>
+    <circle cx="256" cy="256" r="7" fill="#e9f2ff" stroke="none"/>
+  </g>
+</svg>

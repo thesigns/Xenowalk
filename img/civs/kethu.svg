@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <!-- Kethu: the unfurling shoot, life coiled and waiting to grow -->
+  <g fill="none" stroke="#6dffa8" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M220 190 a36 36 0 0 1 72 0 a72 72 0 0 1 -144 0 a108 108 0 0 1 216 0 C364 290 324 376 244 430" stroke-width="22"/>
+    <path d="M328 336 Q258 286 186 324 Q256 378 328 336 Z" fill="#6dffa8" fill-opacity="0.25" stroke-width="18"/>
+    <circle cx="220" cy="190" r="14" fill="#6dffa8" stroke="none"/>
+  </g>
+</svg>

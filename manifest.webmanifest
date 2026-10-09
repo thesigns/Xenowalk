@@ -1,0 +1,13 @@
+{
+  "name": "Xenowalk",
+  "short_name": "Xenowalk",
+  "description": "Your places are star systems. Your walks are trade runs.",
+  "start_url": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#03050a",
+  "theme_color": "#03050a",
+  "icons": [
+    { "src": "img/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}

@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="alien-gambler-skin" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#b77dff" stop-opacity="0.22"/>
+      <stop offset="0.7" stop-color="#b77dff" stop-opacity="0.07"/>
+      <stop offset="1" stop-color="#b77dff" stop-opacity="0.04"/>
+    </linearGradient>
+    <radialGradient id="alien-gambler-eye" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#b77dff" stop-opacity="0.6"/>
+      <stop offset="0.5" stop-color="#b77dff" stop-opacity="0.45"/>
+      <stop offset="1" stop-color="#b77dff" stop-opacity="0.15"/>
+    </radialGradient>
+  </defs>
+  <g fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Coat and high collar -->
+    <path d="M58 520 C64 452 114 416 194 402 L226 394 H286 L318 402 C398 416 448 452 454 520 Z" fill="#0a101b" fill-opacity="0.6" stroke="none"/>
+    <path d="M58 520 C64 452 114 416 194 402 L226 394 H286 L318 402 C336 405 352 409 367 415" stroke="#e9f2ff" stroke-width="4"/>
+    <path d="M226 394 L256 470 L286 394" stroke="#9fb1c8" stroke-width="2"/>
+    <path d="M194 402 L206 344 L240 394 M318 402 L306 344 L272 394" fill="#b77dff" fill-opacity="0.1" stroke="#b77dff" stroke-width="2"/>
+    <path d="M256 414 L263 426 L256 438 L249 426 Z" fill="#b77dff" fill-opacity="0.5" stroke="#b77dff" stroke-width="1.5"/>
+    <!-- Neck -->
+    <path d="M238 334 L234 396 M274 334 L278 396" stroke="#e9f2ff" stroke-width="4"/>
+    <path d="M244 354 C252 358 260 358 268 354 M243 370 C252 374 260 374 269 370" stroke="#61748d" stroke-width="1.5"/>
+    <!-- Head: wide dome, narrow chin -->
+    <path d="M256 342 C290 342 316 314 328 278 C340 242 368 214 372 176 C378 120 326 84 256 84 C186 84 134 120 140 176 C144 214 172 242 184 278 C196 314 222 342 256 342 Z" fill="url(#alien-gambler-skin)" stroke="#e9f2ff" stroke-width="4"/>
+    <path d="M150 196 C166 204 178 216 186 232 M362 196 C346 204 334 216 326 232" stroke="#61748d" stroke-width="1.5"/>
+    <path d="M196 268 L208 284 M202 256 L214 272" stroke="#b77dff" stroke-width="1.5" opacity="0.6"/>
+    <!-- Six eyes rising in a chevron -->
+    <path d="M192 222 C204 208 228 208 242 222 C228 230 204 230 192 222 Z M320 222 C308 208 284 208 270 222 C284 230 308 230 320 222 Z" fill="url(#alien-gambler-eye)" stroke="#b77dff" stroke-width="2.5"/>
+    <path d="M217 213 V229 M295 213 V229" stroke="#0a101b" stroke-opacity="0.6" stroke-width="3"/>
+    <path d="M208 186 C214 180 226 180 232 186 C226 191 214 191 208 186 Z M304 186 C298 180 286 180 280 186 C286 191 298 191 304 186 Z" fill="#b77dff" fill-opacity="0.45" stroke="#b77dff" stroke-width="2"/>
+    <circle cx="232" cy="156" r="4.5" fill="#b77dff" fill-opacity="0.5" stroke="#b77dff" stroke-width="1.5"/>
+    <circle cx="280" cy="156" r="4.5" fill="#b77dff" fill-opacity="0.5" stroke="#b77dff" stroke-width="1.5"/>
+    <!-- Nose slits, thin smirk -->
+    <path d="M250 258 L247 266 M262 258 L265 266" stroke="#9fb1c8" stroke-width="2"/>
+    <path d="M230 298 C246 300 264 299 280 294 L288 287" stroke="#e9f2ff" stroke-width="2.5"/>
+    <!-- Sleeve -->
+    <path d="M330 520 C350 450 370 392 382 352 L426 348 C440 392 470 450 492 520 Z" fill="#0a101b" fill-opacity="0.6" stroke="#e9f2ff" stroke-width="4"/>
+    <path d="M382 352 L426 348 M372 384 C392 378 420 376 438 380" stroke="#b77dff" stroke-width="2"/>
+    <g transform="translate(402 300) scale(1.2) translate(-398 -344)">
+    <!-- Fan of cards -->
+    <g transform="translate(396 344)" stroke-width="2.5">
+      <rect x="-25" y="-84" width="50" height="76" rx="6" transform="rotate(-22)" fill="#0a101b" fill-opacity="0.6" stroke="#9fb1c8"/>
+      <rect x="-25" y="-86" width="50" height="76" rx="6" transform="rotate(0)" fill="#0a101b" fill-opacity="0.6" stroke="#9fb1c8"/>
+      <g transform="rotate(22)">
+        <rect x="-25" y="-88" width="50" height="76" rx="6" fill="#0a101b" fill-opacity="0.6" stroke="#e9f2ff" stroke-width="3"/>
+        <path d="M0 -64 L10 -50 L0 -36 L-10 -50 Z" fill="#b77dff" fill-opacity="0.5" stroke="#b77dff" stroke-width="2"/>
+      </g>
+      <path d="M-44 -70 L-40 -60 M-4 -76 V-66" transform="rotate(-6)" stroke="#61748d" stroke-width="2"/>
+    </g>
+    <!-- Hand: long slender fingers over the fan -->
+    <path d="M382 384 C378 364 382 348 394 340 C406 334 420 348 422 380" fill="#0a101b" fill-opacity="0.6" stroke="#e9f2ff" stroke-width="3"/>
+    <path d="M386 352 Q366 328 356 296 Q358 288 364 293 Q376 322 394 344 Z" fill="#0a101b" fill-opacity="0.6" stroke="#e9f2ff" stroke-width="2.5"/>
+    <path d="M398 342 Q392 306 396 270 Q401 263 405 270 Q402 306 407 340 Z" fill="#0a101b" fill-opacity="0.6" stroke="#e9f2ff" stroke-width="2.5"/>
+    <path d="M410 344 Q420 314 438 290 Q446 288 444 296 Q428 320 418 350 Z" fill="#0a101b" fill-opacity="0.6" stroke="#e9f2ff" stroke-width="2.5"/>
+    <path d="M362 318 H368 M398 300 H404 M428 312 H434" stroke="#b77dff" stroke-width="2"/>
+    </g>
+  </g>
+</svg>

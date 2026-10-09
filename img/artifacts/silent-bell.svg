@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="silent-bell-bronze" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#b3a6d9" stop-opacity="0.3"/>
+      <stop offset="0.7" stop-color="#b3a6d9" stop-opacity="0.1"/>
+      <stop offset="1" stop-color="#b3a6d9" stop-opacity="0.05"/>
+    </linearGradient>
+  </defs>
+  <g fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Hanging ring -->
+    <circle cx="256" cy="98" r="17" fill="#b3a6d9" fill-opacity="0.12" stroke="#e9f2ff" stroke-width="4"/>
+    <!-- Clapper, hanging still -->
+    <path d="M256 352 V384" stroke="#9fb1c8" stroke-width="2"/>
+    <circle cx="256" cy="398" r="13" fill="#b3a6d9" fill-opacity="0.25" stroke="#b3a6d9" stroke-width="2.5"/>
+    <!-- Bell -->
+    <path d="M208 150 C208 126 228 116 256 116 C284 116 304 126 304 150 C306 214 318 282 344 330 C352 344 364 352 378 356 L378 360 C354 378 158 378 134 360 L134 356 C148 352 160 344 168 330 C194 282 206 214 208 150 Z" fill="url(#silent-bell-bronze)" stroke="#e9f2ff" stroke-width="4"/>
+    <path d="M140 346 C184 360 328 360 372 346" stroke="#9fb1c8" stroke-width="2"/>
+    <path d="M208 182 Q256 192 304 182 M186 300 Q256 314 326 300" stroke="#b3a6d9" stroke-width="2"/>
+    <!-- Glyph of the sewn mouth -->
+    <path d="M222 244 H290" stroke="#b3a6d9" stroke-width="3"/>
+    <path d="M232 234 V254 M248 234 V254 M264 234 V254 M280 234 V254" stroke="#b3a6d9" stroke-width="2"/>
+    <!-- Where a song would ring, the lines stay straight -->
+    <path d="M120 214 V318 M392 214 V318" stroke="#b3a6d9" stroke-width="3"/>
+    <path d="M90 226 V306 M422 226 V306" stroke="#b3a6d9" stroke-width="2" opacity="0.5"/>
+    <path d="M226 136 Q240 128 256 128" stroke="#9fb1c8" stroke-width="1.5" opacity="0.6"/>
+    <circle cx="256" cy="398" r="3.5" fill="#e9f2ff" stroke="none"/>
+  </g>
+</svg>

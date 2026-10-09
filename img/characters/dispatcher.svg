@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <radialGradient id="dispatcher-lens" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#5fe6ff" stop-opacity="0.08"/>
+      <stop offset="1" stop-color="#5fe6ff" stop-opacity="0.32"/>
+    </radialGradient>
+  </defs>
+  <g fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Uniform: stand collar, rank tabs, shoulder boards -->
+    <path d="M56 520 C62 454 110 416 190 402 L222 394 H290 L322 402 C402 416 450 454 456 520 Z" fill="#0a101b" fill-opacity="0.6" stroke="#e9f2ff" stroke-width="4"/>
+    <path d="M290 402 L300 520" stroke="#9fb1c8" stroke-width="2"/>
+    <path d="M310 420 H326 M312 430 H328" stroke="#5fe6ff" stroke-width="3"/>
+    <path d="M114 446 L184 414 M398 446 L328 414" stroke="#5fe6ff" stroke-width="2" opacity="0.7"/>
+    <!-- Neck and collar band -->
+    <path d="M234 328 L231 376 M278 328 L281 376" stroke="#e9f2ff" stroke-width="4"/>
+    <path d="M218 400 L222 370 C244 380 268 380 290 370 L294 400 C268 410 244 410 218 400 Z" fill="#0a101b" fill-opacity="0.6" stroke="#9fb1c8" stroke-width="2.5"/>
+    <!-- High bun with stylus pin -->
+    <path d="M240 118 A23 23 0 1 1 272 118" fill="#5fe6ff" fill-opacity="0.1" stroke="#e9f2ff" stroke-width="3"/>
+    <path d="M226 86 L288 112" stroke="#5fe6ff" stroke-width="2.5"/>
+    <!-- Face -->
+    <path d="M195 222 C195 248 197 270 202 290 C210 318 230 340 256 340 C282 340 302 318 310 290 C315 270 317 248 317 222" fill="#0a101b" fill-opacity="0.6" stroke="#e9f2ff" stroke-width="4"/>
+    <!-- Hair swept back -->
+    <path d="M192 230 C184 166 212 118 256 116 C300 118 328 166 320 230 C314 192 292 166 262 164 C238 162 214 176 200 200 C196 210 194 220 192 230 Z" fill="#5fe6ff" fill-opacity="0.1" stroke="#e9f2ff" stroke-width="3"/>
+    <path d="M222 178 C230 152 244 132 256 122 M290 172 C282 150 270 132 258 122 M246 164 C250 146 254 132 256 122" stroke="#61748d" stroke-width="1.5"/>
+    <!-- Eyes, brows -->
+    <path d="M214 208 L242 205 M298 208 L270 205" stroke="#9fb1c8" stroke-width="2.5"/>
+    <path d="M216 226 C222 218 238 218 244 226 C238 232 222 232 216 226 Z M296 226 C290 218 274 218 268 226 C274 232 290 232 296 226 Z" stroke="#e9f2ff" stroke-width="2"/>
+    <circle cx="230" cy="225" r="3.5" fill="#e9f2ff" stroke="none"/>
+    <circle cx="282" cy="225" r="3.5" fill="#e9f2ff" stroke="none"/>
+    <!-- Nose, mouth -->
+    <path d="M257 236 L252 266 L261 268" stroke="#9fb1c8" stroke-width="2"/>
+    <path d="M240 298 C250 301 262 301 272 297" stroke="#e9f2ff" stroke-width="2.5"/>
+    <!-- Earpiece and mic boom -->
+    <path d="M192 212 C186 196 192 186 202 184" stroke="#9fb1c8" stroke-width="3"/>
+    <rect x="178" y="210" width="24" height="46" rx="11" fill="#0a101b" fill-opacity="0.6" stroke="#e9f2ff" stroke-width="3"/>
+    <circle cx="190" cy="233" r="3" fill="#5fe6ff" fill-opacity="0.7" stroke="none"/>
+    <path d="M190 256 C192 290 208 306 230 310" stroke="#e9f2ff" stroke-width="3"/>
+    <rect x="228" y="304" width="16" height="11" rx="5.5" fill="#5fe6ff" fill-opacity="0.5" stroke="#5fe6ff" stroke-width="2"/>
+    <!-- Holo-monocle and floating readout -->
+    <path d="M318 206 L322 214 L306 220" stroke="#e9f2ff" stroke-width="3"/>
+    <circle cx="282" cy="225" r="24" fill="url(#dispatcher-lens)" stroke="#5fe6ff" stroke-width="2"/>
+    <path d="M282 196 V202 M282 248 V254 M253 225 H259 M305 225 H311" stroke="#5fe6ff" stroke-width="1.5"/>
+    <path d="M266 214 A19 19 0 0 1 290 207" stroke="#e9f2ff" stroke-width="1.5" opacity="0.7"/>
+    <path d="M300 208 L344 176 M304 234 L344 206" stroke="#5fe6ff" stroke-width="1" stroke-dasharray="3 4" opacity="0.6"/>
+    <rect x="344" y="168" width="54" height="40" rx="3" fill="#5fe6ff" fill-opacity="0.08" stroke="#5fe6ff" stroke-width="1.5"/>
+    <path d="M352 180 H382 M352 188 H390 M352 196 H372" stroke="#5fe6ff" stroke-width="1.5" opacity="0.7"/>
+  </g>
+</svg>

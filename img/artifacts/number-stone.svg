@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="number-stone-face" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#7aa2ff" stop-opacity="0.24"/>
+      <stop offset="1" stop-color="#7aa2ff" stop-opacity="0.06"/>
+    </linearGradient>
+  </defs>
+  <g fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Plinth -->
+    <path d="M164 392 H352 V414 H164 Z" fill="#7aa2ff" fill-opacity="0.18" stroke="#e9f2ff" stroke-width="4"/>
+    <!-- Stele: cut front face, narrow side face, pyramid cap -->
+    <path d="M188 392 L196 114 L256 74 L340 124 L348 384 L324 392 Z" fill="#7aa2ff" fill-opacity="0.08" stroke="#e9f2ff" stroke-width="4"/>
+    <path d="M188 392 L196 114 H316 L324 392 Z" fill="url(#number-stone-face)"/>
+    <path d="M196 114 L256 74 L316 114 Z" fill="#7aa2ff" fill-opacity="0.18"/>
+    <path d="M196 114 H316 L340 124 M316 114 L324 392 M256 74 L316 114" stroke="#9fb1c8" stroke-width="2"/>
+    <path d="M212 136 H300 L306 378 H206 Z" stroke="#9fb1c8" stroke-width="1.5" opacity="0.6"/>
+    <!-- The count: each row the sum of the two above (dots are ones, bars are fives) -->
+    <path d="M256 158 h0.1 M256 186 h0.1 M246 214 h0.1 M266 214 h0.1 M236 242 h0.1 M256 242 h0.1 M276 242 h0.1 M236 296 h0.1 M256 296 h0.1 M276 296 h0.1 M236 336 h0.1 M256 336 h0.1 M276 336 h0.1" stroke="#7aa2ff" stroke-width="9"/>
+    <path d="M228 268 H284 V276 H228 Z M228 308 H284 V316 H228 Z M228 348 H284 V356 H228 Z M228 362 H284 V370 H228 Z" fill="#7aa2ff" fill-opacity="0.3" stroke="#7aa2ff" stroke-width="2"/>
+    <!-- Tally of rows on the side face -->
+    <path d="M326 158 L334 160 M326 186 L334 188 M326 214 L334 216 M326 242 L334 244 M327 272 L335 274 M327 312 L335 314 M328 359 L336 361" stroke="#7aa2ff" stroke-width="1.5" opacity="0.6"/>
+    <circle cx="256" cy="88" r="3.5" fill="#e9f2ff" stroke="none"/>
+  </g>
+</svg>

@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="lightglass-lens-glass" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#ffd479" stop-opacity="0.08"/>
+      <stop offset="0.5" stop-color="#ffd479" stop-opacity="0.3"/>
+      <stop offset="1" stop-color="#ffd479" stop-opacity="0.1"/>
+    </linearGradient>
+  </defs>
+  <g fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Starlight arriving, scattered -->
+    <path d="M92 186 H226 M92 221 H226 M92 291 H226 M92 326 H226" stroke="#9fb1c8" stroke-width="2" opacity="0.6"/>
+    <!-- Lens, seen edge-on -->
+    <path d="M226 104 A285 285 0 0 1 226 408 A285 285 0 0 1 226 104 Z" fill="url(#lightglass-lens-glass)" stroke="#e9f2ff" stroke-width="4"/>
+    <path d="M226 136 A255 255 0 0 1 226 376 A255 255 0 0 1 226 136 Z" stroke="#ffd479" stroke-width="2" opacity="0.6"/>
+    <path d="M200 176 C195 196 194 214 196 232" stroke="#e9f2ff" stroke-width="2" opacity="0.7"/>
+    <circle cx="204" cy="158" r="3.5" fill="#e9f2ff" stroke="none"/>
+    <!-- Clasps of the mount -->
+    <path d="M208 118 C214 98 238 98 244 118 M208 394 C214 414 238 414 244 394" stroke="#e9f2ff" stroke-width="4"/>
+    <path d="M226 100 V86 M226 412 V426" stroke="#9fb1c8" stroke-width="3"/>
+    <circle cx="226" cy="80" r="6" fill="#ffd479" fill-opacity="0.3" stroke="#ffd479" stroke-width="2"/>
+    <circle cx="226" cy="432" r="6" fill="#ffd479" fill-opacity="0.3" stroke="#ffd479" stroke-width="2"/>
+    <!-- Light leaving, gathered to one point -->
+    <path d="M92 256 H410" stroke="#ffd479" stroke-width="2.5"/>
+    <path d="M226 186 L410 256 L226 326 M226 221 L410 256 L226 291" stroke="#ffd479" stroke-width="2"/>
+    <circle cx="410" cy="256" r="11" fill="#ffd479" fill-opacity="0.3" stroke="#ffd479" stroke-width="2"/>
+    <path d="M410 230 V218 M410 282 V294 M430 256 H436 M428 238 L436 230 M428 274 L436 282" stroke="#ffd479" stroke-width="2"/>
+    <circle cx="410" cy="256" r="4.5" fill="#e9f2ff" stroke="none"/>
+  </g>
+</svg>

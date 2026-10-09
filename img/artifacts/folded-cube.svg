@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="folded-cube-core" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#7aa2ff" stop-opacity="0.3"/>
+      <stop offset="1" stop-color="#7aa2ff" stop-opacity="0.12"/>
+    </linearGradient>
+  </defs>
+  <g fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Outer cube: glass shell -->
+    <path d="M118 158 L288 115 L394 184 L394 366 L224 409 L118 340 Z" fill="#7aa2ff" fill-opacity="0.07"/>
+    <path d="M118 158 L288 115 L394 184 L224 227 Z" fill="#7aa2ff" fill-opacity="0.1"/>
+    <path d="M288 115 L288 297 L394 366 M288 297 L118 340" stroke="#9fb1c8" stroke-width="1.5" stroke-dasharray="4 8" opacity="0.6"/>
+    <!-- Corners folded inward through a direction we lack -->
+    <path d="M118 340 L195 297 M224 409 L242 327 M118 158 L195 216 M224 227 L242 246 M394 366 L317 308 M288 115 L270 197 M394 184 L317 227" stroke="#9fb1c8" stroke-width="1.5"/>
+    <path d="M288 297 L270 278" stroke="#9fb1c8" stroke-width="1.5" opacity="0.5"/>
+    <!-- Inner cube: the same cube, seen from the other side -->
+    <path d="M270 197 L270 278 L317 308 M270 278 L195 297" stroke="#7aa2ff" stroke-width="1.5" opacity="0.55"/>
+    <path d="M195 216 L270 197 L317 227 L317 308 L242 327 L195 297 Z" fill="url(#folded-cube-core)" stroke="#7aa2ff" stroke-width="2.5"/>
+    <path d="M195 216 L242 246 L317 227 M242 246 L242 327" stroke="#7aa2ff" stroke-width="2.5"/>
+    <!-- Outer edges -->
+    <path d="M118 158 L224 227 L394 184 M224 227 L224 409" stroke="#e9f2ff" stroke-width="3"/>
+    <path d="M118 158 L288 115 L394 184 L394 366 L224 409 L118 340 Z" stroke="#e9f2ff" stroke-width="4"/>
+    <circle cx="242" cy="246" r="4" fill="#e9f2ff" stroke="none"/>
+    <circle cx="224" cy="227" r="4" fill="#e9f2ff" stroke="none"/>
+  </g>
+</svg>

@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="mothers-coil-flesh" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#6dffa8" stop-opacity="0.12"/>
+      <stop offset="1" stop-color="#6dffa8" stop-opacity="0.3"/>
+    </linearGradient>
+  </defs>
+  <g fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Body between the two strands, tapering as it grows -->
+    <path d="M256 404 C352 380 352 344 256 320 C160 344 160 380 256 404 Z M256 320 C341 298 341 264 256 242 C171 264 171 298 256 320 Z M256 242 C331 222 331 190 256 170 C181 190 181 222 256 242 Z M256 170 C320 152 320 122 256 104 C192 122 192 152 256 170 Z" fill="url(#mothers-coil-flesh)" stroke="none"/>
+    <!-- Paired rungs -->
+    <path d="M202 379 H310 M192 362 H320 M202 345 H310 M209 297 H303 M200 281 H312 M209 265 H303 M216 220 H296 M208 206 H304 M216 192 H296 M223 150 H289 M216 137 H296 M223 124 H289" stroke="#6dffa8" stroke-width="2" opacity="0.6"/>
+    <g fill="#6dffa8" fill-opacity="0.3" stroke="#6dffa8" stroke-width="2">
+      <circle cx="256" cy="362" r="5"/>
+      <circle cx="256" cy="281" r="4.5"/>
+      <circle cx="256" cy="206" r="4"/>
+      <circle cx="256" cy="137" r="3.5"/>
+    </g>
+    <!-- Two strands, each passing in front of the other in turn -->
+    <path d="M210 430 C222 420 236 410 256 404 C352 380 352 344 256 320 C182 301 172 273 227 251 M281 234 C329 214 321 188 256 170 C192 152 192 122 256 104 C276 98 296 92 304 102 C310 110 302 120 294 114" stroke="#e9f2ff" stroke-width="4"/>
+    <path d="M302 430 C290 420 276 410 256 404 C172 384 162 353 223 330 M285 311 C340 289 330 261 256 242 C191 224 183 198 231 178 M278 162 C319 144 312 120 256 104 C236 98 216 92 208 102 C202 110 210 120 218 114" stroke="#e9f2ff" stroke-width="4"/>
+    <!-- Rootlets -->
+    <path d="M222 421 C214 426 210 432 210 440 M290 421 C298 426 302 432 302 440" stroke="#9fb1c8" stroke-width="2" opacity="0.7"/>
+    <circle cx="256" cy="242" r="6" fill="#e9f2ff" stroke="none"/>
+  </g>
+</svg>

@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="tacticians-die-body" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ff7a59" stop-opacity="0.22"/>
+      <stop offset="1" stop-color="#ff7a59" stop-opacity="0.06"/>
+    </linearGradient>
+  </defs>
+  <g fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Twenty-faced body -->
+    <path d="M256 84 L405 170 V342 L256 428 L107 342 V170 Z" fill="url(#tacticians-die-body)" stroke="#e9f2ff" stroke-width="4"/>
+    <path d="M256 84 L256 150 L107 170 Z M256 84 L256 150 L405 170 Z" fill="#ff7a59" fill-opacity="0.08" stroke="none"/>
+    <path d="M256 84 V150 M107 170 L256 150 L405 170" stroke="#9fb1c8" stroke-width="2"/>
+    <path d="M107 170 L164 309 L107 342 M164 309 L256 428 L348 309 L405 342 M348 309 L405 170" stroke="#9fb1c8" stroke-width="2"/>
+    <!-- Facing side -->
+    <path d="M256 150 L348 309 H164 Z" fill="#ff7a59" fill-opacity="0.18" stroke="#e9f2ff" stroke-width="3"/>
+    <!-- Its pips are battle marks: the reticle, the chevron, the cross, the ring -->
+    <circle cx="256" cy="256" r="22" stroke="#ff7a59" stroke-width="2"/>
+    <path d="M256 222 V236 M256 276 V290 M222 256 H236 M276 256 H290" stroke="#ff7a59" stroke-width="2"/>
+    <circle cx="256" cy="256" r="4" fill="#e9f2ff" stroke="none"/>
+    <path d="M244 360 L256 348 L268 360" stroke="#ff7a59" stroke-width="2"/>
+    <path d="M168 202 L184 218 M184 202 L168 218" stroke="#ff7a59" stroke-width="2"/>
+    <circle cx="336" cy="210" r="7" stroke="#ff7a59" stroke-width="2"/>
+  </g>
+</svg>

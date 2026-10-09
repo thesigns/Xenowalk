@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="oath-gauntlet-plate" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ff7a59" stop-opacity="0.26"/>
+      <stop offset="1" stop-color="#ff7a59" stop-opacity="0.06"/>
+    </linearGradient>
+  </defs>
+  <g fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Cuff -->
+    <path d="M220 306 H292 L336 420 H176 Z" fill="url(#oath-gauntlet-plate)" stroke="#e9f2ff" stroke-width="4"/>
+    <path d="M215 320 H297 M182 404 H330" stroke="#9fb1c8" stroke-width="2"/>
+    <circle cx="212" cy="362" r="5" stroke="#9fb1c8" stroke-width="2"/>
+    <circle cx="300" cy="362" r="5" stroke="#9fb1c8" stroke-width="2"/>
+    <!-- The oath seal -->
+    <path d="M256 338 L276 362 L256 386 L236 362 Z" fill="#ff7a59" fill-opacity="0.25" stroke="#ff7a59" stroke-width="3"/>
+    <path d="M246 366 L256 354 L266 366" stroke="#ff7a59" stroke-width="2"/>
+    <!-- Wrist -->
+    <path d="M214 282 L222 306 M298 282 L290 306" stroke="#e9f2ff" stroke-width="4"/>
+    <!-- Clenched fist -->
+    <path d="M176 132 L186 112 H212 L218 120 L224 100 H252 L258 110 L264 106 H292 L298 116 L306 124 H328 L338 138 L342 208 L332 256 L300 282 H212 L182 258 L172 204 Z" fill="url(#oath-gauntlet-plate)" stroke="#e9f2ff" stroke-width="4"/>
+    <path d="M218 120 V194 M258 110 V194 M298 116 V194 M174 154 H340 M196 266 H316" stroke="#9fb1c8" stroke-width="2"/>
+    <!-- Knuckle ridges, still warm -->
+    <path d="M186 140 L197 132 L208 140 M228 130 L238 122 L248 130 M268 134 L278 126 L288 134 M308 144 L318 136 L328 144" stroke="#ff7a59" stroke-width="2"/>
+    <!-- Thumb plate -->
+    <path d="M174 194 H286 L302 210 L290 230 H178" fill="#ff7a59" fill-opacity="0.14" stroke="#e9f2ff" stroke-width="4"/>
+    <path d="M232 194 V230" stroke="#9fb1c8" stroke-width="2"/>
+    <circle cx="288" cy="212" r="4" fill="#e9f2ff" stroke="none"/>
+  </g>
+</svg>

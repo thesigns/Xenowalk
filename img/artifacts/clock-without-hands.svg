@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <radialGradient id="clock-without-hands-face" cx="0.5" cy="0.45" r="0.55">
+      <stop offset="0" stop-color="#7aa2ff" stop-opacity="0.06"/>
+      <stop offset="0.75" stop-color="#7aa2ff" stop-opacity="0.12"/>
+      <stop offset="1" stop-color="#7aa2ff" stop-opacity="0.28"/>
+    </radialGradient>
+  </defs>
+  <g fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Bow and crown -->
+    <ellipse cx="256" cy="94" rx="24" ry="20" stroke="#e9f2ff" stroke-width="4"/>
+    <path d="M238 114 H274 V132 H238 Z" fill="#7aa2ff" fill-opacity="0.2" stroke="#e9f2ff" stroke-width="4"/>
+    <path d="M247 118 V128 M256 118 V128 M265 118 V128" stroke="#9fb1c8" stroke-width="1.5"/>
+    <path d="M246 132 V144 M266 132 V144" stroke="#e9f2ff" stroke-width="4"/>
+    <!-- Case and bezel -->
+    <circle cx="256" cy="284" r="140" fill="url(#clock-without-hands-face)" stroke="#e9f2ff" stroke-width="4"/>
+    <circle cx="256" cy="284" r="128" stroke="#9fb1c8" stroke-width="2"/>
+    <!-- Hours in base six: ticks and counted dots -->
+    <path d="M285.5 173.9 L287.6 166.2 M313 185.3 L317 178.3 M336.6 203.4 L342.3 197.7 M366.1 254.5 L373.8 252.4 M370 284 L378 284 M366.1 313.5 L373.8 315.6 M336.6 364.6 L342.3 370.3 M313 382.7 L317 389.7 M285.5 394.1 L287.6 401.8 M226.5 394.1 L224.4 401.8 M199 382.7 L195 389.7 M175.4 364.6 L169.7 370.3 M145.9 313.5 L138.2 315.6 M142 284 L134 284 M145.9 254.5 L138.2 252.4 M175.4 203.4 L169.7 197.7 M199 185.3 L195 178.3 M226.5 173.9 L224.4 166.2" stroke="#9fb1c8" stroke-width="1.5"/>
+    <path d="M256 182 L256 162 M344.3 233 L361.7 223 M344.3 335 L361.7 345 M256 386 L256 406 M167.7 335 L150.3 345 M167.7 233 L150.3 223" stroke="#7aa2ff" stroke-width="3"/>
+    <path d="M256 198 h0.1 M328 236.7 h0.1 M333 245.3 h0.1 M335.5 318.3 h0.1 M330.5 327 h0.1 M325.5 335.7 h0.1 M271 370 h0.1 M261 370 h0.1 M251 370 h0.1 M241 370 h0.1 M191.5 344.3 h0.1 M186.5 335.7 h0.1 M181.5 327 h0.1 M176.5 318.3 h0.1 M171.5 309.7 h0.1 M169 262.7 h0.1 M174 254 h0.1 M179 245.3 h0.1 M184 236.7 h0.1 M189 228 h0.1 M194 219.3 h0.1" stroke="#7aa2ff" stroke-width="6"/>
+    <!-- Clockwork, still turning under the glass -->
+    <circle cx="256" cy="284" r="68" stroke="#7aa2ff" stroke-width="1.5" stroke-dasharray="1 8" opacity="0.7"/>
+    <path d="M256 242 L261.3 242.3 L266.8 231.1 L278.4 234.9 L276.2 247.2 L280.7 250 L284.8 253.4 L295.8 247.5 L303 257.4 L294 266.1 L295.9 271 L297.3 276.1 L309.7 277.9 L309.7 290.1 L297.3 291.9 L295.9 297 L294 301.9 L303 310.6 L295.8 320.5 L284.8 314.6 L280.7 318 L276.2 320.8 L278.4 333.1 L266.8 336.9 L261.3 325.7 L256 326 L250.7 325.7 L245.2 336.9 L233.6 333.1 L235.8 320.8 L231.3 318 L227.2 314.6 L216.2 320.5 L209 310.6 L218 301.9 L216.1 297 L214.7 291.9 L202.3 290.1 L202.3 277.9 L214.7 276.1 L216.1 271 L218 266.1 L209 257.4 L216.2 247.5 L227.2 253.4 L231.3 250 L235.8 247.2 L233.6 234.9 L245.2 231.1 L250.7 242.3 Z" fill="#7aa2ff" fill-opacity="0.14" stroke="#7aa2ff" stroke-width="2"/>
+    <circle cx="256" cy="284" r="26" stroke="#9fb1c8" stroke-width="1.5" opacity="0.6"/>
+    <!-- The empty pivot where hands should be -->
+    <circle cx="256" cy="284" r="9" stroke="#e9f2ff" stroke-width="3"/>
+  </g>
+</svg>
