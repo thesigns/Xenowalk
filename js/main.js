@@ -330,10 +330,16 @@ tracker.addEventListener('reading', () => {
 tracker.addEventListener('change', () => updateGps());
 heading.addEventListener('change', () => updateScene());
 
+// Readings come about once a second: they move the map and the HUD, but the
+// page is re-rendered only when docking changes (or on the tick), never on
+// every reading, or a button pressed at that moment would lose its release.
 function afterPosition() {
+  const first = !player;
   if (tracker.position && hasWorld()) player = toWorld(tracker.position);
   updateDock();
-  refresh();
+  updateScene();
+  updateHud();
+  if (first) refreshPage();
 }
 
 function updateDock() {
@@ -379,9 +385,10 @@ function maybeShowEvent() {
   const system = app.docked;
   if (!system || isDialogOpen() || !$('start').hidden) return;
   const t = now();
+  const drawn = system.pendingEvent;
   const event = systemEvent(state, system, t);
   if (!event) return;
-  save();
+  if (event !== drawn) save();
   const key = `${system.id}:${event.day}`;
   if (eventShownFor === key) return;
   eventShownFor = key;
@@ -653,8 +660,37 @@ function goTo(tab) {
   }
 }
 
+// A re-render while a finger is down would replace what it presses (and jerk
+// a scroll), so it waits for the release. A lost release can't block it for
+// long: a new first touch starts the count over, and it waits 2.5 s at most.
+const pointersDown = new Set();
+let refreshWaiting = null;
+window.addEventListener(
+  'pointerdown',
+  (event) => {
+    if (event.isPrimary) pointersDown.clear();
+    pointersDown.add(event.pointerId);
+  },
+  true,
+);
+for (const type of ['pointerup', 'pointercancel']) {
+  window.addEventListener(
+    type,
+    (event) => {
+      pointersDown.delete(event.pointerId);
+      if (!pointersDown.size && refreshWaiting) setTimeout(refreshPage, 0);
+    },
+    true,
+  );
+}
+
 function refreshPage() {
   if (!state || activeTab === 'map') return;
+  if (pointersDown.size && (!refreshWaiting || performance.now() - refreshWaiting < 2500)) {
+    refreshWaiting ??= performance.now();
+    return;
+  }
+  refreshWaiting = null;
   const page = $(`page-${activeTab}`);
   const scroll = page.scrollTop;
   if (activeTab === 'system') renderSystemPage(page, app);

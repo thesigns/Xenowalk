@@ -201,25 +201,47 @@ export function escapeHtml(text) {
 }
 
 // Repeats an action while a button is held, faster the longer it's held.
+// Only one button repeats at a time.
+let stopRepeating = null;
+
+// The release is watched on the window, not the button: a touch that ends on
+// another element (or on a button that was re-rendered meanwhile) must still
+// stop it. A button that left the page or got disabled stops too, as a
+// disabled button receives no pointer events at all.
 export function holdRepeat(button, action) {
-  let timer = null;
-  let delay = 0;
-  const stop = () => {
-    clearTimeout(timer);
-    timer = null;
-  };
-  const tick = () => {
-    action();
-    delay = Math.max(45, delay * 0.8);
-    timer = setTimeout(tick, delay);
-  };
   button.addEventListener('pointerdown', (event) => {
+    if (event.pointerType === 'mouse' && event.button !== 0) return;
     event.preventDefault();
+    stopRepeating?.();
+    let delay = 380;
+    let timer = null;
+    const stop = () => {
+      clearTimeout(timer);
+      window.removeEventListener('pointerup', stop, true);
+      window.removeEventListener('pointercancel', stop, true);
+      window.removeEventListener('blur', stop);
+      button.removeEventListener('pointerleave', stop);
+      if (stopRepeating === stop) stopRepeating = null;
+    };
+    const tick = () => {
+      if (!button.isConnected || button.disabled) {
+        stop();
+        return;
+      }
+      action();
+      delay = Math.max(45, delay * 0.8);
+      timer = setTimeout(tick, delay);
+    };
+    stopRepeating = stop;
+    window.addEventListener('pointerup', stop, true);
+    window.addEventListener('pointercancel', stop, true);
+    window.addEventListener('blur', stop);
+    button.addEventListener('pointerleave', stop);
     action();
-    delay = 380;
     timer = setTimeout(tick, delay);
   });
-  for (const type of ['pointerup', 'pointerleave', 'pointercancel']) button.addEventListener(type, stop);
+  // A long press would open the phone's context menu.
+  button.addEventListener('contextmenu', (event) => event.preventDefault());
   // Keyboard users get one step per press.
   button.addEventListener('keydown', (event) => {
     if (event.key === 'Enter' || event.key === ' ') {

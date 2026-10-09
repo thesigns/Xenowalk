@@ -119,33 +119,46 @@ function eventCard(system, app, day, now) {
 
 // ---------------------------------------------------------------- market
 
+// Steppers update the market in place: re-rendering the page under a finger
+// would swallow the release that stops a held button.
 function marketSection(system, app, day) {
-  const { state } = app;
   const produced = economyById[system.economy].produces;
-  const rows = GOODS.map((good) => marketRow(system, good, produced, app, day));
-  const bar = tradeBar(system, app, day);
-  return h(
+  const holdLabel = h('span.aside');
+  const rows = GOODS.map((good) => marketRow(system, good, produced, app, day, () => update()));
+  // The trade bar is a direct child of the section, so it can stick to the bottom.
+  let bar = h('div', { hidden: true });
+  const update = () => {
+    holdLabel.textContent = `Hold ${holdText(app)}`;
+    for (const row of rows) row.update();
+    const next = tradeBar(system, app, day, update) ?? h('div', { hidden: true });
+    bar.replaceWith(next);
+    bar = next;
+  };
+  const section = h(
     'section.section',
     {},
-    h('h2.section-title', {}, 'Market', h('span.aside', {}, `Hold ${holdText(state, app)}`)),
-    quickActions(system, app, day),
-    h('div.market', {}, rows),
+    h('h2.section-title', {}, 'Market', holdLabel),
+    quickActions(system, app, day, update),
+    h('div.market', {}, rows.map((row) => row.element)),
     bar,
   );
+  update();
+  return section;
 }
 
-function holdText(state, app) {
-  const used = app.cargoUnits() + Object.values(orders).reduce((sum, units) => sum + units, 0);
-  return `${used}/${SHIPS[state.ship].hold}`;
+const ordered = () => Object.values(orders).reduce((sum, units) => sum + units, 0);
+
+function holdText(app) {
+  return `${app.cargoUnits() + ordered()}/${SHIPS[app.state.ship].hold}`;
 }
 
-function marketRow(system, good, produced, app, day) {
+// A market row and update(), which redraws its quantity and buttons.
+function marketRow(system, good, produced, app, day, onChange) {
   const { state } = app;
   const held = state.cargo[good.id].units;
   const relation = economyById[system.economy].relations[good.id];
   const tiers = sellTiers(state, system, good.id, day);
   const isProduct = good.id === produced;
-  const qty = orders[good.id] ?? 0;
 
   const prices = [];
   if (isProduct) {
@@ -165,34 +178,49 @@ function marketRow(system, good, produced, app, day) {
   );
   if (tiers.length > 1 && top.kind !== 'regular') prices.push(h('span.price', {}, h('span.k', {}, 'THEN'), `${tiers[tiers.length - 1].price}`));
 
-  const qtyLabel = h(`span.qty${qty < 0 ? '.sell' : qty > 0 ? '.buy' : ''}`, {}, qty === 0 ? '0' : qty < 0 ? `−${-qty}` : `+${qty}`);
-  const minus = h('button', { type: 'button', 'aria-label': `Sell ${good.name}`, disabled: qty <= -held }, icon('minus'));
-  const plus = h('button', { type: 'button', 'aria-label': `Buy ${good.name}`, disabled: qty < 0 ? false : !isProduct }, icon('plus'));
-  const change = (delta) => {
-    const next = (orders[good.id] ?? 0) + delta;
-    if (next < -held) return;
-    if (next > 0 && !isProduct) return;
-    if (next > system.market.stock) return;
-    if (delta > 0 && next > 0 && app.freeHold() - Object.values(orders).reduce((s, u) => s + u, 0) <= 0) return;
-    orders[good.id] = next;
-    app.feedbackSoft();
-    app.refreshPage();
-  };
-  holdRepeat(minus, () => change(-1));
-  holdRepeat(plus, () => change(1));
-
-  return h(
-    `div.market-row${qty < 0 ? '.selling' : qty > 0 ? '.buying' : ''}`,
+  const qtyLabel = h('span.qty');
+  const minus = h('button', { type: 'button', 'aria-label': `Sell ${good.name}` }, icon('minus'));
+  const plus = h('button', { type: 'button', 'aria-label': `Buy ${good.name}` }, icon('plus'));
+  const element = h(
+    'div.market-row',
     {},
     h('span.good-icon', { style: { '--good': good.color } }, icon(good.id)),
     h('div.name', {}, good.name, h('span.held', {}, held ? `${held} aboard` : '')),
     h('div.prices', {}, prices),
     h('div.stepper', {}, minus, qtyLabel, plus),
   );
+
+  // Whether one more unit can be bought (or one less sold).
+  const canAdd = (qty) => {
+    const next = qty + 1;
+    if (next <= 0) return true;
+    return isProduct && next <= system.market.stock && app.freeHold() - ordered() > 0;
+  };
+  const change = (delta) => {
+    const qty = orders[good.id] ?? 0;
+    if (delta < 0 && qty <= -held) return;
+    if (delta > 0 && !canAdd(qty)) return;
+    orders[good.id] = qty + delta;
+    app.feedbackSoft();
+    onChange();
+  };
+  holdRepeat(minus, () => change(-1));
+  holdRepeat(plus, () => change(1));
+
+  const update = () => {
+    const qty = orders[good.id] ?? 0;
+    qtyLabel.textContent = qty === 0 ? '0' : qty < 0 ? `−${-qty}` : `+${qty}`;
+    qtyLabel.className = `qty${qty < 0 ? ' sell' : qty > 0 ? ' buy' : ''}`;
+    element.classList.toggle('selling', qty < 0);
+    element.classList.toggle('buying', qty > 0);
+    minus.disabled = qty <= -held;
+    plus.disabled = !canAdd(qty);
+  };
+  return { element, update };
 }
 
 // Appears once something is dialed in: what it comes to, and the button.
-function tradeBar(system, app, day) {
+function tradeBar(system, app, day, update) {
   const { state } = app;
   const active = Object.entries(orders).filter(([, units]) => units !== 0);
   if (!active.length) return null;
@@ -206,10 +234,13 @@ function tradeBar(system, app, day) {
       type: 'button',
       disabled: !quote.ok,
       onclick: () => {
-        const result = app.trade(system, orders);
-        if (result?.ok) {
-          orders = {};
-          app.refreshPage();
+        // Cleared first: a successful trade re-renders the page.
+        const placed = orders;
+        orders = {};
+        const result = app.trade(system, placed);
+        if (!result?.ok) {
+          orders = placed;
+          update();
         }
       },
     },
@@ -224,13 +255,13 @@ function tradeBar(system, app, day) {
       h('span', {}, quote.ok ? [sold ? `Sell ${sold}` : '', bought ? `Buy ${bought}` : ''].filter(Boolean).join(' · ') : quote.reason),
       h(`span.net${net > 0 ? '.plus' : net < 0 ? '.minus' : ''}`, {}, `${signed(net)} cr`),
     ),
-    h('button.button', { type: 'button', 'aria-label': 'Clear', onclick: () => { orders = {}; app.refreshPage(); } }, icon('close')),
+    h('button.button', { type: 'button', 'aria-label': 'Clear', onclick: () => { orders = {}; update(); } }, icon('close')),
     confirm,
   );
 }
 
 // Shortcuts: sell everything this market pays well for, or fill the hold with its product.
-function quickActions(system, app, day) {
+function quickActions(system, app, day, update) {
   const { state } = app;
   const produced = economyById[system.economy].produces;
   const sellWanted = () => {
@@ -240,13 +271,15 @@ function quickActions(system, app, day) {
       const top = sellTiers(state, system, good.id, day)[0];
       if (top.kind !== 'regular') orders[good.id] = -held;
     }
-    app.refreshPage();
+    app.feedbackSoft();
+    update();
   };
   const fill = () => {
-    const room = app.freeHold() - Object.values(orders).reduce((s, u) => s + u, 0) + Math.max(0, orders[produced] ?? 0);
+    const room = app.freeHold() - ordered() + Math.max(0, orders[produced] ?? 0);
     const affordable = Math.floor(state.credits / buyPrice(system));
     orders[produced] = Math.max(0, Math.min(room, system.market.stock, affordable));
-    app.refreshPage();
+    app.feedbackSoft();
+    update();
   };
   return h(
     'div.quick',
