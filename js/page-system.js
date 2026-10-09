@@ -27,9 +27,21 @@ export function resetOrders() {
   ordersFor = null;
 }
 
-export function renderSystemPage(root, app) {
+// `footer` sits under the scrolling page: the trade bar lives there, in the
+// same place whether or not anything is selected, so it never pops up under
+// a finger or covers the market.
+export function renderSystemPage(root, app, footer) {
   const system = app.docked;
-  fill(root, system ? dockedView(system, app) : deepSpaceView(app));
+  if (system) {
+    const bar = tradeBar(system, app, galacticDay(app.now()));
+    fill(root, dockedView(system, app, bar));
+    footer.replaceChildren(bar.element);
+    footer.hidden = false;
+  } else {
+    fill(root, deepSpaceView(app));
+    footer.replaceChildren();
+    footer.hidden = true;
+  }
 }
 
 function sectorColor(system) {
@@ -38,7 +50,7 @@ function sectorColor(system) {
 
 // ---------------------------------------------------------------- docked
 
-function dockedView(system, app) {
+function dockedView(system, app, bar) {
   const { state } = app;
   const now = app.now();
   const day = galacticDay(now);
@@ -93,7 +105,7 @@ function dockedView(system, app) {
     );
   }
 
-  parts.push(marketSection(system, app, day));
+  parts.push(marketSection(system, app, day, bar));
   parts.push(shipyardSection(app));
   return parts;
 }
@@ -121,29 +133,24 @@ function eventCard(system, app, day, now) {
 
 // Steppers update the market in place: re-rendering the page under a finger
 // would swallow the release that stops a held button.
-function marketSection(system, app, day) {
+function marketSection(system, app, day, bar) {
   const produced = economyById[system.economy].produces;
   const holdLabel = h('span.aside');
   const rows = GOODS.map((good) => marketRow(system, good, produced, app, day, () => update()));
-  // The trade bar is a direct child of the section, so it can stick to the bottom.
-  let bar = h('div', { hidden: true });
   const update = () => {
     holdLabel.textContent = `Hold ${holdText(app)}`;
     for (const row of rows) row.update();
-    const next = tradeBar(system, app, day, update) ?? h('div', { hidden: true });
-    bar.replaceWith(next);
-    bar = next;
+    bar.update();
   };
-  const section = h(
+  bar.onChange = update;
+  update();
+  return h(
     'section.section',
     {},
     h('h2.section-title', {}, 'Market', holdLabel),
     quickActions(system, app, day, update),
     h('div.market', {}, rows.map((row) => row.element)),
-    bar,
   );
-  update();
-  return section;
 }
 
 const ordered = () => Object.values(orders).reduce((sum, units) => sum + units, 0);
@@ -219,45 +226,53 @@ function marketRow(system, good, produced, app, day, onChange) {
   return { element, update };
 }
 
-// Appears once something is dialed in: what it comes to, and the button.
-function tradeBar(system, app, day, update) {
+// What the selection comes to, and the buttons to clear it or trade. Built
+// once per page; update() changes only texts and states, so the buttons never
+// move or get replaced.
+function tradeBar(system, app, day) {
   const { state } = app;
-  const active = Object.entries(orders).filter(([, units]) => units !== 0);
-  if (!active.length) return null;
-  const quote = quoteTrade(state, system, orders, day);
-  const sold = active.filter(([, u]) => u < 0).reduce((s, [, u]) => s - u, 0);
-  const bought = active.filter(([, u]) => u > 0).reduce((s, [, u]) => s + u, 0);
-  const net = quote.net ?? 0;
-  const confirm = h(
-    'button.button.primary',
-    {
-      type: 'button',
-      disabled: !quote.ok,
-      onclick: () => {
-        // Cleared first: a successful trade re-renders the page.
-        const placed = orders;
-        orders = {};
-        const result = app.trade(system, placed);
-        if (!result?.ok) {
-          orders = placed;
-          update();
-        }
-      },
+  const summary = h('span');
+  const net = h('span.net');
+  const clear = h('button.button', { type: 'button', 'aria-label': 'Clear selection' }, icon('close'));
+  const confirm = h('button.button.primary', { type: 'button' }, 'Trade');
+  const bar = {
+    element: h('div.trade-bar', {}, h('div.trade-summary', {}, summary, net), clear, confirm),
+    onChange: () => {},
+    update() {
+      const active = Object.entries(orders).filter(([, units]) => units !== 0);
+      bar.element.classList.toggle('idle', !active.length);
+      clear.disabled = !active.length;
+      if (!active.length) {
+        summary.textContent = 'Tap − to sell, + to buy';
+        net.textContent = '';
+        confirm.disabled = true;
+        return;
+      }
+      const quote = quoteTrade(state, system, orders, day);
+      const sold = active.filter(([, u]) => u < 0).reduce((sum, [, u]) => sum - u, 0);
+      const bought = active.filter(([, u]) => u > 0).reduce((sum, [, u]) => sum + u, 0);
+      const value = quote.net ?? 0;
+      summary.textContent = quote.ok ? [sold ? `Sell ${sold}` : '', bought ? `Buy ${bought}` : ''].filter(Boolean).join(' · ') : quote.reason;
+      net.textContent = `${signed(value)} cr`;
+      net.className = `net${value > 0 ? ' plus' : value < 0 ? ' minus' : ''}`;
+      confirm.disabled = !quote.ok;
     },
-    'Trade',
-  );
-  return h(
-    'div.trade-bar',
-    {},
-    h(
-      'div.trade-summary',
-      {},
-      h('span', {}, quote.ok ? [sold ? `Sell ${sold}` : '', bought ? `Buy ${bought}` : ''].filter(Boolean).join(' · ') : quote.reason),
-      h(`span.net${net > 0 ? '.plus' : net < 0 ? '.minus' : ''}`, {}, `${signed(net)} cr`),
-    ),
-    h('button.button', { type: 'button', 'aria-label': 'Clear', onclick: () => { orders = {}; update(); } }, icon('close')),
-    confirm,
-  );
+  };
+  clear.addEventListener('click', () => {
+    orders = {};
+    bar.onChange();
+  });
+  confirm.addEventListener('click', () => {
+    // Cleared first: a successful trade re-renders the page.
+    const placed = orders;
+    orders = {};
+    const result = app.trade(system, placed);
+    if (!result?.ok) {
+      orders = placed;
+      bar.onChange();
+    }
+  });
+  return bar;
 }
 
 // Shortcuts: sell everything this market pays well for, or fill the hold with its product.

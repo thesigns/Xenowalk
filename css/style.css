@@ -589,7 +589,18 @@ img {
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
   animation: sheet-in 0.35s var(--ease-out);
+}
+
+/* Below the scrolling page, so nothing on the page hides behind it. */
+.sheet-footer {
+  flex: none;
+  padding: 10px 14px 12px;
+  border-top: 1px solid var(--line-strong);
+  background: rgba(6, 10, 18, 0.97);
+  box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.5);
 }
 
 @keyframes sheet-in {
@@ -598,7 +609,8 @@ img {
 }
 
 .page {
-  height: 100%;
+  flex: 1;
+  min-height: 0;
   overflow-y: auto;
   overscroll-behavior: contain;
   padding: 18px 16px 36px;
@@ -1311,19 +1323,10 @@ button.row:active {
 }
 
 .trade-bar {
-  position: sticky;
-  bottom: 0;
-  z-index: 2;
   display: grid;
   grid-template-columns: minmax(0, 1fr) 48px auto;
   align-items: center;
   gap: 8px;
-  padding: 10px 10px 10px 14px;
-  border-radius: var(--radius);
-  background: rgba(10, 17, 30, 0.96);
-  border: 1px solid rgba(95, 230, 255, 0.45);
-  box-shadow: 0 -8px 30px rgba(0, 0, 0, 0.6), 0 0 22px rgba(95, 230, 255, 0.12);
-  animation: rise-in 0.3s var(--ease-out);
 }
 
 .trade-bar .button {
@@ -1346,6 +1349,11 @@ button.row:active {
 
 .trade-summary .net {
   font-size: 19px;
+}
+
+.trade-bar.idle .trade-summary {
+  color: var(--muted);
+  font-weight: 500;
 }
 
 .net.plus { color: var(--profit); }

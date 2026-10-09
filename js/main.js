@@ -653,7 +653,9 @@ function goTo(tab) {
   } else {
     sheet.hidden = false;
     $('map-hud').hidden = true;
-    for (const page of sheet.children) page.hidden = page.id !== `page-${tab}`;
+    for (const page of sheet.querySelectorAll('.page')) page.hidden = page.id !== `page-${tab}`;
+    // The footer is the System page's trade bar; it shows up when that page renders.
+    if (tab !== 'system') $('sheet-footer').hidden = true;
     $(`page-${tab}`).scrollTop = 0;
     refreshPage();
     map.stop();
@@ -693,7 +695,7 @@ function refreshPage() {
   refreshWaiting = null;
   const page = $(`page-${activeTab}`);
   const scroll = page.scrollTop;
-  if (activeTab === 'system') renderSystemPage(page, app);
+  if (activeTab === 'system') renderSystemPage(page, app, $('sheet-footer'));
   else if (activeTab === 'cargo') renderCargoPage(page, app);
   else if (activeTab === 'codex') renderCodexPage(page, app);
   page.scrollTop = scroll;
