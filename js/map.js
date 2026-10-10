@@ -70,6 +70,16 @@ export class MapView {
     this.lastFrame = 0;
     this.frame = null;
     this.nebula = document.createElement('canvas');
+    // Android may drop a canvas's memory (low on memory, back from the
+    // background) and give it back blank, with its transform reset; the
+    // cached layers are then drawn again.
+    const restored = () => {
+      this.nebulaKey = '';
+      this.asteroids = null;
+      if (!this.running) this.draw();
+    };
+    canvas.addEventListener('contextrestored', restored);
+    this.nebula.addEventListener('contextrestored', restored);
     this.nebulaKey = '';
     this.onTap = null; // (worldPoint) => void
     this.onSystemTap = null; // (system) => void
@@ -271,6 +281,9 @@ export class MapView {
 
   draw(time = performance.now()) {
     const { ctx, width, height } = this;
+    // Set every frame: a restored context comes back with an identity
+    // transform, which drew the whole map small in the top left corner.
+    ctx.setTransform(this.ratio, 0, 0, this.ratio, 0, 0);
     const { player } = this.scene;
     if (player && this.center && !this.panned) {
       // The camera eases after the player, so GPS steps glide.
@@ -415,20 +428,37 @@ export class MapView {
     const signature = `${mpp.toFixed(4)},${width},${height},${ratio},${systems.length},${minedAreas.length},${minedAreas[0]?.minedAt},${minedAreas[minedAreas.length - 1]?.minedAt}`;
     let layer = this.asteroids;
     if (!layer || layer.signature !== signature || Math.abs(origin.x - layer.origin.x) > FIELD_PAD_PX / 2 || Math.abs(origin.y - layer.origin.y) > FIELD_PAD_PX / 2) {
-      layer = this.asteroids = { signature, origin, canvas: this.asteroids?.canvas ?? document.createElement('canvas') };
+      layer = this.asteroids = { signature, origin, canvas: this.asteroids?.canvas ?? this.layerCanvas() };
       this.renderAsteroids(layer.canvas, systems, minedAreas);
     }
     ctx.drawImage(layer.canvas, origin.x - layer.origin.x - FIELD_PAD_PX, origin.y - layer.origin.y - FIELD_PAD_PX, width + 2 * FIELD_PAD_PX, height + 2 * FIELD_PAD_PX);
   }
 
+  // The layer's canvas is kept between redraws: resizing it would allocate
+  // its memory again every time.
+  layerCanvas() {
+    const canvas = document.createElement('canvas');
+    canvas.addEventListener('contextrestored', () => {
+      this.asteroids = null;
+    });
+    return canvas;
+  }
+
   renderAsteroids(canvas, systems, minedAreas) {
-    const { width, height, ratio } = this;
+    const { width, height } = this;
+    // Thin rocks look the same at 2× as at 3×, for less memory.
+    const ratio = Math.min(this.ratio, 2);
     const pad = FIELD_PAD_PX;
-    canvas.width = Math.round((width + 2 * pad) * ratio);
-    canvas.height = Math.round((height + 2 * pad) * ratio);
+    const w = Math.round((width + 2 * pad) * ratio);
+    const hgt = Math.round((height + 2 * pad) * ratio);
+    if (canvas.width !== w || canvas.height !== hgt) {
+      canvas.width = w;
+      canvas.height = hgt;
+    }
     const lctx = canvas.getContext('2d');
+    lctx.setTransform(1, 0, 0, 1, 0, 0);
+    lctx.clearRect(0, 0, w, hgt);
     lctx.setTransform(ratio, 0, 0, ratio, pad * ratio, pad * ratio);
-    lctx.clearRect(-pad, -pad, width + 2 * pad, height + 2 * pad);
     const mpp = this.metersPerPixel;
     // Zoomed out, the cells double in size so the belt never turns into noise.
     const cell = FIELD_ROCK_METERS * 2 ** Math.max(0, Math.ceil(Math.log2((FIELD_ROCK_PX * mpp) / FIELD_ROCK_METERS)));
