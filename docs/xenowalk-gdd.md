@@ -18,7 +18,7 @@ Pierwsze spacery z grą pokazały, że rangi nic nie robią, a statek daje tylko
 - **Kredyt to kaloria:** ekonomia jest przeskalowana tak, że 1 kredyt to mniej więcej 1 spalona kilokaloria, czyli ok. 60–80 kredytów za kilometr spaceru przez całą grę. Ceny dają się czytać jak dystans do przejścia ([7.1](#71-skala-kredyt-to-kaloria)).
 - **Weekendowe wyprawy:** zlecenia dłuższe niż 3 km pojawiają się w piątek i sobotę, z terminem do niedzieli do 20:00, a w sobotę i niedzielę do artefaktów liczy się do 15 km zamiast 3 ([8.4](#84-zlecenie-transportowe-delivery-mission), [9.2](#92-szansa)).
 - **Bank Glutta:** tłuste robaki-bankierzy pożyczają na statek o 1–3 klasy wyższy, za stałą opłatą 20%, spłacane połową każdego zysku, bez odsetek i terminów ([7.6](#76-bank-glutta)).
-- **Wydobycie asteroid:** w głębokiej przestrzeni, co najmniej 400 m od układów, jedno dotknięcie przycisku Mine daje 1 Substances. Wykopane miejsce jest puste w promieniu 200 m przez 6 godzin. Każdy spacer coś daje, także poza własnymi układami ([7.7](#77-wydobycie-asteroid)).
+- **Wydobycie asteroid:** w głębokiej przestrzeni, co najmniej 200 m od układów, jedno dotknięcie przycisku Mine daje 1 Substances. Wykopane miejsce jest puste w promieniu 200 m przez 6 godzin. Każdy spacer coś daje, także między układami i poza nimi ([7.7](#77-wydobycie-asteroid)).
 - **Kości z decyzją:** Obcy rzuca pierwszy, a gracz może spasować za połowę stawki albo zagrać o całość ([8.2](#82-gra-w-kości-dice-game)).
 - **Koniec walki z „oszukiwaniem”:** zamiast reguły „odcinek ponad 2 km to dojazd” liczy się każdy odcinek pokonany średnio wolniej niż 40 km/h. Spacer, bieg i rower to ruch. Kto chce oszukiwać, oszukuje siebie.
 
@@ -287,7 +287,7 @@ Rynek układu to pięć wierszy, po jednym na towar: ile gracz ma w ładowni, ce
 
 ### 7.1. Skala: kredyt to kaloria
 
-- **1 kredyt ≈ 1 kilokaloria.** Spacer spala ok. 60–70 kcal na kilometr, a gra płaci średnio ok. 70 kredytów za kilometr przechodzony między układami. W symulacji zarobek na km wynosi 67–82 cr przez cały rok gry i prawie nie zależy od statku ani od nawyków gracza.
+- **1 kredyt ≈ 1 kilokaloria.** Spacer spala ok. 60–70 kcal na kilometr, a gra płaci średnio ok. 70 kredytów za kilometr przechodzony między układami. W symulacji zarobek na km wynosi 67–82 cr przez cały rok gry i prawie nie zależy od statku ani od nawyków gracza. Z wydobyciem asteroid (od 200 m od układów) wychodzi ok. 81–93 cr/km: trochę ponad skalę, świadomie, jako nagroda za chodzenie.
 - Godzinny spacer (ok. 4–5 km) to ok. 300 cr, a 15-kilometrowa wyprawa ok. 1 000 cr.
 - Kto więcej chodzi, ten szybciej awansuje, i to w prostej proporcji. Ceny dają się czytać jak dystans: Kestrin (3 500 cr) to ok. 50 km spacerów, a Choirship (32 000 cr) ok. 450 km.
 - Dlaczego tak: w wersji 0.2 zarobek rósł kilkukrotnie z wielkością statku, więc po 2–3 miesiącach kredytów było za dużo i nie miały na co iść. Teraz duże statki są drogie, ale osiągalne dzięki samemu chodzeniu.
@@ -298,7 +298,7 @@ Rynek układu to pięć wierszy, po jednym na towar: ile gracz ma w ładowni, ce
 - nagrody za zlecenia transportowe (ok. 20%, zależne wprost od odległości),
 - wygrane w kości,
 - towary z kontenerów,
-- wydobycie asteroid (w symulacji ok. 7% zarobku; więcej u gracza, który chodzi poza swoimi układami).
+- wydobycie asteroid (w symulacji ok. 14% zarobku, ok. 2 500 Substances w rok; więcej u gracza, który chodzi poza swoimi układami).
 
 ### 7.3. Na co idą kredyty
 
@@ -322,16 +322,16 @@ Wyniki symulacji dla gracza, który w tygodniu chodzi godzinę dziennie, a w sob
 |---|---|
 | Start: Mote, 2 układy, 100 kredytów | 1 |
 | Tinderbox (5 układów) | ok. 10 |
-| Kestrin, pełna okolica domu (8 układów) | ok. 28 / ok. 45 |
-| Grindle (12 układów, druga okolica) | ok. 59 |
-| Rookhaul | ok. 79 |
-| Bulwark | ok. 116 (ok. 4 miesiące) |
-| Lightbarque | ok. 160 |
-| Choirship | ok. 216 (ok. 7 miesięcy) |
-| Discovery | ok. 318 (ok. 10,5 miesiąca) |
-| Pełna kolekcja artefaktów | ok. 224 (ok. 7,5 miesiąca) |
+| Kestrin, pełna okolica domu (8 układów) | ok. 28 / ok. 42 |
+| Grindle (12 układów, druga okolica) | ok. 57 |
+| Rookhaul | ok. 76 |
+| Bulwark | ok. 111 (ok. 4 miesiące) |
+| Lightbarque | ok. 150 |
+| Choirship | ok. 203 (ok. 7 miesięcy) |
+| Discovery | ok. 296 (ok. 10 miesięcy) |
+| Pełna kolekcja artefaktów | ok. 225 (ok. 7,5 miesiąca) |
 
-Ta tabela uwzględnia wydobycie asteroid. Symulowany gracz chodzi głównie między swoimi układami, więc kopie niewiele (ok. 3 sztuk na spacer); bez wydobycia Discovery wypada ok. 334. dnia.
+Ta tabela uwzględnia wydobycie asteroid (od 200 m od układów). Bez wydobycia Discovery wypada ok. 334. dnia, a przy wydobyciu od 400 m ok. 318.
 
 Jak tempo zależy od nawyków (mediana):
 
@@ -362,7 +362,7 @@ Rozchodzony gracz nie musi zaczynać od pyłka: może pożyczyć na większy sta
 
 Po porannym handlu albo z dwoma układami w okolicy gracz może nie mieć co robić na spacerze. Wydobycie sprawia, że każdy kilometr coś daje, także daleko od własnych układów.
 
-- **Gdzie:** w głębokiej przestrzeni, co najmniej **400 m** od najbliższego układu. Na mapie pas drobnych skał wypełnia całą przestrzeń, poza kołami 400 m wokół układów i miejscami już wykopanymi, więc od razu widać, gdzie można kopać.
+- **Gdzie:** w głębokiej przestrzeni, co najmniej **200 m** od najbliższego układu (układ ma promień 100 m, więc zostaje 100 m odstępu). Przy 400 m gęsta okolica domu, z układami co 300–500 m, byłaby prawie cała wyłączona; przy 200 m kopie się także po drodze między układami. Na mapie pas drobnych skał wypełnia całą przestrzeń, poza kołami 200 m wokół układów i miejscami już wykopanymi, więc od razu widać, gdzie można kopać.
 - **Jak:** obok przycisku Discover System jest przycisk **Mine**. Jedno dotknięcie daje **1 Substances**, krótki komunikat sam znika. Bez decyzji i bez okien. Pełna ładownia daje komunikat „Cargo hold full”.
 - **Wykopane miejsce** jest puste w promieniu **200 m**. Wykopane miejsca łączą się płynnie jak metaballe (jak przeszukane obszary w Tinwalku): każde rozsiewa wpływ do 300 m, a miejsce jest wykopane tam, gdzie suma wpływów przekracza 1. Na mapie skały znikają tam, gdzie gracz kopał. Po **6 godzinach** skały wracają i można kopać znowu, więc ulubioną trasę da się przejść drugi raz tego samego dnia.
 - **Sprzedaż:** jak każde Substances (kopalnie płacą 50%, przemysł i technologie obcych 110%, reszta 80%). Wykopany towar nic nie kosztował, więc cała cena to zysk, a przy długu połowę zabierają Glutta.
@@ -602,7 +602,7 @@ Wszystkie liczby do strojenia, w jednym miejscu. „Z symulacji” znaczy: dobra
 | Ceny statków | — / 300 / 1 000 / 3 500 / 7 000 / 11 000 / 17 000 / 24 000 / 32 000 / 55 000 | z symulacji |
 | Odkup starego statku | 50% | ustalone |
 | Pożyczka Glutta | na statek 1, 2 lub 3 klasy wyżej, opłata 20%, spłata połową zysków, jedna naraz | ustalone |
-| Wydobycie asteroid | 1 Substances za dotknięcie, od 400 m od układów, wykopane 200 m wokół przez 6 h | ustalone |
+| Wydobycie asteroid | 1 Substances za dotknięcie, od 200 m od układów, wykopane 200 m wokół przez 6 h | ustalone |
 | Ceny bazowe towarów | 4 / 6 / 8 / 16 / 24 | z symulacji |
 | Gracz kupuje produkt rynku za | 60% | ustalone |
 | Gracz sprzedaje za (P / N / D / E) | 50% / 80% / 110% / 140% | z symulacji |

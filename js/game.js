@@ -73,7 +73,7 @@ export const COUNTED_MAX_SPEED_KMH = 40;
 // counts as mined where the influences add up to at least 1. A lone one
 // covers a disc of MINE_RADIUS; ones close together flow into one field.
 export const MINE_GOOD = 'substances';
-export const MINE_MIN_DISTANCE = 400;
+export const MINE_MIN_DISTANCE = 200;
 export const MINE_RADIUS = 200;
 export const MINE_INFLUENCE = 1.5 * MINE_RADIUS;
 const MINE_THRESHOLD = (1 - (MINE_RADIUS / MINE_INFLUENCE) ** 2) ** 2;

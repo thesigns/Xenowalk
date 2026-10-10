@@ -203,7 +203,7 @@ PRESETS['Proposal v0.3'] = {
   artifactKmPerWeekendDay: 15,
   weekendWalkMinutes: 150,
   newAreaKm: 3,
-  miningDistance: 400,
+  miningDistance: 200,
   miningSpacing: 200,
   days: 400,
 };
