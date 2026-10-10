@@ -1,6 +1,6 @@
 # Xenowalk
 
-A walking game: the player's favorite places become star systems, and every walk between them is a trade run. They chart systems where they stand (real GPS), buy what a system produces, sell where it's wanted, meet one stranger per system per day (dice, sealed containers, deliveries), and hunt the 36 relics of six dead civilizations. The ship is the only measure of progress: ten classes, from an escape capsule to the Discovery, each setting the hold, how many systems the captain may have and how far deliveries go. Credits are on a calorie scale, about 70 per km walked. The Glutta Vault, a bank of fat grub-bankers, lends for a ship one to three classes up, paid back from half of every profit. It runs in the browser (PWA later) with no server: all state lives in `localStorage`. The design goal is a walk of about an hour a day, with long walks rewarded at weekends.
+A walking game: the player's favorite places become star systems, and every walk between them is a trade run. They chart systems where they stand (real GPS), buy what a system produces, sell where it's wanted, meet one stranger per system per day (dice, sealed containers, deliveries), and hunt the 36 relics of six dead civilizations. The ship is the only measure of progress: ten classes, from an escape capsule to the Discovery, each setting the hold, how many systems the captain may have and how far deliveries go. Credits are on a calorie scale, about 70 per km walked. The Glutta Vault, a bank of fat grub-bankers, lends for a ship one to three classes up, paid back from half of every profit. It runs in the browser as an installable, offline-capable PWA with no server: all state lives in `localStorage`. The design goal is a walk of about an hour a day, with long walks rewarded at weekends.
 
 ## Source of truth
 
@@ -24,6 +24,8 @@ python tools/serve.py 8000
 Open `http://localhost:8000/?debug`. `tools/serve.py` sends `Cache-Control: no-store`, so edited modules load without a hard reload (plain `python -m http.server` works too, but Chrome caches ES modules aggressively). `tools/phone.html` shows the game in a 390-px phone frame on a desktop.
 
 Debug mode (`?debug`) starts at the last docked system (or in Warsaw), moves the player wherever the map is tapped, can speed game time up (1×, 60×, 3600×), jump a galactic day ahead and add credits. Taps teleport, so the legs between dockings look faster than 40 km/h and earn no km toward relics; speed time up between taps to test those. In debug mode `window.xenowalk` exposes `app`, `state`, `tracker`, `map`, `fromWorld` and `toWorld` for scripted testing.
+
+The service worker is not registered on `localhost` (a cached copy would hide edits); add `?sw` to test it. After adding or removing any file the game loads, run `node tools/sw-files.mjs` to refresh its list, and after changing `img/icon.svg`, `node tools/icons.mjs` to re-render the PNG icons.
 
 The economy simulator: `node tools/sim/run.js "Proposal v0.2" key=value …`, or open `tools/sim/` in the browser.
 
@@ -49,7 +51,8 @@ All game code is in `js/`, loaded from `index.html` via `js/main.js`.
 | `sound.js` | Synthesized sounds (Web Audio): chimes, the dice rattle, the container hiss, the relic shimmer |
 | `haptics.js` | Vibration patterns; names shared with `sound.js` |
 | `debug.js` | Debug panel and the debug clock |
-| `version.js` | `APP_UPDATED`, shown on the start screen and in the menu |
+| `version.js` | `APP_UPDATED`, shown on the start screen and in the menu, and the service worker's cache version |
+| `sw.js` (project root) | The service worker: caches every game file on install (stale-while-revalidate, so updates show on the next launch) and Google Fonts on first load |
 
 ## Conventions and gotchas
 
@@ -62,5 +65,6 @@ All game code is in `js/`, loaded from `index.html` via `js/main.js`.
 - **Colors:** the palette lives as custom properties in `css/style.css`; `COLORS` in `map.js` mirrors it for the canvas. Sector, good and civilization colors are in `data.js` and must match the art.
 - **Art:** all illustrations are hand-drawn SVG line art in `img/`, futuristic minimalism on deep space: main lines `#e9f2ff` width 4, details width 2 in `#9fb1c8` or an accent, translucent accent fills (0.06–0.3), no filters, no text, ids prefixed with the file name. Artifacts (`img/artifacts/<id>.svg`, 512², transparent, object within radius ~190, no outer glow so the CSS silhouette shows the shape), civilization emblems (`img/civs/`), characters (`img/characters/<variant id>.svg`), ships (`img/ships/<ship id>.svg`, 640×320, seen from the rear-port side, nose right; from the Bulwark up they are alien hulls in their civilization's style), planets (`img/planets/<economy in kebab case>.svg`), the emblem and app icon (`img/logo.svg`, `img/icon.svg`). UI icons are symbols in the sprite `img/icons.svg` (`#i-<name>`, goods use their ids).
 - **Feedback:** `feedback(name)` in `main.js` plays a sound and a vibration; `SOUNDS` and `PATTERNS` share names. Audio needs a user gesture first: `sound.unlock()` runs on the start buttons and tabs.
+- **Shared origin:** on GitHub Pages Xenowalk shares `thesigns.github.io` with Tinwalk and Photick, so `localStorage` keys start with `xenowalk.`, the manifest's `id` and `scope` are `./`, and every cache is named `xenowalk-…`; the service worker deletes only those. Cache Storage is per origin, so any other app's worker must do the same.
 - **Safety first:** nothing happens between systems; anything that asks for attention happens in a system the player chose. Keep it that way.
 - **Code style:** match the surrounding code: 2-space indent, single quotes, semicolons, small focused modules, comments that explain why.

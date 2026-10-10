@@ -48,7 +48,7 @@ Między układami gracz przewozi towary: kupuje tanio tam, gdzie się je produku
 
 ### 1.4. Platforma
 
-- Przeglądarka na telefonie, w orientacji pionowej. W przyszłości instalowalna PWA.
+- Przeglądarka na telefonie, w orientacji pionowej. Instalowalna PWA, która działa offline.
 - Bez serwera: cały stan gry w `localStorage`.
 
 ### 1.5. Docelowy gracz
@@ -634,7 +634,7 @@ Wszystkie liczby do strojenia, w jednym miejscu. „Z symulacji” znaczy: dobra
 - **wydarzenia po drodze** (sygnały, wraki): odłożone, bo odciągają uwagę od drogi,
 - reputacja u obcych, obce gry o niejasnych zasadach,
 - więcej rodzajów wydarzeń i artefaktów,
-- pełna PWA (instalacja, działanie offline).
+- powiadomienia i inne funkcje PWA poza instalacją i trybem offline (te już są).
 
 ---
 
@@ -661,7 +661,8 @@ Rozstrzygnięte w wersji 0.3:
 
 - HTML, CSS i czysty JavaScript (moduły ES), bez frameworków i kroku budowania. Mapa na canvasie. Tak samo jak w Tinwalku.
 - Stan w `localStorage`, z wersją zapisu, migracjami i walidacją przy wczytywaniu i imporcie. Przejście na 0.3 wymaga migracji: dotychczasowy statek zamienia się w odpowiednik o podobnej ładowni (Shuttle → Mote, Courier → Kestrin, Hauler → Rookhaul, Freighter → Lightbarque), a kredyty i zysk przeskalowują się do nowej skali.
-- **Klucze `localStorage` z prefiksem `xenowalk.`** (np. `xenowalk.state`). Na GitHub Pages Xenowalk i Tinwalk współdzielą adres, więc i `localStorage`.
+- **Klucze `localStorage` z prefiksem `xenowalk.`** (np. `xenowalk.state`). Na GitHub Pages Xenowalk, Tinwalk i Photick współdzielą adres `thesigns.github.io`, więc i `localStorage`, i pamięć podręczną service workerów.
+- **PWA:** manifest z jawnym `id` i `scope` (`./`, czyli `/Xenowalk/`), więc gra instaluje się obok innych aplikacji z tego adresu. Ikony PNG 192 i 512 (też maskowalna) oraz ikona dla iPhone'a. Service worker zapisuje wszystkie pliki gry przy instalacji i font przy pierwszym uruchomieniu, więc gra działa offline (GPS działa bez internetu). Pamięci podręczne nazywają się `xenowalk-…` i tylko takie są usuwane.
 - Czas gry z `clock.now()`, żeby tryb debug mógł go przyspieszać (terminy zleceń, galaktyczny dzień, dni tygodnia).
 - Opis modułów i konwencji jest w `CLAUDE.md`.
 - Grafiki to ręcznie rysowane pliki SVG w `img/`.

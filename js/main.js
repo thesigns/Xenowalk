@@ -846,5 +846,12 @@ if (isDebug) {
 document.body.classList.add('on-map');
 showStart();
 
+// Offline play once installed. Not on a development server, where a cached
+// copy would hide every edit, unless asked for with ?sw.
+const devServer = ['localhost', '127.0.0.1', '[::1]'].includes(location.hostname);
+if ('serviceWorker' in navigator && (!devServer || new URLSearchParams(location.search).has('sw'))) {
+  navigator.serviceWorker.register(`sw.js?v=${APP_UPDATED}`, { scope: './' }).catch((error) => console.warn('Service worker not registered', error));
+}
+
 // Exposed for poking at the game from the console in debug mode.
 if (isDebug) window.xenowalk = { app, get state() { return state; }, tracker, map, fromWorld, toWorld };
