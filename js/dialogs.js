@@ -16,6 +16,9 @@ import {
 } from './data.js';
 import {
   AREA_MAX_SYSTEMS,
+  MINE_EXPIRY_MS,
+  MINE_MIN_DISTANCE,
+  MINE_RADIUS,
   MIN_SPACING,
   buyPrice,
   freeHold,
@@ -638,12 +641,13 @@ export function openGuide() {
         {},
         step('discover', 'Chart your places', `Tap Discover System where you stand: home, a park bench, your café. Systems sit at least ${MIN_SPACING} m apart, up to ${AREA_MAX_SYSTEMS} within 2 km. The first two are free.`),
         step('cargo', 'Walk and trade', 'Each system sells what it makes (3 a day) and pays well for what it lacks (3 a day). Buy cheap, carry, sell dear. Markets restock at 04:00, and stock waits two days. A kilometer walked earns about 70 credits, roughly the calories you burn.'),
+        step('mine', 'Mine on the way', `Out in deep space, ${MINE_MIN_DISTANCE} m or more from your systems, tap Mine for 1 Substances. A spot is mined out for ${MINE_RADIUS} m around and grows back in ${MINE_EXPIRY_MS / 3_600_000} hours, so walk on and tap again.`),
         step('news', 'Read the news', 'Every day one system in each area runs short of something and pays double for it.'),
         step('event', 'Meet people', 'Each system has one encounter a day: dice with strangers, sealed containers, delivery jobs.'),
         step('artifact', 'Find relics', 'Containers may hide relics of six dead civilizations. Every kilometer between your systems strengthens the signal: 3 km a day count, 15 on Saturdays and Sundays.'),
         step('ship', 'Grow', 'Your ship says who you are. Each bigger one carries more, lets you chart more systems and takes delivery jobs further, from the Mote to the legendary Discovery.'),
         step('mission', 'Go far at weekends', 'On Fridays and Saturdays, jobs beyond 3 km turn up, due Sunday 20:00. A long walk, a big reward.'),
-        step('warning', 'Stay safe', 'Nothing happens between systems. Keep the phone in your pocket and your eyes on the street.'),
+        step('warning', 'Stay safe', 'Between systems there is only the Mine button: one tap, nothing to decide. Stop to tap it, keep the phone in your pocket and your eyes on the street.'),
       ),
       h('button.button.primary.wide', { type: 'button', onclick: () => close() }, 'Got it'),
     );

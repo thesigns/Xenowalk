@@ -68,6 +68,18 @@ export const MAX_KM_PER_WEEKEND_DAY = 15;
 // walking, running, cycling, even a tram; not a car on a highway or a train.
 export const COUNTED_MAX_SPEED_KMH = 40;
 
+// Asteroid mining (GDD 7.7). Mined areas merge like metaballs: each spreads
+// an influence that fades to nothing at MINE_INFLUENCE meters, and a point
+// counts as mined where the influences add up to at least 1. A lone one
+// covers a disc of MINE_RADIUS; ones close together flow into one field.
+export const MINE_GOOD = 'substances';
+export const MINE_MIN_DISTANCE = 400;
+export const MINE_RADIUS = 200;
+export const MINE_INFLUENCE = 1.5 * MINE_RADIUS;
+const MINE_THRESHOLD = (1 - (MINE_RADIUS / MINE_INFLUENCE) ** 2) ** 2;
+// Short enough that a favorite route can be mined again later the same day.
+export const MINE_EXPIRY_MS = 6 * 3_600_000;
+
 const HOUR_MS = 3_600_000;
 const DAY_MS = 24 * HOUR_MS;
 
@@ -276,6 +288,63 @@ export function discoverSystem(state, position, { name, mainPlanet }, now) {
   state.systems.push(system);
   state.stats.discovered++;
   return { system, price };
+}
+
+// ---------------------------------------------------------------- mining
+
+export function activeMinedAreas(state, now) {
+  return state.minedAreas.filter((area) => now - area.minedAt < MINE_EXPIRY_MS);
+}
+
+// Removes the mined areas that have grown back. Returns true if any did.
+export function pruneMinedAreas(state, now) {
+  const active = activeMinedAreas(state, now);
+  const changed = active.length !== state.minedAreas.length;
+  state.minedAreas = active;
+  return changed;
+}
+
+// What a mined area adds to the field at a distance: exactly 1 at MINE_RADIUS,
+// more closer in, 0 from MINE_INFLUENCE on. Takes the distance squared, so the
+// map can evaluate it on a whole grid without square roots.
+export function mineWeight(distanceSquared) {
+  if (distanceSquared >= MINE_INFLUENCE ** 2) return 0;
+  return (1 - distanceSquared / MINE_INFLUENCE ** 2) ** 2 / MINE_THRESHOLD;
+}
+
+function isMined(areas, point) {
+  let field = 0;
+  for (const area of areas) {
+    field += mineWeight((area.x - point.x) ** 2 + (area.y - point.y) ** 2);
+    if (field >= 1) return true;
+  }
+  return false;
+}
+
+// Can the captain mine here? { ok, reason, point }. Only out in deep space,
+// away from every system, where nothing was mined in the last hours.
+export function miningCheck(state, position, { goodSignal }, now) {
+  if (!position) return { ok: false, reason: 'Waiting for GPS' };
+  if (!goodSignal) return { ok: false, reason: 'GPS signal too weak' };
+  if (state.systems.length === 0) return { ok: false, reason: 'Chart your first system first' };
+  const point = toWorld(position);
+  const nearest = state.systems
+    .map((system) => ({ system, d: distance(system, point) }))
+    .sort((a, b) => a.d - b.d)[0];
+  if (nearest.d < MINE_MIN_DISTANCE) {
+    return { ok: false, point, reason: `No asteroids this close to ${nearest.system.name}`, short: `${Math.ceil((MINE_MIN_DISTANCE - nearest.d) / 10) * 10} m out` };
+  }
+  if (isMined(activeMinedAreas(state, now), point)) return { ok: false, point, reason: 'Mined out here. Walk on to fresh rock.', short: 'Mined out' };
+  if (freeHold(state) < 1) return { ok: false, point, reason: 'Cargo hold full', short: 'Hold full' };
+  return { ok: true, point };
+}
+
+// Mines one unit of Substances at a point checked with miningCheck. What is
+// mined cost nothing, so all it sells for is profit.
+export function mineAsteroids(state, point, now) {
+  state.minedAreas.push({ x: Math.round(point.x * 10) / 10, y: Math.round(point.y * 10) / 10, minedAt: now });
+  state.cargo[MINE_GOOD].units += 1;
+  state.stats.mined = (state.stats.mined ?? 0) + 1;
 }
 
 export function renameSystem(state, id, name) {

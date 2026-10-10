@@ -47,13 +47,20 @@
       <button type="button" class="icon-button round" id="recenter" aria-label="Back to my position" hidden><svg class="icon"><use href="img/icons.svg#i-recenter"/></svg></button>
     </div>
     <div class="scale" id="scale"><span class="bar"></span><span class="text"></span></div>
-    <button type="button" class="action" id="action">
-      <svg class="icon" aria-hidden="true"><use href="img/icons.svg#i-discover"/></svg>
-      <span class="action-text">
-        <span class="action-title">Discover System</span>
-        <span class="action-detail">Waiting for GPS</span>
-      </span>
-    </button>
+    <div class="actions">
+      <button type="button" class="action" id="action">
+        <svg class="icon" aria-hidden="true"><use href="img/icons.svg#i-discover"/></svg>
+        <span class="action-text">
+          <span class="action-title">Discover System</span>
+          <span class="action-detail">Waiting for GPS</span>
+        </span>
+      </button>
+      <button type="button" class="mine" id="mine" hidden>
+        <svg class="icon" aria-hidden="true"><use href="img/icons.svg#i-mine"/></svg>
+        <span class="mine-title">Mine</span>
+        <span class="mine-detail" id="mine-detail"></span>
+      </button>
+    </div>
   </div>
 
   <main class="sheet" id="sheet" hidden>
@@ -79,7 +86,7 @@
       <p class="start-tagline">Your places are star systems.<br>Your walks are trade runs.</p>
       <div class="start-safety">
         <svg class="icon" aria-hidden="true"><use href="img/icons.svg#i-warning"/></svg>
-        <p>Space is safe. Streets aren't. Keep your eyes on the road and look at the screen only when you stop in a system.</p>
+        <p>Space is safe. Streets aren't. When you walk outdoors, stay aware of your surroundings. Don't enter restricted, private or dangerous areas, and keep an eye on traffic. Stop before you look at the screen.</p>
       </div>
       <div class="start-buttons">
         <button type="button" class="button primary" id="continue-game" hidden>Continue</button>

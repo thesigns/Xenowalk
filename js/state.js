@@ -6,7 +6,7 @@ import { ARTIFACTS, ECONOMIES, GOOD_IDS, SHIPS } from './data.js';
 import { DAILY_DEMAND, DAILY_SUPPLY, FREE_DISCOVERIES, RESTOCK_CAP_DAYS, START_CREDITS, START_SHIP } from './game.js';
 
 const STORAGE_KEY = 'xenowalk.state';
-export const STATE_VERSION = 3;
+export const STATE_VERSION = 4;
 export const WORLD_ID_MAX_LENGTH = 32;
 
 const INVALID_SAVE = "This file isn't a valid Xenowalk save";
@@ -43,6 +43,12 @@ const MIGRATIONS = {
     save.debt = null;
     save.version = 3;
   },
+  // Asteroid mining: nothing mined yet.
+  3(save) {
+    save.minedAreas = [];
+    if (isObject(save.stats)) save.stats.mined = 0;
+    save.version = 4;
+  },
 };
 
 export function randomWorldId() {
@@ -76,6 +82,7 @@ export function createInitialState(worldId, now) {
     lastDock: null,
     profit: 0,
     debt: null,
+    minedAreas: [],
     stats: {
       km: 0,
       docks: 0,
@@ -87,6 +94,7 @@ export function createInitialState(worldId, now) {
       diceGames: 0,
       diceWins: 0,
       containers: 0,
+      mined: 0,
     },
   };
 }
@@ -212,6 +220,8 @@ export function isValidState(state) {
     (state.lastDock === null || isObject(state.lastDock)) &&
     isNumber(state.profit) &&
     (state.debt === null || (isObject(state.debt) && isNumber(state.debt.owed) && isNumber(state.debt.principal))) &&
+    Array.isArray(state.minedAreas) &&
+    state.minedAreas.every((area) => isObject(area) && isNumber(area.x) && isNumber(area.y) && isNumber(area.minedAt)) &&
     isObject(state.stats)
   );
 }

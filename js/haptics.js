@@ -18,6 +18,7 @@ const PATTERNS = {
   win: [30, 50, 60],
   lose: [90],
   container: [20, 80, 20, 80, 50],
+  mine: [15, 40, 30],
   artifact: [60, 80, 60, 80, 200],
   mission: [25],
   delivered: [30, 50, 30, 50, 60],

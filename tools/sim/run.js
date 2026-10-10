@@ -19,7 +19,7 @@ for (const m of r.milestones) {
 const w = r.perWalk;
 console.log(`\nPer walk: ${w.minutes.toFixed(0)} min, ${w.km.toFixed(1)} km, ${w.stops.toFixed(1)} stops, ${w.events.toFixed(1)} events`);
 const pp = r.perPlayer;
-console.log(`Per player over ${r.days} days: trade ${fmt(pp.trade)}, missions ${fmt(pp.missions)} (${fmt(pp.missionsDone)} done, ${fmt(pp.missionsFailed)} failed), dice ${fmt(pp.dice)} in ${fmt(pp.diceGames)} games, containers ${fmt(pp.containers)} cost ${fmt(pp.containerSpend)} for goods worth ~${fmt(pp.containerValue)}`);
+console.log(`Per player over ${r.days} days: trade ${fmt(pp.trade)}, missions ${fmt(pp.missions)} (${fmt(pp.missionsDone)} done, ${fmt(pp.missionsFailed)} failed), dice ${fmt(pp.dice)} in ${fmt(pp.diceGames)} games, containers ${fmt(pp.containers)} cost ${fmt(pp.containerSpend)} for goods worth ~${fmt(pp.containerValue)}, Substances mined ${fmt(pp.mined ?? 0)}`);
 console.log(`Credits per km walked, by month: ${r.perKm.map((v) => fmt(v)).join(' / ')}`);
 console.log(`Earned p50 at day 7/30/90/end: ${[6, 29, 89, r.days - 1].map((d) => fmt(r.earned[1][d])).join(' / ')}`);
 console.log(`Start: identical markets ${(r.start.identical * 100).toFixed(0)}%, no trade profit in week 1 ${(r.start.deadWeek * 100).toFixed(0)}%`);

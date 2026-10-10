@@ -23,12 +23,16 @@ import {
   galacticDay,
   galacticWeekday,
   houseRoll,
+  MINE_GOOD,
+  mineAsteroids,
+  miningCheck,
   newsFor,
   nextDayStart,
   openContainer,
   pendingEvent,
   planetOptions,
   playDice,
+  pruneMinedAreas,
   recordDock,
   refreshMarket,
   renameSystem,
@@ -49,7 +53,7 @@ import { renderSystemPage, resetOrders } from './page-system.js';
 import { SoundEffects } from './sound.js';
 import { clearState, createInitialState, exportState, loadState, parseSave, randomWorldId, requestPersistentStorage, saveState } from './state.js';
 import { confirmDialog, formatCredits, formatDistance, formatDuration, h, icon, isDialogOpen, signed, toast } from './ui.js';
-import { APP_UPDATED } from './version.js';
+import { APP_BUILD, APP_UPDATED } from './version.js';
 import {
   confirmDelete,
   confirmLoan,
@@ -487,6 +491,31 @@ async function discover() {
   refresh();
 }
 
+// ---------------------------------------------------------------- mining
+
+// One tap, one unit: a toast that fades by itself, nothing to decide.
+function mine() {
+  const t = now();
+  const check = miningCheck(state, tracker.position, { goodSignal: tracker.hasGoodSignal }, t);
+  if (!check.ok) {
+    feedback('error');
+    toast(check.reason, { icon: check.short === 'Hold full' ? 'cargo' : 'warning' });
+    return;
+  }
+  mineAsteroids(state, check.point, t);
+  save();
+  feedback('mine');
+  map.ripple(check.point, '#ffc04d', 2);
+  const button = $('mine');
+  button.classList.remove('struck');
+  void button.offsetWidth;
+  button.classList.add('struck');
+  toast(`+1 ${goodById[MINE_GOOD].name} · hold ${cargoUnits(state)}/${SHIPS[state.ship].hold}`, { icon: MINE_GOOD, kind: 'good' });
+  updateScene();
+  updateHud();
+  if (activeTab === 'cargo') refreshPage();
+}
+
 // ---------------------------------------------------------------- the tick
 
 function tick() {
@@ -502,6 +531,10 @@ function tick() {
     toast(news.length ? 'A new galactic day. Markets restocked, and there is news.' : 'A new galactic day. Markets restocked.', { icon: 'news', kind: 'gold' });
     if (app.docked) refreshMarket(app.docked, day);
     maybeShowEvent();
+  }
+  if (pruneMinedAreas(state, t)) {
+    save();
+    updateScene();
   }
   const expired = expireMissions(state, t);
   if (expired.length) {
@@ -556,6 +589,7 @@ function updateScene() {
       ref: system,
     })),
     pointers,
+    minedAreas: state.minedAreas,
   });
 }
 
@@ -573,6 +607,7 @@ function updateHud() {
   setBadge('codex', newArtifacts.size ? 'gold' : null);
   setBadge('cargo', state.missions.length ? 'gold' : null);
   updateAction();
+  updateMine();
   updateTicker();
 }
 
@@ -648,6 +683,16 @@ function updateAction() {
     detail.textContent = check.reason === 'Not enough credits' ? `Needs ${formatCredits(check.price)} cr` : check.reason;
   }
   button.onclick = discover;
+}
+
+function updateMine() {
+  const button = $('mine');
+  button.hidden = Boolean(app.docked) || state.systems.length === 0;
+  if (button.hidden) return;
+  const check = miningCheck(state, tracker.position, { goodSignal: tracker.hasGoodSignal }, now());
+  button.classList.toggle('disabled', !check.ok);
+  $('mine-detail').textContent = check.ok ? `+1 ${goodById[MINE_GOOD].name}` : (check.short ?? 'No GPS');
+  button.onclick = mine;
 }
 
 // A line under the top bar: first-steps hints, else rotating status and news.
@@ -850,7 +895,7 @@ showStart();
 // copy would hide every edit, unless asked for with ?sw.
 const devServer = ['localhost', '127.0.0.1', '[::1]'].includes(location.hostname);
 if ('serviceWorker' in navigator && (!devServer || new URLSearchParams(location.search).has('sw'))) {
-  navigator.serviceWorker.register(`sw.js?v=${APP_UPDATED}`, { scope: './' }).catch((error) => console.warn('Service worker not registered', error));
+  navigator.serviceWorker.register(`sw.js?v=${APP_UPDATED}.${APP_BUILD}`, { scope: './' }).catch((error) => console.warn('Service worker not registered', error));
 }
 
 // Exposed for poking at the game from the console in debug mode.

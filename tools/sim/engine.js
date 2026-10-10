@@ -123,6 +123,13 @@ export const PARAM_GROUPS = [
     ],
   },
   {
+    title: 'Mining',
+    params: [
+      { key: 'miningDistance', label: 'Asteroids from this far from any system', unit: 'm, 0 = no mining', def: 0, step: 50 },
+      { key: 'miningSpacing', label: 'One Substances per', unit: 'm walked out there', def: 200, step: 25 },
+    ],
+  },
+  {
     title: 'Run',
     params: [
       { key: 'players', label: 'Players', def: 100, step: 50 },
@@ -196,6 +203,8 @@ PRESETS['Proposal v0.3'] = {
   artifactKmPerWeekendDay: 15,
   weekendWalkMinutes: 150,
   newAreaKm: 3,
+  miningDistance: 400,
+  miningSpacing: 200,
   days: 400,
 };
 
@@ -511,7 +520,8 @@ function newPlayer(p, seed) {
     lastEventSystem: -1,
     spentShips: 0,
     spentCoords: 0,
-    totals: { sales: 0, buys: 0, missions: 0, missionsDone: 0, missionsFailed: 0, dice: 0, diceGames: 0, containerSpend: 0, containers: 0, containerValue: 0, events: 0 },
+    minedCarry: 0,
+    totals: { mined: 0, sales: 0, buys: 0, missions: 0, missionsDone: 0, missionsFailed: 0, dice: 0, diceGames: 0, containerSpend: 0, containers: 0, containerValue: 0, events: 0 },
   };
   if (p.secondAreaKm > 0) {
     const a = rng() * Math.PI * 2;
@@ -635,6 +645,26 @@ function runEvent(st, sys, ctx, p) {
     }
     st.missions.push({ dest, units: p.missionUnits, deadline: hours + deadlineHours, reward });
   }
+}
+
+// Asteroid mining (v0.3): one Substances for every miningSpacing meters walked
+// further than miningDistance from all systems, while the hold has room. The
+// mined areas don't last to the next walk, so only the leg itself matters.
+function mine(st, from, to, p) {
+  if (!(p.miningDistance > 0)) return;
+  const length = dist(from, to);
+  const steps = Math.ceil(length / 25);
+  let far = 0;
+  for (let k = 0; k < steps; k++) {
+    const t = (k + 0.5) / steps;
+    const point = { x: from.x + (to.x - from.x) * t, y: from.y + (to.y - from.y) * t };
+    if (st.systems.every((s) => dist(s, point) > p.miningDistance)) far += length / steps;
+  }
+  st.minedCarry += far / p.miningSpacing;
+  const units = Math.min(Math.floor(st.minedCarry), Math.max(0, Math.floor(holdOf(st, p) - cargoUsed(st))));
+  st.minedCarry -= Math.floor(st.minedCarry);
+  st.cargo[2] += units;
+  st.totals.mined += units;
 }
 
 // The systems a weekend walk from home would pass, worked out once a day.
@@ -881,6 +911,7 @@ export function simulatePlayer(input, seed, days) {
           if (!walkStart[i]) {
             daily.km += km * p.detour;
             totalKm += km * p.detour;
+            mine(st, route[i - 1], sys, p);
           }
         }
         daily.stops++;
@@ -1014,6 +1045,7 @@ function summarize(runs, p, days) {
     milestones,
     perPlayer: {
       trade: t('sales') - t('buys'),
+      mined: t('mined'),
       missions: t('missions'),
       dice: t('dice'),
       containerSpend: t('containerSpend'),

@@ -169,6 +169,7 @@ function logSection(state, now) {
       stat('Units traded', String(stats.bought + stats.sold)),
       stat('Deliveries', String(stats.delivered)),
       stat('Containers opened', String(stats.containers)),
+      stat('Substances mined', String(stats.mined ?? 0)),
       stat('Dice', stats.diceGames ? `${stats.diceWins}–${stats.diceGames - stats.diceWins}` : '—'),
       stat('Lifetime profit', `${formatCredits(state.profit)} cr`),
       // The calorie scale at work: what a kilometer has been worth so far.

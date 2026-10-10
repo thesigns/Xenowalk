@@ -53,6 +53,12 @@ const SOUNDS = {
     s.tone(t, { frequency: 330, endFrequency: 220, duration: 0.5, volume: 0.15, type: 'triangle' });
     s.tone(t + 0.15, { frequency: 262, endFrequency: 174, duration: 0.6, volume: 0.12, type: 'triangle' });
   },
+  // A short cutting beam and a chunk of rock breaking off.
+  mine(s, t) {
+    s.tone(t, { frequency: 2400, endFrequency: 1100, duration: 0.14, volume: 0.06, type: 'sawtooth' });
+    s.noise(t + 0.1, { duration: 0.16, volume: 0.22, frequency: 260, filter: 'lowpass' });
+    s.tone(t + 0.14, { frequency: NOTES[5], duration: 0.3, volume: 0.1 });
+  },
   container(s, t) {
     s.hiss(t, { duration: 0.9, volume: 0.12, frequency: 2600, fade: 0.1 });
     s.noise(t + 0.85, { duration: 0.2, volume: 0.3, frequency: 180, filter: 'lowpass' });

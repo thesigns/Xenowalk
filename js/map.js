@@ -6,7 +6,7 @@
 
 import { hasWorld, sectorField, starsInCell } from './galaxy.js';
 import { createSimplex } from './noise.js';
-import { SYSTEM_RADIUS } from './game.js';
+import { MINE_MIN_DISTANCE, SYSTEM_RADIUS, mineWeight } from './game.js';
 
 const MIN_VIEW_METERS = 300;
 const MAX_VIEW_METERS = 9000;
@@ -21,6 +21,12 @@ const NEBULA_MOVING_STEP_PX = 9;
 const SETTLE_MS = 160;
 const EDGE_GLOW_PX = 11;
 const FOLLOW_EASING = 0.18;
+// The asteroid layer is this much bigger than the screen, so it can slide
+// with the camera a while before it is drawn again.
+const FIELD_PAD_PX = 80;
+// One rock per cell of at least this many meters and pixels.
+const FIELD_ROCK_METERS = 25;
+const FIELD_ROCK_PX = 8;
 
 // Mirrors the palette in css/style.css.
 export const COLORS = {
@@ -30,6 +36,8 @@ export const COLORS = {
   dim: '#61748d',
   cyan: '#5fe6ff',
   gold: '#ffd479',
+  substances: '#ffc04d',
+  rock: '#9fb1c8',
   sectors: ['#5b9dff', '#b77dff', '#ffb24d'],
   // The same as rgb triples, for the nebula's pixels.
   sectorRgb: [
@@ -85,6 +93,7 @@ export class MapView {
     this.canvas.height = Math.round(this.height * ratio);
     this.ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
     this.nebulaKey = '';
+    this.asteroids = null;
   }
 
   get metersPerPixel() {
@@ -282,6 +291,7 @@ export class MapView {
     this.drawStars(time, this.center);
     if (hasWorld()) this.drawNebula(time);
     this.drawGrid();
+    if (hasWorld() && this.scene.systems.length) this.drawAsteroids();
     if (this.scene.showArea && player) this.drawArea(player, time);
     this.drawRoutes(time);
     for (const system of this.scene.systems) this.drawSystem(system, time);
@@ -390,6 +400,83 @@ export class MapView {
     }
     ctx.stroke();
     ctx.globalAlpha = 1;
+  }
+
+  // Asteroids fill deep space: none within MINE_MIN_DISTANCE of a system, and
+  // none where the captain mined, until the rock grows back. Where mining is
+  // possible can be seen at a glance. The rocks are pinned to the world and
+  // drawn into a layer a bit bigger than the screen, redrawn only when the
+  // view moves past its margin or zooms, or the fields change.
+  drawAsteroids() {
+    const { ctx, width, height, ratio } = this;
+    const { systems, minedAreas = [] } = this.scene;
+    const mpp = this.metersPerPixel;
+    const origin = this.toScreen({ x: 0, y: 0 });
+    const signature = `${mpp.toFixed(4)},${width},${height},${ratio},${systems.length},${minedAreas.length},${minedAreas[0]?.minedAt},${minedAreas[minedAreas.length - 1]?.minedAt}`;
+    let layer = this.asteroids;
+    if (!layer || layer.signature !== signature || Math.abs(origin.x - layer.origin.x) > FIELD_PAD_PX / 2 || Math.abs(origin.y - layer.origin.y) > FIELD_PAD_PX / 2) {
+      layer = this.asteroids = { signature, origin, canvas: this.asteroids?.canvas ?? document.createElement('canvas') };
+      this.renderAsteroids(layer.canvas, systems, minedAreas);
+    }
+    ctx.drawImage(layer.canvas, origin.x - layer.origin.x - FIELD_PAD_PX, origin.y - layer.origin.y - FIELD_PAD_PX, width + 2 * FIELD_PAD_PX, height + 2 * FIELD_PAD_PX);
+  }
+
+  renderAsteroids(canvas, systems, minedAreas) {
+    const { width, height, ratio } = this;
+    const pad = FIELD_PAD_PX;
+    canvas.width = Math.round((width + 2 * pad) * ratio);
+    canvas.height = Math.round((height + 2 * pad) * ratio);
+    const lctx = canvas.getContext('2d');
+    lctx.setTransform(ratio, 0, 0, ratio, pad * ratio, pad * ratio);
+    lctx.clearRect(-pad, -pad, width + 2 * pad, height + 2 * pad);
+    const mpp = this.metersPerPixel;
+    // Zoomed out, the cells double in size so the belt never turns into noise.
+    const cell = FIELD_ROCK_METERS * 2 ** Math.max(0, Math.ceil(Math.log2((FIELD_ROCK_PX * mpp) / FIELD_ROCK_METERS)));
+    const tl = this.toWorld(-pad, -pad);
+    const br = this.toWorld(width + pad, height + pad);
+    const clear = MINE_MIN_DISTANCE;
+    const fade = Math.max(60, 12 * mpp);
+    // Three brightness steps, each drawn as one path.
+    const paths = [new Path2D(), new Path2D(), new Path2D()];
+    const glints = new Path2D();
+    for (let i = Math.floor(tl.x / cell); i <= Math.ceil(br.x / cell); i++) {
+      for (let j = Math.floor(br.y / cell); j <= Math.ceil(tl.y / cell); j++) {
+        const h = hash2(i, j);
+        const x = (i + h[0]) * cell;
+        const y = (j + h[1]) * cell;
+        let nearest = Infinity;
+        for (const system of systems) nearest = Math.min(nearest, (system.x - x) ** 2 + (system.y - y) ** 2);
+        nearest = Math.sqrt(nearest);
+        if (nearest < clear) continue;
+        let field = 0;
+        for (const area of minedAreas) field += mineWeight((area.x - x) ** 2 + (area.y - y) ** 2);
+        if (field >= 1) continue;
+        // Soft edges: thinning out toward a system and toward a mined field.
+        const presence = Math.min(1, (nearest - clear) / fade) * Math.min(1, (1 - field) * 2.5);
+        if (h[2] > presence) continue;
+        const p = this.toScreen({ x, y });
+        const size = 1 + h[3] * 2;
+        const path = h[4] < 0.08 ? glints : paths[Math.floor(h[4] * 3)];
+        const spin = h[3] * Math.PI * 2;
+        for (let k = 0; k < 4; k++) {
+          const a = spin + (k * Math.PI) / 2 + (h[k] - 0.5) * 0.9;
+          const r = size * (0.6 + h[(k + 2) % 5] * 0.6);
+          if (k === 0) path.moveTo(p.x + Math.cos(a) * r, p.y + Math.sin(a) * r);
+          else path.lineTo(p.x + Math.cos(a) * r, p.y + Math.sin(a) * r);
+        }
+        path.closePath();
+      }
+    }
+    lctx.lineWidth = 1;
+    lctx.lineJoin = 'round';
+    lctx.strokeStyle = COLORS.rock;
+    paths.forEach((path, index) => {
+      lctx.globalAlpha = 0.2 + index * 0.13;
+      lctx.stroke(path);
+    });
+    lctx.strokeStyle = COLORS.substances;
+    lctx.globalAlpha = 0.5;
+    lctx.stroke(glints);
   }
 
   // The area around the player in which at most 8 systems fit.
@@ -677,6 +764,18 @@ export class MapView {
     this.scale = { meters, pixels };
     this.onScale?.(meters, pixels);
   }
+}
+
+// Five stable numbers in [0, 1) for a grid cell.
+function hash2(i, j) {
+  let h = Math.imul(i, 374761393) ^ Math.imul(j, 668265263);
+  const out = [];
+  for (let k = 0; k < 5; k++) {
+    h = Math.imul(h ^ (h >>> 13), 1274126177);
+    h ^= h >>> 16;
+    out.push((h >>> 0) / 4294967296);
+  }
+  return out;
 }
 
 function clamp(value, min, max) {

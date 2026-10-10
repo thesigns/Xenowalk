@@ -167,6 +167,12 @@
       <circle cx="14.5" cy="11.5" r="1.1"/>
       <circle cx="13.6" cy="16.6" r=".9"/>
     </symbol>
+    <symbol id="i-mine" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M3.5 13.5 6.5 8.5l5-1.5 3.5 3.5-.5 5.5-4.5 4H6l-3-3Z"/>
+      <circle cx="9" cy="14.5" r="1.6" opacity=".6"/>
+      <path d="M12.5 11.5 20.5 3.5"/>
+      <path d="M17 7.5l2.5 1M16 4.5 15 2M19 10l2 1.5" opacity=".6"/>
+    </symbol>
     <symbol id="i-substances" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
       <path d="M12 3 19 7v10l-7 4-7-4V7Z"/>
       <path d="m12 3 0 8 7 6M12 11l-7 6" opacity=".6"/>
