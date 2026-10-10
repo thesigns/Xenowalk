@@ -60,16 +60,6 @@ export function icon(name, className = '') {
   return svg;
 }
 
-export function rankInsignia(index, className = 'insignia') {
-  const svg = document.createElementNS(SVG_NS, 'svg');
-  svg.setAttribute('class', className);
-  svg.setAttribute('aria-hidden', 'true');
-  const use = document.createElementNS(SVG_NS, 'use');
-  use.setAttribute('href', `img/ranks.svg#rank-${index}`);
-  svg.append(use);
-  return svg;
-}
-
 export function formatCredits(value) {
   return Math.round(value).toLocaleString('en-US');
 }
@@ -139,8 +129,9 @@ export function openDialog(build, { dismissible = true, className = '' } = {}) {
       };
       if (dismissible) {
         dialog.append(h('button.dialog-close', { type: 'button', 'aria-label': 'Close', onclick: () => close(null) }, icon('close')));
+        // A dialog can lock itself mid-way (data-locked), e.g. once the house has thrown.
         backdrop.addEventListener('click', (event) => {
-          if (event.target === backdrop) close(null);
+          if (event.target === backdrop && !dialog.dataset.locked) close(null);
         });
       }
       build(close, dialog);

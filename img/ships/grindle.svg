@@ -1,15 +1,15 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 320">
-  <!-- Hauler, hold 40 -->
+  <!-- Grindle (frontier-built), hold 30 -->
   <defs>
-    <linearGradient id="hauler-hull" x1="0" y1="0" x2="0" y2="1">
+    <linearGradient id="grindle-hull" x1="0" y1="0" x2="0" y2="1">
       <stop offset="0" stop-color="#5fe6ff" stop-opacity="0.16"/>
       <stop offset="1" stop-color="#5fe6ff" stop-opacity="0.06"/>
     </linearGradient>
-    <linearGradient id="hauler-plume" x1="1" y1="0" x2="0" y2="0">
+    <linearGradient id="grindle-plume" x1="1" y1="0" x2="0" y2="0">
       <stop offset="0" stop-color="#5fe6ff" stop-opacity="0.32"/>
       <stop offset="1" stop-color="#5fe6ff" stop-opacity="0"/>
     </linearGradient>
-    <radialGradient id="hauler-glow">
+    <radialGradient id="grindle-glow">
       <stop offset="0" stop-color="#e9f2ff"/>
       <stop offset="0.5" stop-color="#5fe6ff" stop-opacity="0.9"/>
       <stop offset="1" stop-color="#5fe6ff" stop-opacity="0.35"/>
@@ -17,11 +17,11 @@
   </defs>
   <g fill="none" stroke-linecap="round" stroke-linejoin="round">
     <!-- Exhaust -->
-    <path fill="url(#hauler-plume)" d="M19 178L74 145L78 146L82 152L86 163L88 175L87 185L84 191Z"/>
-    <path fill="url(#hauler-plume)" d="M41 263L96 228L100 229L104 236L108 248L110 260L109 270L106 274Z"/>
-    <path fill="url(#hauler-plume)" d="M7 228L60 196L63 196L68 203L71 213L72 225L72 234L69 239Z"/>
+    <path fill="url(#grindle-plume)" d="M19 178L74 145L78 146L82 152L86 163L88 175L87 185L84 191Z"/>
+    <path fill="url(#grindle-plume)" d="M41 263L96 228L100 229L104 236L108 248L110 260L109 270L106 274Z"/>
+    <path fill="url(#grindle-plume)" d="M7 228L60 196L63 196L68 203L71 213L72 225L72 234L69 239Z"/>
     <!-- Hull panels -->
-    <path fill="url(#hauler-hull)" d="M417 156L420 55L427 40L485 31L557 61L581 78L586 91L582 153L548 204L490 216L423 177Z
+    <path fill="url(#grindle-hull)" d="M417 156L420 55L427 40L485 31L557 61L581 78L586 91L582 153L548 204L490 216L423 177Z
          M457 33L491 28L526 42L525 55L491 61L457 46ZM165 95L460 49L481 58L480 86L183 136L166 124Z
          M176 119L181 107L234 99L285 130L291 149L291 234L285 244L231 255L183 217L178 200Z
          M243 108L248 97L299 88L353 118L359 137L357 220L351 230L299 241L249 205L244 187Z
@@ -71,9 +71,9 @@
          M76 191L69 170L68 148L73 137L80 138M457 36L427 40L420 55
          M129 272L106 282L97 274L91 252L90 238L70 247L62 239L55 219L54 198L59 188L75 189"/>
     <!-- Engines -->
-    <path fill="url(#hauler-glow)" stroke="#5fe6ff" stroke-width="2" d="M77.9 143.3C83.2 147.8 88 162.4 88.7 176C89.3 189.5 85.5 196.9 80.2 192.4C74.9 188 70.1 173.3 69.4 159.8C68.8 146.2 72.6 138.8 77.9 143.3Z"/>
-    <path fill="url(#hauler-glow)" stroke="#5fe6ff" stroke-width="2" d="M99.7 226.9C105.2 232 110.2 247.1 110.8 260.6C111.3 274.1 107.3 280.8 101.8 275.7C96.3 270.5 91.3 255.4 90.7 241.9C90.2 228.5 94.2 221.7 99.7 226.9Z"/>
-    <path fill="url(#hauler-glow)" stroke="#5fe6ff" stroke-width="2" d="M63.2 194.1C68.2 198.7 72.8 212.9 73.4 225.8C74.1 238.7 70.6 245.4 65.6 240.8C60.6 236.1 56 221.9 55.4 209C54.7 196.1 58.2 189.4 63.2 194.1Z"/>
+    <path fill="url(#grindle-glow)" stroke="#5fe6ff" stroke-width="2" d="M77.9 143.3C83.2 147.8 88 162.4 88.7 176C89.3 189.5 85.5 196.9 80.2 192.4C74.9 188 70.1 173.3 69.4 159.8C68.8 146.2 72.6 138.8 77.9 143.3Z"/>
+    <path fill="url(#grindle-glow)" stroke="#5fe6ff" stroke-width="2" d="M99.7 226.9C105.2 232 110.2 247.1 110.8 260.6C111.3 274.1 107.3 280.8 101.8 275.7C96.3 270.5 91.3 255.4 90.7 241.9C90.2 228.5 94.2 221.7 99.7 226.9Z"/>
+    <path fill="url(#grindle-glow)" stroke="#5fe6ff" stroke-width="2" d="M63.2 194.1C68.2 198.7 72.8 212.9 73.4 225.8C74.1 238.7 70.6 245.4 65.6 240.8C60.6 236.1 56 221.9 55.4 209C54.7 196.1 58.2 189.4 63.2 194.1Z"/>
     <path stroke="#e9f2ff" stroke-width="1.5" opacity="0.8" d="M78 154C81 157 84 165 84 172C85 180 83 184 80 181C77 179 74 171 74 163C73 156 76 152 78 154Z
          M100 238C103 241 106 249 106 256C107 264 104 267 101 265C98 262 96 254 95 246C95 239 97 235 100 238Z
          M64 205C66 207 69 215 69 222C70 229 68 233 65 230C62 228 60 220 59 213C59 206 61 202 64 205Z"/>

@@ -3,17 +3,47 @@
 // share an origin, and so localStorage.
 
 import { ARTIFACTS, ECONOMIES, GOOD_IDS, SHIPS } from './data.js';
-import { FREE_DISCOVERIES, START_CREDITS } from './game.js';
+import { DAILY_DEMAND, DAILY_SUPPLY, FREE_DISCOVERIES, RESTOCK_CAP_DAYS, START_CREDITS, START_SHIP } from './game.js';
 
 const STORAGE_KEY = 'xenowalk.state';
-export const STATE_VERSION = 1;
+export const STATE_VERSION = 3;
 export const WORLD_ID_MAX_LENGTH = 32;
 
 const INVALID_SAVE = "This file isn't a valid Xenowalk save";
 const OTHER_VERSION = 'This save comes from a newer version of Xenowalk';
 
 // Each migration upgrades a save from the version it is keyed by to the next one.
-const MIGRATIONS = {};
+const MIGRATIONS = {
+  // v0.3: ten ships instead of four, no ranks, credits on a calorie scale
+  // (about a fifth of v0.2's). The ship becomes the class with the most
+  // similar hold; today's drawn events had v0.2 prices, so they are drawn again.
+  1(save) {
+    const SHIP_FOR_V2 = [1, 3, 5, 7]; // Shuttle, Courier, Hauler, Freighter
+    save.ship = SHIP_FOR_V2[save.ship] ?? 1;
+    const scale = (value) => Math.round(value / 5);
+    save.credits = scale(save.credits);
+    save.profit = scale(save.profit ?? 0);
+    delete save.rank;
+    for (const held of Object.values(save.cargo ?? {})) if (isObject(held)) held.cost = scale(held.cost);
+    for (const mission of save.missions ?? []) if (isObject(mission)) mission.reward = scale(mission.reward);
+    for (const system of save.systems ?? []) {
+      if (!isObject(system)) continue;
+      system.pendingEvent = null;
+      if (isObject(system.market)) {
+        system.market.stock = Math.min(system.market.stock, DAILY_SUPPLY * RESTOCK_CAP_DAYS);
+        for (const id of Object.keys(system.market.demand ?? {})) {
+          system.market.demand[id] = Math.min(system.market.demand[id], DAILY_DEMAND * RESTOCK_CAP_DAYS);
+        }
+      }
+    }
+    save.version = 2;
+  },
+  // The Glutta Vault: no one owes anything yet.
+  2(save) {
+    save.debt = null;
+    save.version = 3;
+  },
+};
 
 export function randomWorldId() {
   const letters = 'ABCDEFGHJKLMNPQRSTUVWXYZ';
@@ -33,7 +63,7 @@ export function createInitialState(worldId, now) {
     world: { id: worldId, origin: null },
     credits: START_CREDITS,
     freeDiscoveries: FREE_DISCOVERIES,
-    ship: 0,
+    ship: START_SHIP,
     cargo: emptyCargo(),
     systems: [],
     nextSystemId: 1,
@@ -45,7 +75,7 @@ export function createInitialState(worldId, now) {
     kmToday: { day: 0, km: 0 },
     lastDock: null,
     profit: 0,
-    rank: 0,
+    debt: null,
     stats: {
       km: 0,
       docks: 0,
@@ -181,7 +211,7 @@ export function isValidState(state) {
     isObject(state.kmToday) &&
     (state.lastDock === null || isObject(state.lastDock)) &&
     isNumber(state.profit) &&
-    isCount(state.rank) &&
+    (state.debt === null || (isObject(state.debt) && isNumber(state.debt.owed) && isNumber(state.debt.principal))) &&
     isObject(state.stats)
   );
 }

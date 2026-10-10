@@ -21,7 +21,6 @@ const PATTERNS = {
   artifact: [60, 80, 60, 80, 200],
   mission: [25],
   delivered: [30, 50, 30, 50, 60],
-  rank: [40, 60, 40, 60, 40, 60, 120],
   ship: [100, 80, 160],
   expired: [80, 60, 40],
   error: [50],

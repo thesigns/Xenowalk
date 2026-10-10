@@ -130,6 +130,7 @@
   <div class="toolbar">
     <button type="button" id="preset-gdd" data-preset="GDD v0.1">GDD v0.1</button>
     <button type="button" id="preset-proposal" data-preset="Proposal v0.2">Proposal v0.2</button>
+    <button type="button" id="preset-v03" data-preset="Proposal v0.3">Proposal v0.3</button>
     <button type="button" id="keep">Keep as baseline</button>
     <button type="button" class="primary" id="run">Run</button>
   </div>
@@ -358,6 +359,7 @@ function renderGlance(cur, base) {
     ['Walk', (r) => `${fmt(r.main.perWalk.minutes)} min · ${fmt(r.main.perWalk.km, 1)} km`],
     ['Stops and events per walk', (r) => `${fmt(r.main.perWalk.stops, 1)} · ${fmt(r.main.perWalk.events, 1)}`],
     ['Phone out per walk', (r) => `${fmt(r.main.perWalk.stops * r.params.stopMinutes)} min`],
+    ['Credits per km walked', (r) => (r.main.perKm?.length ? fmt([...r.main.perKm].sort((a, b) => a - b)[Math.floor(r.main.perKm.length / 2)]) : '–')],
     ['Start with identical markets', (r) => `${fmt(r.main.start.identical * 100)}%`],
     ['Credits earned, day 30', (r) => compact(r.main.earned[1][Math.min(29, r.main.days - 1)])],
     ['Credits earned, last day', (r) => compact(r.main.earned[1][r.main.days - 1])],
@@ -393,7 +395,8 @@ function renderMilestones(cur, base) {
   table.append(head);
 
   cur.main.milestones.forEach((ms, i) => {
-    const bm = base?.main.milestones[i];
+    // Matched by name: the presets list different ships.
+    const bm = base?.main.milestones.find((m) => m.label === ms.label);
     const tr = el('tr');
     tr.append(el('td', {}, ms.label), el('td', { className: 'num' }, `${fmt(ms.share * 100)}%`), el('td', { className: 'num' }, ms.share >= 0.5 ? fmt(ms.days[1]) : '–'));
     if (base) tr.append(el('td', { className: 'num muted' }, bm && bm.share >= 0.5 ? fmt(bm.days[1]) : '–'));
@@ -611,12 +614,12 @@ $('sweep-which').addEventListener('click', () => {
   renderSweep();
 });
 
-// Open on a real comparison: GDD v0.1 as the baseline, the proposal as current.
+// Open on a real comparison: v0.2 as the baseline, v0.3 as current.
 (async () => {
-  applyPreset('GDD v0.1');
+  applyPreset('Proposal v0.2');
   await run();
   state.baseline = state.current;
-  applyPreset('Proposal v0.2');
+  applyPreset('Proposal v0.3');
   await run();
 })();
 </script>

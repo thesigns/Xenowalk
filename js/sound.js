@@ -76,9 +76,6 @@ const SOUNDS = {
     [4, 6, 8].forEach((n, i) => s.tone(t + i * 0.1, { frequency: NOTES[n], duration: 0.5, volume: 0.17 }));
     s.noise(t + 0.2, { duration: 0.3, volume: 0.05, frequency: 7000, filter: 'highpass' });
   },
-  rank(s, t) {
-    [0, 2, 4, 5, 7, 10].forEach((n, i) => s.tone(t + i * 0.11, { frequency: NOTES[n], duration: 0.9, volume: 0.15, type: i === 5 ? 'triangle' : 'sine' }));
-  },
   ship(s, t) {
     s.tone(t, { frequency: 60, endFrequency: 140, duration: 1.4, volume: 0.25, type: 'sawtooth', attack: 0.3 });
     s.hiss(t, { duration: 1.4, volume: 0.08, frequency: 400, fade: 0.4 });

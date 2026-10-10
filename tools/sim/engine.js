@@ -38,6 +38,8 @@ export const PARAM_GROUPS = [
       { key: 'placeChoices', label: 'Picks the best fit of', unit: 'places', def: 3 },
       { key: 'fillFactor', label: 'Buys Coords until loop is', unit: '× walk', def: 1.3, step: 0.1 },
       { key: 'secondAreaKm', label: 'Second area (work, family) at', unit: 'km, 0 = none', def: 0, step: 0.5 },
+      { key: 'weekendWalkMinutes', label: 'Weekend walk (Sat, Sun)', unit: 'min, 0 = as weekdays', def: 0, step: 15 },
+      { key: 'newAreaKm', label: 'More areas, for weekend walks, at', unit: 'km, 0 = none', def: 0, step: 0.5 },
     ],
   },
   {
@@ -57,8 +59,12 @@ export const PARAM_GROUPS = [
   {
     title: 'Ships',
     params: [
+      { key: 'shipNames', label: 'Names', def: 'Shuttle, Courier, Hauler, Freighter', list: true, text: true },
       { key: 'shipHolds', label: 'Holds', def: '10, 20, 40, 80', list: true },
       { key: 'shipPrices', label: 'Prices', def: '0, 4000, 15000, 50000', list: true },
+      { key: 'shipSystems', label: 'Systems allowed', def: '999, 999, 999, 999', list: true },
+      { key: 'shipMissionKm', label: 'Mission range', unit: 'km', def: '99, 99, 99, 99', list: true },
+      { key: 'startShip', label: 'Start with ship no.', unit: '0 = first', def: 0 },
       { key: 'tradeIn', label: 'Trade-in', unit: '%', def: 0.5, scale: 100 },
     ],
   },
@@ -67,6 +73,7 @@ export const PARAM_GROUPS = [
     params: [
       { key: 'marketModel', label: 'Model', def: 'impact', options: [['impact', 'Price impact, slow recovery (v0.1)'], ['daily', 'Daily stock and demand']] },
       { key: 'basePrices', label: 'Base prices (HF, AF, S, HT, AT)', def: '20, 30, 40, 80, 120', list: true },
+      { key: 'roundPrices', label: 'Prices in whole credits', def: 'no', options: [['no', 'No'], ['yes', 'Yes, as in the game']] },
       { key: 'buyMults', label: 'Player buys at (P, N, D, E)', def: '0.6, 1.1, 1.5, 2.0', list: true },
       { key: 'sellMults', label: 'Player sells at (P, N, D, E)', def: '0.5, 0.9, 1.3, 1.7', list: true },
       { key: 'impact', label: 'Impact per unit', unit: '%', def: 0.03, scale: 100, model: 'impact' },
@@ -88,6 +95,7 @@ export const PARAM_GROUPS = [
       { key: 'weightContainer', label: 'Weight: container', def: 1 },
       { key: 'weightMission', label: 'Weight: mission', def: 1 },
       { key: 'diceStakes', label: 'Dice stake by ship', def: '100', list: true },
+      { key: 'diceFold', label: 'House throws first, fold for half', def: 'no', options: [['no', 'No (v0.1, v0.2)'], ['yes', 'Yes (v0.3)']] },
       { key: 'containerPrice', label: 'Container price', def: 200, step: 50 },
       { key: 'containerMin', label: 'Container units, min', def: 3 },
       { key: 'containerMax', label: 'Container units, max', def: 12 },
@@ -97,7 +105,8 @@ export const PARAM_GROUPS = [
       { key: 'missionMults', label: 'Deadline multipliers', def: '4, 2.5, 1.5, 1', list: true },
       { key: 'missionUnits', label: 'Mission cargo', unit: 'units', def: 5 },
       { key: 'missionMax', label: 'Missions at once', def: 3 },
-      { key: 'missionRange', label: 'Destination', def: 'any', options: [['any', 'Any own system'], ['area', 'Same area only']] },
+      { key: 'missionRange', label: 'Destination', def: 'any', options: [['any', 'Any own system'], ['area', 'Same area only'], ['ship', 'Within the ship’s range']] },
+      { key: 'longMissionKm', label: 'Longer missions only Fri–Sat, due Sun 20:00', unit: 'km, 0 = off', def: 0, step: 0.5 },
     ],
   },
   {
@@ -109,6 +118,7 @@ export const PARAM_GROUPS = [
       { key: 'artifactPerKm', label: 'Plus per km between systems', unit: 'p.p.', def: 0, scale: 100, step: 0.1 },
       { key: 'artifactLegCapKm', label: 'Longer legs are commutes, not counted', unit: 'km, 0 = all count', def: 0, step: 0.5 },
       { key: 'artifactKmPerDay', label: 'Km counted per day, at most', unit: '0 = all', def: 0, step: 0.5 },
+      { key: 'artifactKmPerWeekendDay', label: 'Km counted per weekend day', unit: '0 = as weekdays', def: 0, step: 0.5 },
       { key: 'artifactCap', label: 'Chance cap', unit: '%', def: 0.4, scale: 100 },
     ],
   },
@@ -157,13 +167,46 @@ export const PRESETS = {
   },
 };
 
-const LIST_KEYS = PARAM_GROUPS.flatMap((g) => g.params).filter((p) => p.list).map((p) => p.key);
+// v0.3: the ship is the measure of progress (no ranks). It sets the hold, how
+// many systems the captain may have and how far deliveries go. Credits are
+// on a calorie scale, about 60 per km walked; weekends bring long walks.
+PRESETS['Proposal v0.3'] = {
+  ...PRESETS['Proposal v0.2'],
+  shipNames: 'Capsule, Mote, Tinderbox, Kestrin, Grindle, Rookhaul, Bulwark, Lightbarque, Choirship, Discovery',
+  shipHolds: '5, 10, 15, 20, 30, 40, 55, 70, 85, 100',
+  shipSystems: '2, 3, 5, 8, 12, 17, 23, 30, 38, 999',
+  shipMissionKm: '0, 1, 2, 3, 4, 5, 6, 7, 8, 9',
+  shipPrices: '0, 300, 1000, 3500, 7000, 11000, 17000, 24000, 32000, 55000',
+  startShip: 1,
+  basePrices: '4, 6, 8, 16, 24',
+  roundPrices: 'yes',
+  sellMults: '0.5, 0.8, 1.1, 1.4',
+  dailySupply: 3,
+  dailyDemand: 3,
+  startCredits: 100,
+  coordBase: 300,
+  diceStakes: '10, 20, 20, 30, 40, 50, 60, 80, 100, 120',
+  diceFold: 'yes',
+  containerPrice: 60,
+  missionPerMeter: 0.08,
+  missionRange: 'ship',
+  longMissionKm: 3,
+  artifactPerKm: 0.004,
+  artifactLegCapKm: 0,
+  artifactKmPerWeekendDay: 15,
+  weekendWalkMinutes: 150,
+  newAreaKm: 3,
+  days: 400,
+};
+
+const LIST_PARAMS = PARAM_GROUPS.flatMap((g) => g.params).filter((p) => p.list);
 
 // Turns list fields ('10, 20') into arrays and fills in anything missing.
 export function normalizeParams(input) {
   const p = { ...DEFAULTS, ...input };
-  for (const key of LIST_KEYS) {
-    if (typeof p[key] === 'string') p[key] = p[key].split(/[,;\s]+/).filter(Boolean).map(Number);
+  for (const { key, text } of LIST_PARAMS) {
+    if (typeof p[key] !== 'string') continue;
+    p[key] = text ? p[key].split(',').map((item) => item.trim()).filter(Boolean) : p[key].split(/[,;\s]+/).filter(Boolean).map(Number);
   }
   return p;
 }
@@ -268,21 +311,24 @@ function levelBounds(rel, p) {
   return [p.priceFloor / p.sellMults[rel], p.priceCap / p.buyMults[rel]];
 }
 
+// The game rounds prices to whole credits, which matters once they are small.
+const whole = (value, p) => (p.roundPrices === 'yes' ? Math.round(value) : value);
+
 function buyPrice(sys, p) {
   const g = PRODUCES[sys.economy];
   const level = p.marketModel === 'impact' ? sys.market.level[g] : 1;
-  return p.basePrices[g] * p.buyMults[0] * level;
+  return whole(p.basePrices[g] * p.buyMults[0] * level, p);
 }
 
 // Market news: today one system in each area pays extra for one good.
 const hasNews = (sys, g) => sys.news && sys.news.good === g && sys.news.left >= 1;
 
 function sellPrice(sys, g, p) {
-  if (hasNews(sys, g)) return p.basePrices[g] * p.newsMult;
+  if (hasNews(sys, g)) return whole(p.basePrices[g] * p.newsMult, p);
   const rel = REL[sys.economy][g];
   if (p.marketModel === 'impact') return p.basePrices[g] * p.sellMults[rel] * sys.market.level[g];
-  if (IS_PREMIUM[rel] && sys.market.demand[g] >= 1) return p.basePrices[g] * p.sellMults[rel];
-  return p.basePrices[g] * p.sellMults[rel === 0 ? 0 : 1];
+  if (IS_PREMIUM[rel] && sys.market.demand[g] >= 1) return whole(p.basePrices[g] * p.sellMults[rel], p);
+  return whole(p.basePrices[g] * p.sellMults[rel === 0 ? 0 : 1], p);
 }
 
 function recordSale(sys, g, p) {
@@ -315,13 +361,13 @@ function recordPurchase(sys, p) {
 // `fresh` means a later galactic day (daily stock back, impact partly recovered),
 // discounted by `factor` because a sale today beats one tomorrow.
 function pushSellSlots(out, sys, g, p, fresh, factor, here, units) {
-  if (!fresh && hasNews(sys, g)) out.push({ price: p.basePrices[g] * p.newsMult * factor, cap: Math.floor(sys.news.left), here });
+  if (!fresh && hasNews(sys, g)) out.push({ price: whole(p.basePrices[g] * p.newsMult, p) * factor, cap: Math.floor(sys.news.left), here });
   const rel = REL[sys.economy][g];
   if (p.marketModel === 'daily') {
-    const fallback = p.basePrices[g] * p.sellMults[rel === 0 ? 0 : 1] * factor;
+    const fallback = whole(p.basePrices[g] * p.sellMults[rel === 0 ? 0 : 1], p) * factor;
     if (IS_PREMIUM[rel]) {
       const cap = fresh ? p.dailyDemand : Math.floor(sys.market.demand[g]);
-      if (cap > 0) out.push({ price: p.basePrices[g] * p.sellMults[rel] * factor, cap, here });
+      if (cap > 0) out.push({ price: whole(p.basePrices[g] * p.sellMults[rel], p) * factor, cap, here });
     }
     out.push({ price: fallback, cap: Infinity, here });
     return;
@@ -452,12 +498,13 @@ function newPlayer(p, seed) {
     placeRadius: Math.max(p.minSpacing * 1.2, Math.min(p.placementRadius, budgetMeters * 0.3)),
     systems: [],
     credits: p.startCredits,
-    tier: 0,
+    tier: p.startShip,
     cargo: new Float64Array(5),
     missions: [],
     coordsBought: 0,
-    // Home area, and optionally a second one (work, family) a commute away.
-    areas: [{ center: { x: 0, y: 0 }, wants: true }],
+    // Home area, optionally a second one (work, family) a commute away with a
+    // walk of its own, and areas opened later for weekend walks.
+    areas: [{ center: { x: 0, y: 0 }, wants: true, kind: 'home' }],
     artifacts: 0,
     emptyContainers: 0,
     kmSinceArtifact: 0,
@@ -468,7 +515,7 @@ function newPlayer(p, seed) {
   };
   if (p.secondAreaKm > 0) {
     const a = rng() * Math.PI * 2;
-    st.areas.push({ center: { x: p.secondAreaKm * 1000 * Math.cos(a), y: p.secondAreaKm * 1000 * Math.sin(a) }, wants: true });
+    st.areas.push({ center: { x: p.secondAreaKm * 1000 * Math.cos(a), y: p.secondAreaKm * 1000 * Math.sin(a) }, wants: true, kind: 'second' });
   }
   for (let i = 0; i < p.startCoords; i++) tryPlaceSystem(st, p, 0);
   return st;
@@ -487,7 +534,7 @@ function runEvent(st, sys, ctx, p) {
   const stake = p.diceStakes[Math.min(st.tier, p.diceStakes.length - 1)];
   if (st.credits >= stake && p.weightDice > 0) options.push(['dice', p.weightDice]);
   if (st.credits >= p.containerPrice && p.weightContainer > 0) options.push(['container', p.weightContainer]);
-  const targets = st.systems.filter((s) => s !== sys && (p.missionRange !== 'area' || s.area === sys.area));
+  const targets = missionTargets(st, sys, ctx, p);
   if (targets.length && p.weightMission > 0) options.push(['mission', p.weightMission]);
   if (!options.length) return;
   let roll = st.rng() * options.reduce((s, o) => s + o[1], 0);
@@ -506,7 +553,16 @@ function runEvent(st, sys, ctx, p) {
     // A cautious captain only plays with money to spare.
     if (st.credits < stake * 3) return;
     const d = () => 2 + Math.floor(st.rng() * 6) + Math.floor(st.rng() * 6);
-    const win = d() > d();
+    const house = d();
+    // v0.3: the house throws first; the captain folds for half when the odds are poor.
+    if (p.diceFold === 'yes' && diceWinChance(house) < 0.25) {
+      const loss = Math.ceil(stake / 2);
+      st.credits -= loss;
+      st.totals.dice -= loss;
+      st.totals.diceGames++;
+      return;
+    }
+    const win = d() > house;
     st.credits += win ? stake : -stake;
     st.totals.dice += win ? stake : -stake;
     st.totals.diceGames++;
@@ -538,12 +594,26 @@ function runEvent(st, sys, ctx, p) {
     // When will the captain get there: later on this walk, or on the next walk?
     const later = ctx.arrivals.findIndex((a, i) => i > ctx.stopIndex && ctx.route[i] === dest);
     const eta = later >= 0 ? ctx.arrivals[later] - hours : ctx.nextWalkHours - hours + 1;
-    let pick = -1;
-    for (let i = 0; i < p.missionDeadlines.length; i++) {
-      if (p.missionDeadlines[i] >= eta + 0.5 && (pick < 0 || p.missionDeadlines[i] < p.missionDeadlines[pick])) pick = i;
+    // Only jobs the captain's walks will actually pass: weekday walks stay in
+    // their areas, the weekend walk reaches what it reaches.
+    const reachable = later >= 0 || (ctx.nextIsWeekend ? weekendReach(st, p, ctx).has(dest) : st.areas[dest.area].kind !== 'weekend');
+    if (!reachable) return;
+    let deadlineHours;
+    let reward;
+    if (p.longMissionKm > 0 && dist(sys, dest) > p.longMissionKm * 1000) {
+      // A weekend job: due on Sunday at 20:00. Taken if the weekend walk can do it.
+      deadlineHours = (ctx.dayIndex + (6 - ctx.weekday)) * 24 + 20 - hours;
+      if (later < 0 && !(p.weekendWalkMinutes > 0 && ctx.weekday < 6 && weekendReach(st, p, ctx).has(dest))) return;
+      reward = Math.round(p.missionPerMeter * dist(sys, dest));
+    } else {
+      let pick = -1;
+      for (let i = 0; i < p.missionDeadlines.length; i++) {
+        if (p.missionDeadlines[i] >= eta + 0.5 && (pick < 0 || p.missionDeadlines[i] < p.missionDeadlines[pick])) pick = i;
+      }
+      if (pick < 0) return;
+      deadlineHours = p.missionDeadlines[pick];
+      reward = Math.round(p.missionPerMeter * dist(sys, dest) * (p.missionMults[pick] ?? 1));
     }
-    if (pick < 0) return;
-    const reward = Math.round(p.missionPerMeter * dist(sys, dest) * (p.missionMults[pick] ?? 1));
     // A full hold makes room by selling its cheapest cargo here, if the pay is worth it.
     let need = p.missionUnits - (holdOf(st, p) - cargoUsed(st));
     if (need > 0) {
@@ -563,8 +633,35 @@ function runEvent(st, sys, ctx, p) {
         }
       }
     }
-    st.missions.push({ dest, units: p.missionUnits, deadline: hours + p.missionDeadlines[pick], reward });
+    st.missions.push({ dest, units: p.missionUnits, deadline: hours + deadlineHours, reward });
   }
+}
+
+// The systems a weekend walk from home would pass, worked out once a day.
+function weekendReach(st, p, ctx) {
+  ctx.weekendReach ??= new Set(planLoop(st.systems, p, p.weekendWalkMinutes));
+  return ctx.weekendReach;
+}
+
+// Where a delivery from this system may go: the same area (v0.2), the ship's
+// range (v0.3), or anywhere. Jobs longer than longMissionKm only on Fri and Sat.
+function missionTargets(st, sys, ctx, p) {
+  const range = p.missionRange === 'ship' ? (p.shipMissionKm[st.tier] ?? 0) * 1000 : Infinity;
+  const longOk = !(p.longMissionKm > 0) || ctx.weekday === 4 || ctx.weekday === 5;
+  return st.systems.filter((s) => {
+    if (s === sys) return false;
+    if (p.missionRange === 'area' && s.area !== sys.area) return false;
+    const d = dist(s, sys);
+    if (d > range) return false;
+    return longOk || d <= p.longMissionKm * 1000;
+  });
+}
+
+// The chance that 2d6 beats a house total.
+function diceWinChance(house) {
+  let wins = 0;
+  for (let a = 1; a <= 6; a++) for (let b = 1; b <= 6; b++) if (a + b > house) wins++;
+  return wins / 36;
 }
 
 function sellUnit(st, sys, g, p) {
@@ -641,12 +738,25 @@ function trade(st, sys, ctx, p) {
   }
 }
 
+// Working capital: enough to fill the hold with an average good.
+function reserveFor(hold, p) {
+  const average = p.basePrices.reduce((a, b) => a + b, 0) / p.basePrices.length;
+  return hold * average * p.buyMults[0];
+}
+
 function shop(st, p, hours) {
-  // Keep enough to fill the hold, or trading stalls.
-  const reserve = holdOf(st, p) * 40;
+  const reserve = reserveFor(holdOf(st, p), p);
+  // The ship caps how many systems the captain may have in all.
+  const roomForSystems = st.systems.length < (p.shipSystems[st.tier] ?? Infinity);
   // The second area only starts once home is as big as the walk allows.
-  const area = st.areas.findIndex((a, i) => a.wants && inArea(st, i).length < p.maxSystems);
-  if (area >= 0) {
+  let area = st.areas.findIndex((a, i) => a.wants && inArea(st, i).length < p.maxSystems);
+  if (area < 0 && roomForSystems && p.newAreaKm > 0) {
+    // Home is done: a new area a few km away, in a direction not used yet.
+    const a = st.rng() * Math.PI * 2;
+    st.areas.push({ center: { x: p.newAreaKm * 1000 * Math.cos(a), y: p.newAreaKm * 1000 * Math.sin(a) }, wants: true, kind: 'weekend' });
+    area = st.areas.length - 1;
+  }
+  if (area >= 0 && roomForSystems) {
     // Paid on discovery: priced by the systems nearby, or by all of them.
     const count = p.coordPricing === 'area' ? Math.max(0, inArea(st, area).length - p.startCoords) : st.coordsBought;
     const coordPrice = p.coordBase * Math.pow(p.coordGrowth, count);
@@ -655,7 +765,8 @@ function shop(st, p, hours) {
         st.credits -= coordPrice;
         st.spentCoords += coordPrice;
         st.coordsBought++;
-        st.areas[area].wants = tourMinutes(planLoop(inArea(st, area), p, Infinity), p) <= p.walkMinutes * p.fillFactor;
+        // Weekend areas fill up to the area limit; the others only as far as their walk reaches.
+        if (st.areas[area].kind !== 'weekend') st.areas[area].wants = tourMinutes(planLoop(inArea(st, area), p, Infinity), p) <= p.walkMinutes * p.fillFactor;
       } else {
         st.areas[area].wants = false;
       }
@@ -665,7 +776,7 @@ function shop(st, p, hours) {
   const next = st.tier + 1;
   if (next < p.shipHolds.length) {
     const cost = p.shipPrices[next] - p.shipPrices[st.tier] * p.tradeIn;
-    if (st.credits >= cost + p.shipHolds[next] * 40) {
+    if (st.credits >= cost + reserveFor(p.shipHolds[next], p)) {
       st.credits -= cost;
       st.spentShips += cost;
       st.tier = next;
@@ -695,8 +806,9 @@ export function simulatePlayer(input, seed, days) {
   const st = newPlayer(p, seed);
   const walks = walkSchedule(st.rng, p, days);
   const speed = (p.walkSpeedKmh * 1000) / 60;
-  const series = { earned: new Float64Array(days), systems: new Uint8Array(days), tier: new Uint8Array(days), artifacts: new Uint8Array(days) };
+  const series = { earned: new Float64Array(days), systems: new Uint8Array(days), tier: new Uint8Array(days), artifacts: new Uint8Array(days), km: new Float64Array(days) };
   const daily = { walks: 0, km: 0, stops: 0, events: 0, minutes: 0 };
+  let totalKm = 0;
   const start = { identical: st.systems.length >= 2 && st.systems[0].economy === st.systems[1].economy, weekTrade: 0 };
 
   for (let day = 0; day < days; day++) {
@@ -716,14 +828,25 @@ export function simulatePlayer(input, seed, days) {
           sys.news = { good: goods[Math.floor(st.rng() * goods.length)], left: p.newsDemand };
         }
       }
-      const areaOrder = st.areas.map((_, i) => i).filter((i) => inArea(st, i).length).sort((a, b) => WALK_HOURS[a] - WALK_HOURS[b]);
-      for (const area of areaOrder) {
-        const local = inArea(st, area);
+      // Days run Monday (0) to Sunday (6).
+      const weekday = day % 7;
+      const weekend = weekday >= 5 && p.weekendWalkMinutes > 0;
+      // Weekdays: a walk at home, and one in the second area if there is one.
+      // Weekends: one long walk from home through any systems it can reach.
+      const plans = weekend
+        ? [{ systems: st.systems, budget: p.weekendWalkMinutes, hour: 10 }]
+        : st.areas
+            .map((a, i) => ({ a, i }))
+            .filter(({ a, i }) => a.kind !== 'weekend' && inArea(st, i).length)
+            .sort((x, y) => WALK_HOURS[x.i] - WALK_HOURS[y.i])
+            .map(({ i }) => ({ systems: inArea(st, i), budget: p.walkMinutes, hour: WALK_HOURS[i], area: i }));
+      for (const plan of plans) {
+        const local = plan.systems;
         let walk;
         if (local.length === 1) walk = [local[0]];
-        else if (p.persona === 'pingpong' && area === 0) walk = planPingPong(local, p, p.walkMinutes);
-        else walk = planLoop(local, p, p.walkMinutes, st.rng);
-        let t = day * 24 + WALK_HOURS[area];
+        else if (p.persona === 'pingpong' && plan.area === 0) walk = planPingPong(local, p, plan.budget);
+        else walk = planLoop(local, p, plan.budget, st.rng);
+        let t = day * 24 + plan.hour;
         for (let i = 0; i < walk.length; i++) {
           if (i > 0) t += (dist(walk[i - 1], walk[i]) * p.detour) / speed / 60 + p.stopMinutes / 60;
           walkStart.push(i === 0);
@@ -731,12 +854,14 @@ export function simulatePlayer(input, seed, days) {
           arrivals.push(t);
         }
         daily.walks++;
-        daily.minutes += (t - (day * 24 + WALK_HOURS[area])) * 60;
+        daily.minutes += (t - (day * 24 + plan.hour)) * 60;
       }
       let next = day + 1;
       while (next < days && !walks[next]) next++;
-      const firstHour = WALK_HOURS[areaOrder[0]];
-      const ctx = { day: galacticDay(day * 24 + firstHour), route, arrivals, stopIndex: 0, hours: 0, nextWalkHours: next * 24 + firstHour };
+      const firstHour = plans[0]?.hour ?? 17;
+      const nextIsWeekend = next % 7 >= 5 && p.weekendWalkMinutes > 0;
+      const ctx = { day: galacticDay(day * 24 + firstHour), dayIndex: day, weekday, nextIsWeekend, route, arrivals, stopIndex: 0, hours: 0, nextWalkHours: next * 24 + (nextIsWeekend ? 10 : 17) };
+      const kmCap = weekday >= 5 && p.artifactKmPerWeekendDay > 0 ? p.artifactKmPerWeekendDay : p.artifactKmPerDay;
 
       for (let i = 0; i < route.length; i++) {
         const sys = route[i];
@@ -749,11 +874,14 @@ export function simulatePlayer(input, seed, days) {
           // second walk elsewhere from doubling the pace of the collection.
           const km = dist(route[i - 1], sys) / 1000;
           if (!(p.artifactLegCapKm > 0 && km > p.artifactLegCapKm)) {
-            const counted = p.artifactKmPerDay > 0 ? Math.min(km, p.artifactKmPerDay - kmToday) : km;
+            const counted = kmCap > 0 ? Math.min(km, kmCap - kmToday) : km;
             kmToday += counted;
             st.kmSinceArtifact += counted;
           }
-          if (!walkStart[i]) daily.km += km * p.detour;
+          if (!walkStart[i]) {
+            daily.km += km * p.detour;
+            totalKm += km * p.detour;
+          }
         }
         daily.stops++;
         refreshMarket(sys, hours, p);
@@ -781,39 +909,30 @@ export function simulatePlayer(input, seed, days) {
     series.systems[day] = st.systems.length;
     series.tier[day] = st.tier;
     series.artifacts[day] = st.artifacts;
+    series.km[day] = totalKm;
   }
   return { series, totals: st.totals, daily, start, economies: st.systems.map((s) => s.economy) };
 }
 
 // ---------------------------------------------------------------- many players
 
-// Trade ranks by lifetime earnings (GDD 7.5). Spending on ships and Coords
-// does not lower them, which is exactly what `earned` measures.
-export const RANKS = [
-  ['Stowaway', 0],
-  ['Drifter', 1000],
-  ['Haggler', 5000],
-  ['Trader', 15000],
-  ['Merchant', 40000],
-  ['Shipowner', 100000],
-  ['Magnate', 200000],
-  ['Tycoon', 400000],
-  ['Elite', 650000],
-];
-
-export const MILESTONES = [
-  { label: '3 systems', test: (s, d) => s.systems[d] >= 3 },
-  { label: '5 systems', test: (s, d) => s.systems[d] >= 5 },
-  { label: '8 systems', test: (s, d) => s.systems[d] >= 8 },
-  { label: 'Courier', test: (s, d) => s.tier[d] >= 1 },
-  { label: 'Hauler', test: (s, d) => s.tier[d] >= 2 },
-  { label: 'Freighter', test: (s, d) => s.tier[d] >= 3 },
-  { label: '1st artifact', test: (s, d) => s.artifacts[d] >= 1 },
-  { label: '12 artifacts', test: (s, d) => s.artifacts[d] >= 12 },
-  { label: '24 artifacts', test: (s, d) => s.artifacts[d] >= 24 },
-  { label: 'All artifacts', test: (s, d, p) => s.artifacts[d] >= p.artifactCount },
-  ...RANKS.slice(2).filter((_, i) => i % 2 === 0 || i === RANKS.length - 3).map(([name, credits]) => ({ label: `Rank ${name}`, test: (s, d) => s.earned[d] >= credits })),
-];
+// Milestones follow the ship list: each ship, the system counts ships allow,
+// and the artifacts.
+export function milestonesFor(p) {
+  const list = [];
+  const counts = [...new Set([3, 5, 8, ...p.shipSystems.filter((n) => n > 8 && n < 900)])].sort((a, b) => a - b);
+  for (const n of counts) list.push({ label: `${n} systems`, test: (s, d) => s.systems[d] >= n });
+  p.shipHolds.forEach((_, i) => {
+    if (i > p.startShip) list.push({ label: p.shipNames[i] ?? `Ship ${i}`, test: (s, d) => s.tier[d] >= i });
+  });
+  list.push(
+    { label: '1st artifact', test: (s, d) => s.artifacts[d] >= 1 },
+    { label: '12 artifacts', test: (s, d) => s.artifacts[d] >= 12 },
+    { label: '24 artifacts', test: (s, d) => s.artifacts[d] >= 24 },
+    { label: 'All artifacts', test: (s, d) => s.artifacts[d] >= p.artifactCount },
+  );
+  return list;
+}
 
 function quantile(sorted, q) {
   if (!sorted.length) return NaN;
@@ -848,7 +967,7 @@ function summarize(runs, p, days) {
     return out.map((a) => Array.from(a));
   };
 
-  const milestones = MILESTONES.map((m) => {
+  const milestones = milestonesFor(p).map((m) => {
     const reached = [];
     for (const run of runs) {
       for (let d = 0; d < days; d++) {
@@ -869,9 +988,26 @@ function summarize(runs, p, days) {
   const economyMix = [0, 0, 0, 0, 0];
   for (const r of runs) for (const e of r.economies) economyMix[e]++;
 
+  // Credits per km walked, month by month: the "1 cr ≈ 1 kcal" check.
+  const perKm = [];
+  for (let m = 0; (m + 1) * 30 <= days; m++) {
+    const from = m * 30 - 1;
+    const to = (m + 1) * 30 - 1;
+    const ratios = runs
+      .map((r) => {
+        const km = r.series.km[to] - (from >= 0 ? r.series.km[from] : 0);
+        const cr = r.series.earned[to] - (from >= 0 ? r.series.earned[from] : 0);
+        return km > 0 ? cr / km : NaN;
+      })
+      .filter(Number.isFinite)
+      .sort((a, b) => a - b);
+    perKm.push(quantile(ratios, 0.5));
+  }
+
   return {
     days,
     players: n,
+    perKm,
     earned: band('earned'),
     systems: band('systems'),
     artifacts: band('artifacts'),

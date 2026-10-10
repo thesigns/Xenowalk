@@ -1,0 +1,74 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 320">
+  <!-- Tinderbox (class 2, Halloran Yards), hold 15 -->
+  <defs>
+    <linearGradient id="tinderbox-hull" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#5fe6ff" stop-opacity="0.16"/>
+      <stop offset="1" stop-color="#5fe6ff" stop-opacity="0.06"/>
+    </linearGradient>
+    <linearGradient id="tinderbox-plume" x1="1" y1="0" x2="0" y2="0">
+      <stop offset="0" stop-color="#5fe6ff" stop-opacity="0.32"/>
+      <stop offset="1" stop-color="#5fe6ff" stop-opacity="0"/>
+    </linearGradient>
+    <radialGradient id="tinderbox-glow">
+      <stop offset="0" stop-color="#e9f2ff"/>
+      <stop offset="0.5" stop-color="#5fe6ff" stop-opacity="0.9"/>
+      <stop offset="1" stop-color="#5fe6ff" stop-opacity="0.35"/>
+    </radialGradient>
+  </defs>
+  <g fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Exhaust -->
+    <path fill="url(#tinderbox-plume)" d="M14 257l130-78 11 1 12 11 8 16 3 19-3 15-8 8Z"/>
+    <path fill="url(#tinderbox-plume)" d="M156 308l63-35 4 1 5 4 3 7 1 7-1 6-3 3Z"/>
+    <!-- Hull panels -->
+    <path fill="url(#tinderbox-hull)" d="M169 153l31-32 172-52 62 5 46 18 38 20 12 24 0 24-20 38-15 14-52 36-172 52-21-7-66-33-15-29Z
+         M329 61l7-7 73-23 57 29 7 15 0 24-73 23-71-36ZM360 39l10-9 45-12 39 1 29 14 2 8-27 27-41 14-57-29Z
+         M139 162l16-17 35-16 42 22 17 34 0 64-17 16-39 7-38-20-16-33Z
+         M130 195l3-11 4-7 7-4 21-6 8 0 8 4 8 8 7 10 7 25 0 13-3 10-4 8-29 10-7 0-8-4-8-8-7-11-7-25Z
+         M222 266l7-7 43-13 14 7 7 14 0 21-7 8-43 13-14-8-7-14ZM213 279l2-5 3-3 19-6 8 7 3 6 2 7 0 6-2 5-3 3-15 5-4 0-8-6-5-13Z
+         M334 272l86-26 6 3 25 43-68 20-6-3ZM326 195l80-25 3 2 0 79-79 24-4-2ZM257 136l48-10 22 16 0 5-43 13-27-19Z
+         M427 225l4-44 24-15 3 2-3 44-24 14ZM473 218l17-10 3 1 0 25-17 10-3-1Z"/>
+    <path fill="#5fe6ff" fill-opacity="0.08" d="M264 201l-14-29 21-15 18 38ZM250 172l-66-34 16-17 71 36ZM289 195l-18-38 172-52 18 38ZM271 157l-71-36 172-52 71 36Z
+         M461 143l-18-38 48-2 19 38ZM443 105l-71-36 62 5 57 29ZM510 141l-19-38 27 9 12 24ZM400 97l-8-15 74-22 7 15Z
+         M392 82l-56-28 73-23 57 29ZM210 198l-17-33 39-14 17 34ZM193 165l-38-20 35-16 42 22ZM250 280l-7-14 43-13 7 14Z
+         M243 266l-14-7 43-13 14 7ZM257 136l48-10 22 16-43 13Z"/>
+    <!-- Glass and accents -->
+    <path fill="#5fe6ff" fill-opacity="0.3" d="M417 68l-9-19 40-14 10 19ZM408 49l-38-19 45-12 33 17ZM417 82l0-14 41-14 0 14ZM458 54l-10-19 35-2 2 5ZM448 35l-33-17 39 1 29 14Z
+         M458 68l0-14 27-16 0 3ZM417 82l-57-29 0-14 10-9 38 19 9 19Z"/>
+    <!-- Facets -->
+    <path stroke="#9fb1c8" stroke-width="1.5" opacity="0.75" d="M264 201l-14-29 21-15 18 38-25 6 0 64M250 172l-20-10M202 122l69 35 7-2M280 280l9 1-2 2M324 141l119-36 18 38-172 52 0 86 38-11
+         M409 245l52-16-9 9M455 105l36-2 19 38-49 2 0 86 12-8M473 93l18 10 12 4M476 220l24-16M529 136l-19 5 0 52M472 75l-72 22-8-15 74-22
+         M392 82l-54-27M400 119l0-22M417 68l-9-19 40-14 10 19-41 14 0 7M408 49l-36-18M420 20l28 15 31-2M484 38l-26 16 0 7
+         M242 187l-32 11-17-33 39-14M193 165l-36-19M195 269l15-14 33-5M210 255l0-57M167 255l7-4 5-7 2-11-2-25-5-12-14-19-8-4-8 0
+         M281 271l-31 9-7-14 19-6M243 266l-14-7M247 305l3-4 43-13M250 301l0-21M233 301l0-18-7-11-4-2-4 1M409 172l-79 25-4-2M330 275l0-78
+         M284 160l0-5 43-13M257 136l27 19M458 168l-24 15-3-2M434 183l-3 43M493 209l-17 10-3-1M476 219l0 24"/>
+    <path stroke="#9fb1c8" stroke-width="2" d="M343 278l85-26M462 58l4 2M449 107l24-8 0-9M192 130l40 21 3 6M207 269l15-2M140 175l22-8M167 255l19-6M222 271l0-5 7-7 19-6
+         M293 281l0 7-3 3M215 274l3-3 12-4M235 303l7-3M250 285l0 6M406 170l3 2 0 79-79 24-4-2 0-4M257 140l0-4 48-10 22 16 0 5-43 13-5-4
+         M455 166l3 2-3 44-24 14-4-1M473 229l0-11 17-10 3 1 0 3"/>
+    <!-- Details -->
+    <path stroke="#9fb1c8" stroke-width="2" opacity="0.8" d="M336 202l68-20"/>
+    <path stroke="#9fb1c8" stroke-width="1.5" opacity="0.7" d="M370 192l0 64"/>
+    <path stroke="#9fb1c8" stroke-width="2" d="M290 107l0-78"/>
+    <path stroke="#9fb1c8" stroke-width="2.5" d="M306 280h0M322 275h0M306 251h0M440 174h0M453 217h0"/>
+    <!-- Outline -->
+    <path stroke="#e9f2ff" stroke-width="4" d="M191 131l9-10 2 1M190 130l10-9 129-39 0-21 7-7 2 1M203 270l12 6M286 295l57-17M428 252l15-4 9-10M443 248l29-20M492 214l18-16-10 6
+         M510 193l0 5 20-38 0-24-12-24-15-5M473 89l45 23M479 33l4 0 2 8-19 19 7 15 0 15M336 54l25-8M372 31l-2-1 45-12 5 2M370 30l-10 9 0 7
+         M415 18l39 1 29 14M157 146l-2-1 35-16 2 1M155 145l-16 17 0 15M155 252l38 20 14-3M193 272l2-3
+         M140 175l-7 9-3 11 0 12 3 13 4 12 7 11 8 8 8 4 5 0M231 302l12 7 43-13 4-5M243 309l4-4M214 275l-1 10 5 13 8 6 9-1M230 304l2-2
+         M341 278l36 31 6 3 68-20-23-39M342 277l41 35M473 229l0 14 3 1 17-10 0-22"/>
+    <!-- Engines -->
+    <g fill="url(#tinderbox-glow)" stroke="#5fe6ff" stroke-width="2" transform="rotate(73.2)">
+      <ellipse cx="249.9" cy="-86.8" rx="36.8" ry="20.6"/>
+      <ellipse cx="339.6" cy="-130.8" rx="14.7" ry="8.3"/>
+    </g>
+    <g stroke="#e9f2ff" stroke-width="1.5" opacity="0.8" transform="rotate(73.2)">
+      <ellipse cx="253.2" cy="-87.7" rx="21.4" ry="12"/>
+      <ellipse cx="341" cy="-131.2" rx="8.5" ry="4.8"/>
+    </g>
+    <!-- Lights -->
+    <g fill="#5fe6ff" stroke="none">
+      <circle cx="290" cy="29" r="3"/>
+      <circle cx="487" cy="243" r="3"/>
+      <circle cx="264" cy="179" r="2.5"/>
+    </g>
+  </g>
+</svg>

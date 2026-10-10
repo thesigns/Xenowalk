@@ -1,15 +1,15 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 320">
-  <!-- Courier, hold 20 -->
+  <!-- Kestrin (Halloran Yards), hold 20 -->
   <defs>
-    <linearGradient id="courier-hull" x1="0" y1="0" x2="0" y2="1">
+    <linearGradient id="kestrin-hull" x1="0" y1="0" x2="0" y2="1">
       <stop offset="0" stop-color="#5fe6ff" stop-opacity="0.16"/>
       <stop offset="1" stop-color="#5fe6ff" stop-opacity="0.06"/>
     </linearGradient>
-    <linearGradient id="courier-plume" x1="1" y1="0" x2="0" y2="0">
+    <linearGradient id="kestrin-plume" x1="1" y1="0" x2="0" y2="0">
       <stop offset="0" stop-color="#5fe6ff" stop-opacity="0.32"/>
       <stop offset="1" stop-color="#5fe6ff" stop-opacity="0"/>
     </linearGradient>
-    <radialGradient id="courier-glow">
+    <radialGradient id="kestrin-glow">
       <stop offset="0" stop-color="#e9f2ff"/>
       <stop offset="0.5" stop-color="#5fe6ff" stop-opacity="0.9"/>
       <stop offset="1" stop-color="#5fe6ff" stop-opacity="0.35"/>
@@ -17,10 +17,10 @@
   </defs>
   <g fill="none" stroke-linecap="round" stroke-linejoin="round">
     <!-- Exhaust -->
-    <path fill="url(#courier-plume)" d="M88 223L147 186L152 187L157 194L161 206L163 219L162 229L158 234Z"/>
-    <path fill="url(#courier-plume)" d="M3 148L57 116L61 116L66 122L69 133L71 144L70 154L67 159L63 159Z"/>
+    <path fill="url(#kestrin-plume)" d="M88 223L147 186L152 187L157 194L161 206L163 219L162 229L158 234Z"/>
+    <path fill="url(#kestrin-plume)" d="M3 148L57 116L61 116L66 122L69 133L71 144L70 154L67 159L63 159Z"/>
     <!-- Hull panels -->
-    <path fill="url(#courier-hull)" d="M132 126L207 91L340 72L489 70L604 72L510 110L379 161L247 192L168 191L142 171L133 154Z
+    <path fill="url(#kestrin-hull)" d="M132 126L207 91L340 72L489 70L604 72L510 110L379 161L247 192L168 191L142 171L133 154Z
          M216 166L432 126L431 141L344 253L269 269L216 182ZM36 85L99 75L374 94L374 108L166 146L36 89Z
          M139 188L146 176L325 147L375 154L380 157L383 165L383 174L379 178L335 203L158 244L148 235L140 212Z
          M51 118L57 107L223 84L269 90L273 92L276 100L276 108L273 112L232 134L68 168L59 161L52 140Z
@@ -57,8 +57,8 @@
          M202 84L184 79L165 82M158 244L183 234L241 222M158 244L148 235L140 212L139 188L146 176
          M68 168L91 159L133 152M68 168L59 161L52 140L51 118L57 107L75 107"/>
     <!-- Engines -->
-    <path fill="url(#courier-glow)" stroke="#5fe6ff" stroke-width="2" d="M151.7 184.5C158.2 189.7 163.7 205.4 164 219.6C164.3 233.8 159.4 241.1 152.9 235.9C146.4 230.7 140.9 214.9 140.6 200.7C140.3 186.5 145.3 179.2 151.7 184.5Z"/>
-    <path fill="url(#courier-glow)" stroke="#5fe6ff" stroke-width="2" d="M61.2 113.9C66.5 118.2 71.2 132.2 71.7 145.2C72.3 158.2 68.4 165.4 63.1 161.1C57.9 156.8 53.2 142.8 52.6 129.8C52.1 116.8 56 109.7 61.2 113.9Z"/>
+    <path fill="url(#kestrin-glow)" stroke="#5fe6ff" stroke-width="2" d="M151.7 184.5C158.2 189.7 163.7 205.4 164 219.6C164.3 233.8 159.4 241.1 152.9 235.9C146.4 230.7 140.9 214.9 140.6 200.7C140.3 186.5 145.3 179.2 151.7 184.5Z"/>
+    <path fill="url(#kestrin-glow)" stroke="#5fe6ff" stroke-width="2" d="M61.2 113.9C66.5 118.2 71.2 132.2 71.7 145.2C72.3 158.2 68.4 165.4 63.1 161.1C57.9 156.8 53.2 142.8 52.6 129.8C52.1 116.8 56 109.7 61.2 113.9Z"/>
     <path stroke="#e9f2ff" stroke-width="1.5" opacity="0.8" d="M152 196C156 199 159 208 159 215C159 223 156 227 153 224C149 221 146 213 146 205C146 197 148 193 152 196Z
          M62 125C65 127 67 135 67 142C68 149 66 153 63 150C60 148 57 140 57 133C57 126 59 122 62 125Z"/>
     <!-- Lights -->

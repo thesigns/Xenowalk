@@ -5,7 +5,6 @@ import {
   ARTIFACTS,
   EVENT_VARIANTS,
   GOOD_IDS,
-  RANKS,
   SHIPS,
   economyById,
   goodById,
@@ -20,39 +19,54 @@ export const AREA_RADIUS = 2000;
 export const AREA_MAX_SYSTEMS = 8;
 export const DISCOVER_MAX_SPEED = 12 / 3.6; // m/s
 export const FREE_DISCOVERIES = 2;
-export const DISCOVERY_BASE_PRICE = 1500;
+export const DISCOVERY_BASE_PRICE = 300;
 export const DISCOVERY_GROWTH = 1.5;
-export const START_CREDITS = 500;
+export const START_CREDITS = 100;
 
 // Galactic day (GDD 3.3)
 export const DAY_START_HOUR = 4;
 
 // Markets (GDD 6)
 export const BUY_FACTOR = 0.6;
-export const SELL_FACTORS = { P: 0.5, N: 0.8, D: 1.3, E: 1.7 };
-export const DAILY_SUPPLY = 5;
-export const DAILY_DEMAND = 4;
+export const SELL_FACTORS = { P: 0.5, N: 0.8, D: 1.1, E: 1.4 };
+export const DAILY_SUPPLY = 3;
+export const DAILY_DEMAND = 3;
 export const RESTOCK_CAP_DAYS = 2;
 export const NEWS_FACTOR = 2;
 export const NEWS_DEMAND = 10;
 
-// Ships (GDD 5)
+// Ships (GDD 5): a new game starts with the Mote; the Capsule waits for pirates.
+export const START_SHIP = 1;
 export const TRADE_IN = 0.5;
 
+// The Glutta Vault (GDD 7.6): loans for one to three ship classes up, a flat
+// fee, paid back from half of every profit. No interest, no deadline.
+export const LOAN_FEE = 0.2;
+export const LOAN_REPAY_SHARE = 0.5;
+export const LOAN_CLASSES_UP = 3;
+
 // Events (GDD 8)
-export const DICE_STAKES = [100, 250, 500, 1000];
+// Dice stakes by ship, Capsule to Discovery.
+export const DICE_STAKES = [10, 20, 20, 30, 40, 50, 60, 80, 100, 120];
 export const JUNK_CHANCE = 0.1;
-export const MISSION_PAY_PER_METER = 0.15;
+export const MISSION_PAY_PER_METER = 0.08;
 export const MISSION_DEADLINE_FACTORS = { 24: 1.5, 48: 1.2, 72: 1 };
+// Deliveries further than this are weekend jobs: offered on Friday and
+// Saturday, due on Sunday at 20:00.
+export const LONG_MISSION_KM = 3;
+const WEEKEND_DEADLINE_HOUR = 20;
 export const MAX_MISSIONS = 3;
 const EVENT_WEIGHTS = { dice: 1, container: 1, mission: 1 };
 
 // Artifacts (GDD 9.2)
 export const ARTIFACT_BASE_CHANCE = 0.01;
-export const ARTIFACT_CHANCE_PER_KM = 0.005;
+export const ARTIFACT_CHANCE_PER_KM = 0.004;
 export const ARTIFACT_MAX_CHANCE = 0.5;
-export const COMMUTE_LEG_KM = 2;
 export const MAX_KM_PER_DAY = 3;
+export const MAX_KM_PER_WEEKEND_DAY = 15;
+// A leg between dockings counts if covered slower than this on average:
+// walking, running, cycling, even a tram; not a car on a highway or a train.
+export const COUNTED_MAX_SPEED_KMH = 40;
 
 const HOUR_MS = 3_600_000;
 const DAY_MS = 24 * HOUR_MS;
@@ -63,6 +77,19 @@ const DAY_MS = 24 * HOUR_MS;
 export function galacticDay(ms) {
   const d = new Date(ms - DAY_START_HOUR * HOUR_MS);
   return Math.round(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()) / DAY_MS);
+}
+
+// Day of the week of a galactic day: 0 Monday … 6 Sunday.
+export function galacticWeekday(ms) {
+  return (new Date(ms - DAY_START_HOUR * HOUR_MS).getDay() + 6) % 7;
+}
+
+export const isWeekend = (ms) => galacticWeekday(ms) >= 5;
+
+// Sunday 20:00 of this galactic week, when weekend jobs are due.
+export function weekendDeadline(ms) {
+  const d = new Date(ms - DAY_START_HOUR * HOUR_MS);
+  return new Date(d.getFullYear(), d.getMonth(), d.getDate() + (6 - galacticWeekday(ms)), WEEKEND_DEADLINE_HOUR).getTime();
 }
 
 // When the next galactic day starts.
@@ -112,26 +139,56 @@ function weightedPick(items, weightOf, random = Math.random) {
 
 const randomInt = (min, max) => min + Math.floor(Math.random() * (max - min + 1));
 
-// ---------------------------------------------------------------- profit and ranks
+// ---------------------------------------------------------------- profit
 
-export function rankIndex(profit) {
-  let index = 0;
-  RANKS.forEach((rank, i) => {
-    if (profit >= rank.profit) index = i;
-  });
-  return index;
+// Lifetime profit, kept for the log. Progress itself is the ship (GDD 5).
+// While the captain owes the Glutta, half of every gain goes to them; buying
+// goods is never touched, only what the trade earned.
+function addProfit(state, amount) {
+  state.profit += amount;
+  if (amount > 0 && state.debt) {
+    const paid = Math.min(state.debt.owed, Math.floor(amount * LOAN_REPAY_SHARE));
+    state.credits -= paid;
+    payDebt(state, paid);
+  }
 }
 
-// Adds to lifetime profit. Returns the new rank's index on a promotion, else null.
-// The rank never drops, even after losses.
-export function addProfit(state, amount) {
-  state.profit += amount;
-  const index = rankIndex(state.profit);
-  if (index > state.rank) {
-    state.rank = index;
-    return index;
+// ---------------------------------------------------------------- the bank
+
+// What the Glutta would lend: for each of the next three ship classes, what it
+// costs at the yard, rounded up to hundreds. None while a loan is open.
+export function loanOffers(state) {
+  if (state.debt) return [];
+  const offers = [];
+  for (let up = 1; up <= LOAN_CLASSES_UP && state.ship + up < SHIPS.length; up++) {
+    const index = state.ship + up;
+    const amount = Math.ceil(shipCost(state, index) / 100) * 100;
+    offers.push({ ship: index, amount, owed: Math.round(amount * (1 + LOAN_FEE)) });
   }
-  return null;
+  return offers;
+}
+
+export function takeLoan(state, offer, now) {
+  if (state.debt) return false;
+  state.credits += offer.amount;
+  state.debt = { principal: offer.amount, owed: offer.owed, takenAt: now };
+  state.stats.loans = (state.stats.loans ?? 0) + 1;
+  return true;
+}
+
+function payDebt(state, amount) {
+  state.debt.owed -= amount;
+  state.stats.repaid = (state.stats.repaid ?? 0) + amount;
+  if (state.debt.owed <= 0) state.debt = null;
+}
+
+// Pays back early, as much as the captain has. Returns the amount paid.
+export function repayDebt(state) {
+  if (!state.debt) return 0;
+  const paid = Math.max(0, Math.min(state.debt.owed, Math.floor(state.credits)));
+  state.credits -= paid;
+  payDebt(state, paid);
+  return paid;
 }
 
 // ---------------------------------------------------------------- discovery
@@ -158,6 +215,8 @@ export function discoveryCheck(state, position, { goodSignal, speed }) {
     .filter(({ d }) => d < MIN_SPACING)
     .sort((a, b) => a.d - b.d)[0];
   if (close) return { ...result, reason: `Too close to ${close.system.name}` };
+  const ship = shipOf(state);
+  if (state.systems.length >= ship.systems) return { ...result, reason: `Your ${ship.name} holds ${ship.systems} systems` };
   if (nearby >= AREA_MAX_SYSTEMS) return { ...result, reason: `Area full (${nearby}/${AREA_MAX_SYSTEMS})` };
   if (state.credits < price) return { ...result, reason: 'Not enough credits' };
   return { ...result, ok: true };
@@ -329,7 +388,7 @@ export function quoteTrade(state, system, orders, day) {
   return { ok: true, proceeds, cost, profit, net };
 }
 
-// Carries out orders checked with quoteTrade. Returns the quote, plus a promotion if any.
+// Carries out orders checked with quoteTrade. Returns the quote.
 export function trade(state, system, orders, day) {
   const quote = quoteTrade(state, system, orders, day);
   if (!quote.ok) return quote;
@@ -350,8 +409,8 @@ export function trade(state, system, orders, day) {
     }
   }
   state.credits += quote.net;
-  const promotion = addProfit(state, quote.profit);
-  return { ...quote, promotion };
+  addProfit(state, quote.profit);
+  return quote;
 }
 
 // Uses up news and demand as units are sold.
@@ -449,8 +508,9 @@ export function dockedSystem(state, point, currentId) {
 }
 
 // Counts the straight line from the last docked system toward the next
-// artifact (GDD 9.2): legs longer than an area are commutes, and at most
-// 3 km a day count. Returns the kilometers counted.
+// artifact (GDD 9.2): a leg counts if it was covered slower than 40 km/h on
+// average, and at most 3 km count a day, 15 on Saturdays and Sundays.
+// Returns the kilometers counted.
 export function recordDock(state, system, now) {
   const day = galacticDay(now);
   if (state.kmToday.day !== day) state.kmToday = { day, km: 0 };
@@ -458,8 +518,10 @@ export function recordDock(state, system, now) {
   const last = state.lastDock && systemById(state, state.lastDock.systemId);
   if (last && last.id !== system.id) {
     const km = distance(last, system) / 1000;
-    if (km <= COMMUTE_LEG_KM) {
-      counted = Math.max(0, Math.min(km, MAX_KM_PER_DAY - state.kmToday.km));
+    const hours = (now - (state.lastDock.at ?? 0)) / HOUR_MS;
+    if (hours > 0 && km / hours <= COUNTED_MAX_SPEED_KMH) {
+      const cap = isWeekend(now) ? MAX_KM_PER_WEEKEND_DAY : MAX_KM_PER_DAY;
+      counted = Math.max(0, Math.min(km, cap - state.kmToday.km));
       state.kmToday.km += counted;
       state.artifactKm += counted;
       state.stats.km += km;
@@ -477,22 +539,33 @@ export function artifactChance(state) {
 
 // ---------------------------------------------------------------- missions
 
-function missionTargets(state, system) {
-  return state.systems.filter((other) => other.id !== system.id && distance(other, system) <= AREA_RADIUS);
+// Where a delivery from this system may go (GDD 8.4): within the ship's range;
+// beyond 3 km only on Friday and Saturday, as weekend jobs.
+function missionTargets(state, system, now) {
+  const range = shipOf(state).missionKm * 1000;
+  const weekendJobs = [4, 5].includes(galacticWeekday(now));
+  return state.systems.filter((other) => {
+    if (other.id === system.id) return false;
+    const d = distance(other, system);
+    return d <= range && (weekendJobs || d <= LONG_MISSION_KM * 1000);
+  });
 }
 
-function missionReward(meters, hours, factor) {
-  return Math.max(20, Math.round((MISSION_PAY_PER_METER * meters * MISSION_DEADLINE_FACTORS[hours] * factor) / 5) * 5);
+const isLong = (meters) => meters > LONG_MISSION_KM * 1000;
+
+function missionReward(meters, factor) {
+  return Math.max(10, Math.round((MISSION_PAY_PER_METER * meters * factor) / 5) * 5);
 }
 
-// Pays for deliveries to this system. Returns [{ mission, promotion }].
+// Pays for deliveries to this system. Returns the missions delivered.
 export function deliverMissions(state, system, now) {
   const delivered = [];
   state.missions = state.missions.filter((mission) => {
     if (mission.to !== system.id || now > mission.deadline) return true;
     state.credits += mission.reward;
     state.stats.delivered++;
-    delivered.push({ mission, promotion: addProfit(state, mission.reward) });
+    addProfit(state, mission.reward);
+    delivered.push(mission);
     return false;
   });
   return delivered;
@@ -522,8 +595,10 @@ export function systemEvent(state, system, now) {
   if (dice.length) kinds.push({ kind: 'dice', variants: dice });
   const containers = EVENT_VARIANTS.container.filter((variant) => state.credits >= variant.price);
   if (containers.length) kinds.push({ kind: 'container', variants: containers });
-  const targets = missionTargets(state, system);
-  if (targets.length) kinds.push({ kind: 'mission', variants: EVENT_VARIANTS.mission });
+  const targets = missionTargets(state, system, now);
+  // The medic's parcel is always a short, 24-hour job.
+  const missions = EVENT_VARIANTS.mission.filter((variant) => variant.id !== 'medic' || targets.some((t) => !isLong(distance(t, system))));
+  if (targets.length) kinds.push({ kind: 'mission', variants: missions });
   if (!kinds.length) return null;
 
   const { kind, variants } = weightedPick(kinds, (k) => EVENT_WEIGHTS[k.kind]);
@@ -534,12 +609,16 @@ export function systemEvent(state, system, now) {
   } else if (kind === 'container') {
     offer = { price: variant.price, units: variant.units };
   } else {
-    const target = targets[Math.floor(Math.random() * targets.length)];
+    const pool = variant.id === 'medic' ? targets.filter((t) => !isLong(distance(t, system))) : targets;
+    const target = pool[Math.floor(Math.random() * pool.length)];
     const meters = distance(system, target);
     offer = {
       to: target.id,
       units: variant.units,
-      options: variant.deadlines.map((hours) => ({ hours, reward: missionReward(meters, hours, variant.rewardFactor) })),
+      // A weekend job has one deadline, Sunday 20:00; short ones offer three.
+      options: isLong(meters)
+        ? [{ until: weekendDeadline(now), reward: missionReward(meters, variant.rewardFactor) }]
+        : variant.deadlines.map((hours) => ({ hours, reward: missionReward(meters, MISSION_DEADLINE_FACTORS[hours] * variant.rewardFactor) })),
     };
   }
   system.pendingEvent = { systemId: system.id, day, kind, variant: variant.id, offer };
@@ -568,21 +647,47 @@ export function declineEvent(state, system) {
 
 const roll2d6 = () => [randomInt(1, 6), randomInt(1, 6)];
 
-// Both throw 2d6, higher wins, a tie goes to the house (GDD 8.2).
+// Dice (GDD 8.2): the house throws 2d6 first, kept with the event so closing
+// the app can't take it back. Then the captain folds for half the stake or
+// throws too: higher wins, a tie goes to the house.
+export function houseRoll(state, system) {
+  const event = system.pendingEvent;
+  event.house ??= roll2d6();
+  return event.house;
+}
+
+// The chance that 2d6 beats a house total.
+export function diceWinChance(houseTotal) {
+  let wins = 0;
+  for (let a = 1; a <= 6; a++) for (let b = 1; b <= 6; b++) if (a + b > houseTotal) wins++;
+  return wins / 36;
+}
+
+export function foldDice(state, system) {
+  const event = system.pendingEvent;
+  const loss = Math.ceil(event.offer.stake / 2);
+  state.credits -= loss;
+  state.stats.diceGames++;
+  closeEvent(state, system);
+  addProfit(state, -loss);
+  return { loss };
+}
+
 export function playDice(state, system) {
-  const { stake } = system.pendingEvent.offer;
+  const event = system.pendingEvent;
+  const { stake } = event.offer;
+  const house = houseRoll(state, system);
   const player = roll2d6();
-  const house = roll2d6();
   const win = player[0] + player[1] > house[0] + house[1];
   state.credits += win ? stake : -stake;
   state.stats.diceGames++;
   if (win) state.stats.diceWins++;
   closeEvent(state, system);
-  const promotion = addProfit(state, win ? stake : -stake);
-  return { player, house, win, stake, promotion };
+  addProfit(state, win ? stake : -stake);
+  return { player, house, win, stake };
 }
 
-// Buys the sealed container. Returns { good, units, kept, junk, artifact, promotion }.
+// Buys the sealed container. Returns { good, units, kept, junk, artifact }.
 export function openContainer(state, system, now) {
   const { price, units: [min, max] } = system.pendingEvent.offer;
   state.credits -= price;
@@ -609,8 +714,8 @@ export function openContainer(state, system, now) {
     state.cargo[good].units += kept;
   }
   closeEvent(state, system);
-  const promotion = addProfit(state, -price);
-  return { good, units, kept, junk, artifact, promotion };
+  addProfit(state, -price);
+  return { good, units, kept, junk, artifact };
 }
 
 export function acceptMission(state, system, optionIndex, now) {
@@ -623,8 +728,8 @@ export function acceptMission(state, system, optionIndex, now) {
     to,
     units,
     reward: option.reward,
-    hours: option.hours,
-    deadline: now + option.hours * HOUR_MS,
+    hours: option.hours ?? null,
+    deadline: option.until ?? now + option.hours * HOUR_MS,
     takenAt: now,
   };
   state.missions.push(mission);

@@ -3,7 +3,7 @@
 
 import { now } from './clock.js';
 import { DEBUG_START, DebugPanel, isDebug } from './debug.js';
-import { SECTORS, SHIPS, goodById } from './data.js';
+import { BANK, SECTORS, SHIPS, goodById } from './data.js';
 import {
   acceptMission,
   buyShip,
@@ -11,12 +11,18 @@ import {
   declineEvent,
   deleteSystem,
   deliverMissions,
+  diceWinChance,
   discoverSystem,
   discoveryCheck,
   dockedSystem,
   expireMissions,
+  foldDice,
   freeHold,
+  LONG_MISSION_KM,
+  MAX_KM_PER_WEEKEND_DAY,
   galacticDay,
+  galacticWeekday,
+  houseRoll,
   newsFor,
   nextDayStart,
   openContainer,
@@ -26,6 +32,8 @@ import {
   recordDock,
   refreshMarket,
   renameSystem,
+  repayDebt,
+  takeLoan,
   systemById,
   systemEvent,
   trade,
@@ -44,6 +52,7 @@ import { confirmDialog, formatCredits, formatDistance, formatDuration, h, icon, 
 import { APP_UPDATED } from './version.js';
 import {
   confirmDelete,
+  confirmLoan,
   confirmShip,
   openArtifactCard,
   openDiscoverDialog,
@@ -54,7 +63,6 @@ import {
   openSystemCard,
   revealArtifact,
   showNewShip,
-  showPromotion,
 } from './dialogs.js';
 
 const $ = (id) => document.getElementById(id);
@@ -108,6 +116,7 @@ const app = {
   refreshPage,
 
   trade(system, orders) {
+    const owed = owedNow();
     const result = trade(state, system, orders, galacticDay(now()));
     if (!result.ok) {
       feedback('error');
@@ -120,7 +129,7 @@ const app = {
     if (result.proceeds) parts.push(`sold for ${formatCredits(result.proceeds)}`);
     if (result.cost) parts.push(`bought for ${formatCredits(result.cost)}`);
     toast(`Trade done: ${parts.join(', ')} · <b>${signed(result.net)} cr</b>`, { icon: 'credits', kind: result.net >= 0 ? 'good' : '' });
-    if (result.promotion !== null) showPromotion(app, result.promotion);
+    noteRepayment(owed);
     refresh();
     return result;
   },
@@ -148,10 +157,41 @@ const app = {
     save();
     refresh();
   },
-  playDice() {
-    const result = playDice(state, eventSystem());
+  houseRoll() {
+    const house = houseRoll(state, eventSystem());
+    save();
+    return house;
+  },
+  diceWinChance,
+  foldDice() {
+    const result = foldDice(state, eventSystem());
     save();
     return result;
+  },
+  playDice() {
+    const owed = owedNow();
+    const result = playDice(state, eventSystem());
+    noteRepayment(owed);
+    save();
+    return result;
+  },
+  async takeLoan(offer) {
+    if (!(await confirmLoan(app, offer))) return;
+    if (!takeLoan(state, offer, now())) return;
+    save();
+    feedback('sell');
+    toast(`${formatCredits(offer.amount)} cr from the ${BANK.name}. Ossumar smiles.`, { icon: 'credits', kind: 'gold' });
+    refresh();
+  },
+  repayDebt() {
+    const owed = owedNow();
+    const paid = repayDebt(state);
+    if (!paid) return;
+    save();
+    feedback('buy');
+    toast(`Paid ${formatCredits(paid)} cr to the Glutta`, { icon: 'credits' });
+    noteRepayment(owed, true);
+    refresh();
   },
   openContainer() {
     const result = openContainer(state, eventSystem(), now());
@@ -172,9 +212,8 @@ const app = {
     refresh();
     return mission;
   },
-  afterEvent(promotion) {
+  afterEvent() {
     refresh();
-    if (promotion !== null && promotion !== undefined) showPromotion(app, promotion);
   },
   revealArtifact(id) {
     revealArtifact(app, id).then(() => {
@@ -244,6 +283,24 @@ const app = {
   },
 };
 
+function owedNow() {
+  return state.debt?.owed ?? 0;
+}
+
+// Tells the captain what the Glutta took, and when the debt is gone.
+function noteRepayment(owedBefore, quiet = false) {
+  const taken = owedBefore - owedNow();
+  if (taken <= 0) return;
+  if (!state.debt) {
+    setTimeout(() => {
+      feedback('delivered');
+      toast(BANK.paidOff, { icon: 'credits', kind: 'gold' });
+    }, 600);
+  } else if (!quiet) {
+    setTimeout(() => toast(`The Glutta took ${formatCredits(taken)} cr · ${formatCredits(state.debt.owed)} left`, { icon: 'credits' }), 500);
+  }
+}
+
 function eventSystem() {
   return systemById(state, eventSystemId ?? dockedId);
 }
@@ -299,6 +356,8 @@ function begin() {
   setTimeout(() => {
     start.hidden = true;
     start.classList.remove('leaving');
+    // Docking may have happened behind the start screen; its event shows now.
+    maybeShowEvent();
   }, 600);
   if (state.world.origin) setWorld(state.world);
   shownDay = galacticDay(now());
@@ -365,17 +424,18 @@ function dock(system) {
   const t = now();
   recordDock(state, system, t);
   refreshMarket(system, galacticDay(t));
+  const owed = owedNow();
   const delivered = deliverMissions(state, system, t);
+  if (delivered.length) setTimeout(() => noteRepayment(owed), 800);
   save();
   feedback('dock');
   map.ripple(system, SECTORS[system.sector].color);
   toast(`Docked at <b>${escape(system.name)}</b>`, { icon: 'system' });
-  for (const { mission, promotion } of delivered) {
+  for (const mission of delivered) {
     setTimeout(() => {
       feedback('delivered');
       toast(`Delivered ${mission.units} crates · <b>+${formatCredits(mission.reward)} cr</b>`, { icon: 'mission', kind: 'good' });
     }, 700);
-    if (promotion !== null) showPromotion(app, promotion);
   }
   maybeShowEvent();
 }
@@ -620,6 +680,12 @@ function updateTicker() {
       const nearest = state.systems.map((s) => ({ s, d: Math.hypot(s.x - player.x, s.y - player.y) })).sort((a, b) => a.d - b.d)[0];
       items.push({ tag: 'NAV', text: `${escape(nearest.s.name)} · ${formatDistance(nearest.d)}` });
     }
+    const weekday = galacticWeekday(t);
+    if ((weekday === 4 || weekday === 5) && SHIPS[state.ship].missionKm > LONG_MISSION_KM) {
+      items.push({ tag: 'WEEKEND', kind: 'gold', text: `Jobs beyond ${LONG_MISSION_KM} km on offer today, due Sunday 20:00` });
+    }
+    if (weekday >= 5) items.push({ tag: 'WEEKEND', kind: 'gold', text: `Up to ${MAX_KM_PER_WEEKEND_DAY} km count toward relics today` });
+    if (state.debt) items.push({ tag: 'DEBT', text: `You owe the Glutta <b>${formatCredits(state.debt.owed)} cr</b>` });
     items.push({ tag: 'DAY', text: `New galactic day in ${formatDuration(nextDayStart(t) - t)}` });
   }
   const index = Math.floor(Date.now() / TICKER_MS) % items.length;

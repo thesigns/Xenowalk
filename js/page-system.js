@@ -1,12 +1,13 @@
 // The System page: the market, today's event and the shipyard of the system
 // the player is docked at, or, in deep space, the way to their systems.
 
-import { GOODS, SECTORS, SHIPS, economyById, goodById, kebab } from './data.js';
+import { BANK, GOODS, SECTORS, SHIPS, economyById, goodById, kebab } from './data.js';
 import {
   buyPrice,
   galacticDay,
   newsFor,
   newsItem,
+  loanOffers,
   nextDayStart,
   pendingEvent,
   quoteTrade,
@@ -16,7 +17,8 @@ import {
   systemById,
   variantOf,
 } from './game.js';
-import { direction, fill, formatCredits, formatDistance, formatDuration, h, holdRepeat, icon, signed } from './ui.js';
+import { debtWalkingText, priceText, shipTraits, walkingText } from './ship-view.js';
+import { direction, fill, formatDistance, formatDuration, h, holdRepeat, icon, signed } from './ui.js';
 
 // The units the player has dialed in, per good: negative sells, positive buys.
 let orders = {};
@@ -106,6 +108,7 @@ function dockedView(system, app, bar) {
   }
 
   parts.push(marketSection(system, app, day, bar));
+  parts.push(bankSection(app));
   parts.push(shipyardSection(app));
   return parts;
 }
@@ -124,7 +127,7 @@ function eventCard(system, app, day, now) {
     'button.card.event-card',
     { type: 'button', onclick: () => app.openEvent(system) },
     h('img', { src: `img/characters/${variant.id}.svg`, alt: '' }),
-    h('div', {}, h('div.eyebrow', {}, variant.title), h('b', {}, variant.name), h('div.muted', {}, 'Wants a word with you.')),
+    h('div', {}, h('div.eyebrow', {}, variant.title), h('b', {}, variant.name), h('div.muted', {}, event.house ? 'The dice are on the table. Your move.' : 'Wants a word with you.')),
     icon('chevron'),
   );
 }
@@ -306,11 +309,77 @@ function quickActions(system, app, day, update) {
 
 // ---------------------------------------------------------------- shipyard
 
+// The Glutta Vault: three loans, one to three ship classes up, or the debt
+// and a way to pay it back early.
+function bankSection(app) {
+  const { state } = app;
+  const head = h('h2.section-title', {}, BANK.name, h('span.aside', {}, 'Paid back from half your profits'));
+  const banker = h('img.banker', { src: `img/characters/${BANK.art}.svg`, alt: '' });
+  if (state.debt) {
+    const { owed } = state.debt;
+    const canPay = Math.min(owed, Math.floor(state.credits));
+    return h(
+      'section.section',
+      {},
+      head,
+      h(
+        'div.card.bank-card.owing',
+        {},
+        banker,
+        h(
+          'div',
+          {},
+          h('div.eyebrow', {}, 'You owe the Glutta'),
+          h('div.debt', {}, priceText(owed)),
+          h('div.muted', { style: { fontSize: '12px' } }, debtWalkingText(owed)),
+          h('button.button.small', { type: 'button', disabled: canPay <= 0, onclick: () => app.repayDebt() }, canPay >= owed ? `Pay it all · ${priceText(owed)}` : `Pay ${priceText(canPay)} now`),
+        ),
+      ),
+    );
+  }
+  const offers = loanOffers(state);
+  if (!offers.length) return null;
+  return h(
+    'section.section',
+    {},
+    head,
+    h(
+      'div.card.bank-card',
+      {},
+      banker,
+      h(
+        'div',
+        {},
+        h('div.eyebrow', {}, BANK.title),
+        h('b', {}, BANK.banker),
+        h('div.muted', { style: { fontSize: '12px' } }, `A flat 20% fee, no interest, no deadline. Half of every profit goes to the Glutta until you are clear.`),
+      ),
+    ),
+    h(
+      'div.loan-offers',
+      {},
+      offers.map((offer) =>
+        h(
+          'button.loan-offer',
+          { type: 'button', onclick: () => app.takeLoan(offer) },
+          h('img', { src: `img/ships/${SHIPS[offer.ship].id}.svg`, alt: '' }),
+          h('span.loan-ship', {}, `For a ${SHIPS[offer.ship].name}`),
+          h('span.loan-amount', {}, priceText(offer.amount)),
+          h('span.muted', {}, `Repay ${priceText(offer.owed)}`),
+          h('span.muted', {}, debtWalkingText(offer.owed)),
+        ),
+      ),
+    ),
+  );
+}
+
+// Every ship above the captain's, with its traits and its price in credits
+// and in kilometers of walking.
 function shipyardSection(app) {
   const { state } = app;
   const offers = SHIPS.map((ship, index) => ({ ship, index })).filter(({ index }) => index > state.ship);
   if (!offers.length) {
-    return h('section.section', {}, h('h2.section-title', {}, 'Shipyard'), h('div.empty', {}, 'You fly the biggest ship there is. Respect.'));
+    return h('section.section', {}, h('h2.section-title', {}, 'Shipyard'), h('div.empty', {}, 'You fly the Discovery. No yard has anything to sell you.'));
   }
   return h(
     'section.section',
@@ -322,18 +391,21 @@ function shipyardSection(app) {
       offers.map(({ ship, index }) => {
         const cost = shipCost(state, index);
         return h(
-          'div.card.ship-offer',
+          `div.card.ship-offer${index === state.ship + 1 ? '.next' : ''}`,
           {},
           h('img', { src: `img/ships/${ship.id}.svg`, alt: '' }),
           h(
             'div',
             {},
+            h('div.eyebrow', {}, ship.maker),
             h('b', {}, ship.name),
-            h('div.muted', {}, `Hold ${ship.hold} · ${ship.tagline}`),
+            h('div.muted', { style: { fontSize: '12px' } }, ship.tagline),
+            shipTraits(ship),
             h(
-              'button.button.small',
-              { type: 'button', disabled: state.credits < cost, onclick: () => app.buyShip(index) },
-              `${formatCredits(cost)} cr`,
+              'div.offer-buy',
+              {},
+              h('button.button.small', { type: 'button', disabled: state.credits < cost, onclick: () => app.buyShip(index) }, priceText(cost)),
+              h('span.muted', {}, walkingText(cost)),
             ),
           ),
         );

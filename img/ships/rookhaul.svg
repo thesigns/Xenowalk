@@ -1,15 +1,15 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 320">
-  <!-- Freighter, hold 80 -->
+  <!-- Rookhaul (frontier armored hauler), hold 40 -->
   <defs>
-    <linearGradient id="freighter-hull" x1="0" y1="0" x2="0" y2="1">
+    <linearGradient id="rookhaul-hull" x1="0" y1="0" x2="0" y2="1">
       <stop offset="0" stop-color="#5fe6ff" stop-opacity="0.16"/>
       <stop offset="1" stop-color="#5fe6ff" stop-opacity="0.06"/>
     </linearGradient>
-    <linearGradient id="freighter-plume" x1="1" y1="0" x2="0" y2="0">
+    <linearGradient id="rookhaul-plume" x1="1" y1="0" x2="0" y2="0">
       <stop offset="0" stop-color="#5fe6ff" stop-opacity="0.32"/>
       <stop offset="1" stop-color="#5fe6ff" stop-opacity="0"/>
     </linearGradient>
-    <radialGradient id="freighter-glow">
+    <radialGradient id="rookhaul-glow">
       <stop offset="0" stop-color="#e9f2ff"/>
       <stop offset="0.5" stop-color="#5fe6ff" stop-opacity="0.9"/>
       <stop offset="1" stop-color="#5fe6ff" stop-opacity="0.35"/>
@@ -17,14 +17,14 @@
   </defs>
   <g fill="none" stroke-linecap="round" stroke-linejoin="round">
     <!-- Exhaust -->
-    <path fill="url(#freighter-plume)" d="M41 263L66 245L68 245L71 249L73 255L74 262L73 268L72 270Z"/>
-    <path fill="url(#freighter-plume)" d="M18 242L43 224L45 225L47 228L49 234L50 241L50 246L48 249Z"/>
-    <path fill="url(#freighter-plume)" d="M39 224L64 206L67 207L69 210L71 217L72 224L72 229L70 232L68 232Z"/>
-    <path fill="url(#freighter-plume)" d="M17 204L41 186L43 187L46 191L48 197L49 203L48 209L47 212L44 211Z"/>
-    <path fill="url(#freighter-plume)" d="M38 185L63 167L65 168L68 171L70 177L71 184L70 190L69 193L66 193Z"/>
-    <path fill="url(#freighter-plume)" d="M15 166L39 148L42 149L44 152L46 158L47 165L47 171L45 174L43 173Z"/>
+    <path fill="url(#rookhaul-plume)" d="M41 263L66 245L68 245L71 249L73 255L74 262L73 268L72 270Z"/>
+    <path fill="url(#rookhaul-plume)" d="M18 242L43 224L45 225L47 228L49 234L50 241L50 246L48 249Z"/>
+    <path fill="url(#rookhaul-plume)" d="M39 224L64 206L67 207L69 210L71 217L72 224L72 229L70 232L68 232Z"/>
+    <path fill="url(#rookhaul-plume)" d="M17 204L41 186L43 187L46 191L48 197L49 203L48 209L47 212L44 211Z"/>
+    <path fill="url(#rookhaul-plume)" d="M38 185L63 167L65 168L68 171L70 177L71 184L70 190L69 193L66 193Z"/>
+    <path fill="url(#rookhaul-plume)" d="M15 166L39 148L42 149L44 152L46 158L47 165L47 171L45 174L43 173Z"/>
     <!-- Hull panels -->
-    <path fill="url(#freighter-hull)" d="M48 141L51 129L125 117L171 149L176 168L178 257L173 268L98 284L56 246L51 227Z
+    <path fill="url(#rookhaul-hull)" d="M48 141L51 129L125 117L171 149L176 168L178 257L173 268L98 284L56 246L51 227Z
          M104 72L141 67L156 76L157 137L120 144L105 133Z
          M80 46L83 44L139 36L154 42L179 56L182 60L183 71L175 79L172 80L114 89L84 69L80 64Z
          M490 140L493 81L498 73L531 67L576 86L596 95L603 103L604 105L603 118L597 134L594 138L570 168L537 175L494 152Z
@@ -86,12 +86,12 @@
          M45 178L40 174L37 162L36 150L39 144L46 144M84 269L72 275L67 270L63 258L62 252
          M62 247L49 253L44 249L40 237L39 225L42 220L49 220"/>
     <!-- Engines -->
-    <path fill="url(#freighter-glow)" stroke="#5fe6ff" stroke-width="2" d="M68.1 243.9C71.2 246.8 74 255.2 74.3 262.7C74.6 270.2 72.3 274 69.1 271.1C66 268.3 63.2 259.9 62.9 252.4C62.6 244.8 64.9 241.1 68.1 243.9Z"/>
-    <path fill="url(#freighter-glow)" stroke="#5fe6ff" stroke-width="2" d="M44.9 223.2C47.8 225.9 50.5 234.1 50.8 241.4C51.1 248.7 49 252.5 46 249.8C43 247.1 40.4 239 40.1 231.7C39.7 224.3 41.9 220.6 44.9 223.2Z"/>
-    <path fill="url(#freighter-glow)" stroke="#5fe6ff" stroke-width="2" d="M66.6 205.3C69.7 208 72.5 216.4 72.8 224.1C73.1 231.7 70.8 235.7 67.6 232.9C64.5 230.2 61.7 221.8 61.4 214.2C61.1 206.5 63.4 202.6 66.6 205.3Z"/>
-    <path fill="url(#freighter-glow)" stroke="#5fe6ff" stroke-width="2" d="M43.2 185.6C46.2 188.1 48.9 196.3 49.2 203.7C49.6 211.2 47.4 215.1 44.4 212.5C41.4 210 38.7 201.8 38.4 194.4C38.1 186.9 40.3 183 43.2 185.6Z"/>
-    <path fill="url(#freighter-glow)" stroke="#5fe6ff" stroke-width="2" d="M65.1 166.1C68.3 168.7 71.1 177 71.4 184.8C71.7 192.6 69.3 196.8 66.2 194.2C63 191.6 60.1 183.2 59.8 175.4C59.5 167.6 61.9 163.5 65.1 166.1Z"/>
-    <path fill="url(#freighter-glow)" stroke="#5fe6ff" stroke-width="2" d="M41.6 147.3C44.6 149.7 47.3 157.9 47.6 165.4C48 173 45.8 177.2 42.8 174.7C39.8 172.2 37.1 164.1 36.7 156.6C36.4 149 38.6 144.8 41.6 147.3Z"/>
+    <path fill="url(#rookhaul-glow)" stroke="#5fe6ff" stroke-width="2" d="M68.1 243.9C71.2 246.8 74 255.2 74.3 262.7C74.6 270.2 72.3 274 69.1 271.1C66 268.3 63.2 259.9 62.9 252.4C62.6 244.8 64.9 241.1 68.1 243.9Z"/>
+    <path fill="url(#rookhaul-glow)" stroke="#5fe6ff" stroke-width="2" d="M44.9 223.2C47.8 225.9 50.5 234.1 50.8 241.4C51.1 248.7 49 252.5 46 249.8C43 247.1 40.4 239 40.1 231.7C39.7 224.3 41.9 220.6 44.9 223.2Z"/>
+    <path fill="url(#rookhaul-glow)" stroke="#5fe6ff" stroke-width="2" d="M66.6 205.3C69.7 208 72.5 216.4 72.8 224.1C73.1 231.7 70.8 235.7 67.6 232.9C64.5 230.2 61.7 221.8 61.4 214.2C61.1 206.5 63.4 202.6 66.6 205.3Z"/>
+    <path fill="url(#rookhaul-glow)" stroke="#5fe6ff" stroke-width="2" d="M43.2 185.6C46.2 188.1 48.9 196.3 49.2 203.7C49.6 211.2 47.4 215.1 44.4 212.5C41.4 210 38.7 201.8 38.4 194.4C38.1 186.9 40.3 183 43.2 185.6Z"/>
+    <path fill="url(#rookhaul-glow)" stroke="#5fe6ff" stroke-width="2" d="M65.1 166.1C68.3 168.7 71.1 177 71.4 184.8C71.7 192.6 69.3 196.8 66.2 194.2C63 191.6 60.1 183.2 59.8 175.4C59.5 167.6 61.9 163.5 65.1 166.1Z"/>
+    <path fill="url(#rookhaul-glow)" stroke="#5fe6ff" stroke-width="2" d="M41.6 147.3C44.6 149.7 47.3 157.9 47.6 165.4C48 173 45.8 177.2 42.8 174.7C39.8 172.2 37.1 164.1 36.7 156.6C36.4 149 38.6 144.8 41.6 147.3Z"/>
     <path stroke="#e9f2ff" stroke-width="1.5" opacity="0.8" d="M68 250C70 252 72 256 72 260C72 264 71 267 69 265C67 263 66 259 65 255C65 251 67 248 68 250Z
          M45 229C47 231 48 235 48 239C49 243 47 245 46 244C44 242 43 238 42 234C42 230 43 228 45 229Z
          M67 212C69 213 70 218 70 222C70 226 69 228 67 227C66 225 64 221 64 216C64 212 65 210 67 212Z

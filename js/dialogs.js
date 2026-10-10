@@ -1,12 +1,12 @@
 // Dialogs: the three events and their variants, charting a system, the
-// artifact reveal, promotions and new ships, cards for systems and relics,
+// artifact reveal, new ships, cards for systems and relics,
 // and the menu. Each takes `app` (see main.js) for state and actions.
 
 import {
   ARTIFACTS,
   GOODS,
-  RANKS,
   SECTORS,
+  BANK,
   SHIPS,
   artifactById,
   civById,
@@ -26,6 +26,7 @@ import {
   systemById,
   variantOf,
 } from './game.js';
+import { debtWalkingText, shipTraits, systemsLabel, walkingText } from './ship-view.js';
 import {
   confirmDialog,
   direction,
@@ -37,7 +38,6 @@ import {
   openDialog,
   openOverlay,
   prefersReducedMotion,
-  rankInsignia,
   signed,
   wait,
 } from './ui.js';
@@ -83,67 +83,121 @@ export function openEventDialog(app, system) {
   return missionDialog(app, event);
 }
 
+// The house throws first; then fold for half the stake, or throw for all of it.
 function diceDialog(app, event) {
   const variant = variantOf(event);
   const { stake } = event.offer;
+  const half = Math.ceil(stake / 2);
   return openDialog((close, dialog) => {
+    const yours = [die('you'), die('you')];
+    const theirs = [die('house'), die('house')];
+    const yourTotal = h('div.dice-total', {}, '?');
+    const theirTotal = h('div.dice-total', {}, '?');
+    const table = () =>
+      h(
+        'div.dice-table',
+        {},
+        // The house throws first, so it reads first, on the left.
+        h('div.dice-side', {}, h('div.who', {}, 'House'), h('div.dice-pair', {}, theirs), theirTotal),
+        h('div.versus', {}, 'VS'),
+        h('div.dice-side', {}, h('div.who', {}, 'You'), h('div.dice-pair', {}, yours), yourTotal),
+      );
+    const tumble = async (dice) => {
+      app.feedback('dice');
+      dice.forEach((d) => d.classList.add('rolling'));
+      const spins = prefersReducedMotion() ? 1 : 12;
+      for (let i = 0; i < spins; i++) {
+        dice.forEach((d) => setFace(d, 1 + Math.floor(Math.random() * 6)));
+        await wait(85);
+      }
+      dice.forEach((d) => d.classList.remove('rolling'));
+    };
+    // Once the house has thrown there is no walking away: fold or play.
+    const lock = () => {
+      dialog.dataset.locked = '1';
+      dialog.querySelector('.dialog-close')?.remove();
+    };
+
     const offer = () => {
       dialog.append(
         encounter(variant),
-        h('div.offer', {}, offerLine('Stake', `${formatCredits(stake)} cr`), offerLine('Rules', 'Higher 2d6 wins · ties: house')),
+        h('div.offer', {}, offerLine('Stake', `${formatCredits(stake)} cr`), offerLine('Rules', 'House throws first · fold for half')),
         h(
           'div.button-row',
           {},
           h('button.button', { type: 'button', onclick: () => { app.declineEvent(); close(); } }, 'Walk away'),
-          h('button.button.primary', { type: 'button', onclick: roll }, `Roll · ${formatCredits(stake)}`),
+          h('button.button.primary', { type: 'button', onclick: () => houseThrows(true) }, 'Let them throw'),
         ),
       );
     };
-    const roll = async () => {
-      const result = app.playDice();
+
+    const houseThrows = async (animate) => {
+      lock();
+      const house = app.houseRoll();
       clearDialog(dialog);
-      const yours = [die('you'), die('you')];
-      const theirs = [die('house'), die('house')];
-      const yourTotal = h('div.dice-total', {}, '?');
-      const theirTotal = h('div.dice-total', {}, '?');
+      dialog.append(h('h2', {}, `Dice with ${variant.name}`), table());
+      if (animate) await tumble(theirs);
+      setFace(theirs[0], house[0]);
+      setFace(theirs[1], house[1]);
+      const total = house[0] + house[1];
+      theirTotal.textContent = total;
+      const chance = app.diceWinChance(total);
+      const need = total + 1;
       dialog.append(
-        h('h2', {}, `Dice with ${variant.name}`),
         h(
-          'div.dice-table',
+          'p.dice-odds',
+          { style: { textAlign: 'center' } },
+          need > 12 ? 'Nothing beats a 12. Fold, or pray.' : `You need ${need}${need < 12 ? '+' : ''} to win · ${Math.round(chance * 100)}% chance`,
+        ),
+        h(
+          'div.button-row',
           {},
-          h('div.dice-side', {}, h('div.who', {}, 'You'), h('div.dice-pair', {}, yours), yourTotal),
-          h('div.versus', {}, 'VS'),
-          h('div.dice-side', {}, h('div.who', {}, 'House'), h('div.dice-pair', {}, theirs), theirTotal),
+          h('button.button', { type: 'button', onclick: fold }, `Fold · −${formatCredits(half)}`),
+          h('button.button.primary', { type: 'button', onclick: play }, `Throw · ${formatCredits(stake)}`),
         ),
       );
-      app.feedback('dice');
-      const all = [...yours, ...theirs];
-      all.forEach((d) => d.classList.add('rolling'));
-      const spins = prefersReducedMotion() ? 1 : 12;
-      for (let i = 0; i < spins; i++) {
-        all.forEach((d) => setFace(d, 1 + Math.floor(Math.random() * 6)));
-        await wait(85);
-      }
-      all.forEach((d) => d.classList.remove('rolling'));
-      setFace(yours[0], result.player[0]);
-      setFace(yours[1], result.player[1]);
-      await wait(250);
-      yourTotal.textContent = result.player[0] + result.player[1];
-      setFace(theirs[0], result.house[0]);
-      setFace(theirs[1], result.house[1]);
-      await wait(350);
-      theirTotal.textContent = result.house[0] + result.house[1];
-      await wait(250);
-      app.feedback(result.win ? 'win' : 'lose');
+    };
+
+    const finish = (won, text, line) => {
+      app.feedback(won ? 'win' : 'lose');
       app.refresh();
       dialog.append(
-        h(`div.result.${result.win ? 'win' : 'lose'}`, {}, result.win ? `You win ${signed(stake)} cr` : `You lose ${formatCredits(stake)} cr`),
-        h('p', { style: { textAlign: 'center' } }, result.win ? '“Beginner’s luck. Or is it?”' : '“The house thanks you for your generosity.”'),
+        h(`div.result.${won ? 'win' : 'lose'}`, {}, text),
+        h('p', { style: { textAlign: 'center' } }, line),
         h('button.button.wide', { type: 'button', onclick: () => close() }, 'Done'),
       );
-      app.afterEvent(result.promotion);
+      app.afterEvent();
     };
-    offer();
+
+    const removeChoices = () => {
+      dialog.querySelector('.dice-odds')?.remove();
+      dialog.querySelector('.button-row')?.remove();
+    };
+
+    const fold = () => {
+      const { loss } = app.foldDice();
+      removeChoices();
+      finish(false, `You fold · −${formatCredits(loss)} cr`, '“Wise. Or cowardly. The credits don’t care.”');
+    };
+
+    const play = async () => {
+      const result = app.playDice();
+      removeChoices();
+      await tumble(yours);
+      setFace(yours[0], result.player[0]);
+      setFace(yours[1], result.player[1]);
+      yourTotal.textContent = result.player[0] + result.player[1];
+      await wait(300);
+      finish(
+        result.win,
+        result.win ? `You win ${signed(stake)} cr` : `You lose ${formatCredits(stake)} cr`,
+        result.win ? '“Beginner’s luck. Or is it?”' : '“The house thanks you for your generosity.”',
+      );
+    };
+
+    // Reopened after the house already threw: straight to the choice.
+    if (event.house) houseThrows(false);
+    else offer();
   });
 }
 
@@ -240,7 +294,7 @@ function containerDialog(app, event) {
       } else {
         dialog.append(h('button.button.wide', { type: 'button', onclick: () => close() }, 'Done'));
       }
-      app.afterEvent(result.promotion);
+      app.afterEvent();
     }
   });
 }
@@ -256,7 +310,13 @@ function missionDialog(app, event) {
     const meters = from && target ? Math.hypot(target.x - from.x, target.y - from.y) : 0;
     dialog.append(
       encounter(variant),
-      h('div.offer', {}, offerLine('Cargo', `${units} crates`), offerLine('Deliver to', `${target?.name ?? '?'} · ${formatDistance(meters)}`)),
+      h(
+        'div.offer',
+        {},
+        offerLine('Cargo', `${units} crates`),
+        offerLine('Deliver to', `${target?.name ?? '?'} · ${formatDistance(meters)}`),
+        options[0].until ? offerLine('Weekend job', 'due Sunday 20:00') : null,
+      ),
       room < units ? h('div.notice', {}, icon('warning'), h('span', {}, `You need ${units} free slots in the hold. Sell something first, then come back to this.`)) : null,
       full ? h('div.notice', {}, icon('warning'), h('span', {}, 'You already run three deliveries. Finish one first.')) : null,
       h(
@@ -272,7 +332,7 @@ function missionDialog(app, event) {
                 if (app.acceptMission(index)) close();
               },
             },
-            h('span', {}, `Within ${option.hours} h`),
+            h('span', {}, option.until ? 'By Sunday 20:00' : `Within ${option.hours} h`),
             h('span.reward', {}, `+${formatCredits(option.reward)} cr`),
           ),
         ),
@@ -380,25 +440,6 @@ export function revealArtifact(app, id) {
   });
 }
 
-export function showPromotion(app, index) {
-  const rank = RANKS[index];
-  const next = RANKS[index + 1];
-  app.feedback('rank');
-  return openDialog((close, dialog) => {
-    dialog.append(
-      h(
-        'div.ceremony',
-        {},
-        rankInsignia(index),
-        h('div.kicker', {}, 'Promoted'),
-        h('h2', {}, rank.name),
-        h('p', {}, `${formatCredits(app.state.profit)} cr of lifetime profit.${next ? ` Next: ${next.name} at ${formatCredits(next.profit)}.` : ' The galaxy knows your name.'}`),
-      ),
-      h('button.button.gold.wide', { type: 'button', onclick: () => close() }, 'Carry on'),
-    );
-  });
-}
-
 export function showNewShip(app, index) {
   const ship = SHIPS[index];
   app.feedback('ship');
@@ -408,11 +449,39 @@ export function showNewShip(app, index) {
         'div.ceremony',
         {},
         h('img.ship-art', { src: `img/ships/${ship.id}.svg`, alt: '' }),
-        h('div.kicker', { style: { color: 'var(--cyan)' } }, 'New ship'),
+        h('div.kicker', { style: { color: 'var(--cyan)' } }, `New ship · ${ship.maker}`),
         h('h2', {}, ship.name),
-        h('p', {}, `Hold ${ship.hold}. ${ship.tagline}`),
+        h('p', {}, ship.tagline),
+        shipTraits(ship),
       ),
       h('button.button.primary.wide', { type: 'button', onclick: () => close() }, 'Take the helm'),
+    );
+  });
+}
+
+// Ossumar's terms, before a loan is taken.
+export function confirmLoan(app, offer) {
+  const ship = SHIPS[offer.ship];
+  return openDialog((close, dialog) => {
+    dialog.append(
+      h(
+        'div.encounter',
+        { style: { '--accent': '#ffd479' } },
+        h('div.portrait', {}, h('img', { src: `img/characters/${BANK.art}.svg`, alt: '' })),
+        h('div.role', {}, BANK.title),
+        h('div.who', {}, BANK.banker),
+        h('p.line', {}, `“${BANK.line}”`),
+      ),
+      h(
+        'div.offer',
+        {},
+        offerLine('You get', `${formatCredits(offer.amount)} cr`),
+        offerLine('Enough for', `a ${ship.name}`),
+        offerLine('You owe', `${formatCredits(offer.owed)} cr`),
+        offerLine('Paid back', 'half of every profit'),
+      ),
+      h('p.muted', { style: { fontSize: '13px', textAlign: 'center' } }, `No interest and no deadline: the debt never grows. ${debtWalkingText(offer.owed)}.`),
+      h('div.button-row', {}, h('button.button', { type: 'button', onclick: () => close(false) }, 'No, thanks'), h('button.button.gold', { type: 'button', onclick: () => close(true) }, `Borrow ${formatCredits(offer.amount)}`)),
     );
   });
 }
@@ -423,7 +492,7 @@ export async function confirmShip(app, index) {
   const cost = ship.price - Math.round(current.price * 0.5);
   return confirmDialog({
     title: `Buy the ${ship.name}?`,
-    text: `${formatCredits(ship.price)} cr, minus ${formatCredits(Math.round(current.price * 0.5))} for your ${current.name}: ${formatCredits(cost)} cr. Hold ${current.hold} → ${ship.hold}. Your cargo moves over.`,
+    text: `${formatCredits(ship.price)} cr, minus ${formatCredits(Math.round(current.price * 0.5))} for your ${current.name}: ${formatCredits(cost)} cr (${walkingText(cost)}). Hold ${current.hold} → ${ship.hold}, ${systemsLabel(current)} → ${systemsLabel(ship).toLowerCase()}, jobs to ${ship.missionKm} km. Your cargo moves over.`,
     confirm: `Buy · ${formatCredits(cost)}`,
   });
 }
@@ -568,11 +637,12 @@ export function openGuide() {
         'div.guide',
         {},
         step('discover', 'Chart your places', `Tap Discover System where you stand: home, a park bench, your café. Systems sit at least ${MIN_SPACING} m apart, up to ${AREA_MAX_SYSTEMS} within 2 km. The first two are free.`),
-        step('cargo', 'Walk and trade', 'Each system sells what it makes (5 a day) and pays well for what it lacks (4 a day). Buy cheap, carry, sell dear. Markets restock at 04:00, and stock waits two days.'),
+        step('cargo', 'Walk and trade', 'Each system sells what it makes (3 a day) and pays well for what it lacks (3 a day). Buy cheap, carry, sell dear. Markets restock at 04:00, and stock waits two days. A kilometer walked earns about 70 credits, roughly the calories you burn.'),
         step('news', 'Read the news', 'Every day one system in each area runs short of something and pays double for it.'),
         step('event', 'Meet people', 'Each system has one encounter a day: dice with strangers, sealed containers, delivery jobs.'),
-        step('artifact', 'Find relics', 'Containers may hide relics of six dead civilizations. Every kilometer between your systems strengthens the signal (3 km a day count).'),
-        step('ship', 'Grow', 'Bigger ships carry more. Profit earns ranks, from Stowaway to Elite.'),
+        step('artifact', 'Find relics', 'Containers may hide relics of six dead civilizations. Every kilometer between your systems strengthens the signal: 3 km a day count, 15 on Saturdays and Sundays.'),
+        step('ship', 'Grow', 'Your ship says who you are. Each bigger one carries more, lets you chart more systems and takes delivery jobs further, from the Mote to the legendary Discovery.'),
+        step('mission', 'Go far at weekends', 'On Fridays and Saturdays, jobs beyond 3 km turn up, due Sunday 20:00. A long walk, a big reward.'),
         step('warning', 'Stay safe', 'Nothing happens between systems. Keep the phone in your pocket and your eyes on the street.'),
       ),
       h('button.button.primary.wide', { type: 'button', onclick: () => close() }, 'Got it'),

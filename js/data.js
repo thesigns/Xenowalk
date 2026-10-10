@@ -1,12 +1,12 @@
-// Game content: goods, economies, sectors, ships, ranks, event variants,
+// Game content: goods, economies, sectors, ships, event variants,
 // civilizations and artifacts. Rules that use them live in game.js.
 
 export const GOODS = [
-  { id: 'humanFood', name: 'Human Food', base: 20, color: '#8fe388' },
-  { id: 'alienFood', name: 'Alien Food', base: 30, color: '#e58cff' },
-  { id: 'substances', name: 'Substances', base: 40, color: '#ffc04d' },
-  { id: 'humanTech', name: 'Human Tech', base: 80, color: '#62b6ff' },
-  { id: 'alienTech', name: 'Alien Tech', base: 120, color: '#9d8cff' },
+  { id: 'humanFood', name: 'Human Food', base: 4, color: '#8fe388' },
+  { id: 'alienFood', name: 'Alien Food', base: 6, color: '#e58cff' },
+  { id: 'substances', name: 'Substances', base: 8, color: '#ffc04d' },
+  { id: 'humanTech', name: 'Human Tech', base: 16, color: '#62b6ff' },
+  { id: 'alienTech', name: 'Alien Tech', base: 24, color: '#9d8cff' },
 ];
 
 export const GOOD_IDS = GOODS.map((good) => good.id);
@@ -68,25 +68,37 @@ export const economyById = Object.fromEntries(ECONOMIES.map((economy) => [econom
 // Image file names follow the ids in kebab case.
 export const kebab = (id) => id.replace(/[A-Z]/g, (c) => `-${c.toLowerCase()}`);
 
+// The ships (GDD 5): the only measure of progress. Each sets the hold, how many
+// systems the captain may have in all, and how far deliveries may go. Small
+// ones come from human yards, middle ones from the frontier, the biggest are
+// refitted hulls of extinct civilizations. Art: img/ships/<id>.svg.
 export const SHIPS = [
-  { id: 'shuttle', name: 'Shuttle', hold: 10, price: 0, tagline: 'Small, stubborn and paid off.' },
-  { id: 'courier', name: 'Courier', hold: 20, price: 3000, tagline: 'Swept wings, twin engines, twice the hold. Outruns its own invoices.' },
-  { id: 'hauler', name: 'Hauler', hold: 40, price: 15000, tagline: 'A cargo spine, four pods and three engines. Work ship, no apologies.' },
-  { id: 'freighter', name: 'Freighter', hold: 80, price: 80000, tagline: 'A small moon of containers that answers to you.' },
+  { id: 'capsule', name: 'Capsule', hold: 5, systems: 2, missionKm: 0, price: 0, maker: 'Escape pod', tagline: 'What is left when the ship is gone. Too small for anyone to bother with.' },
+  { id: 'mote', name: 'Mote', hold: 10, systems: 3, missionKm: 1, price: 300, maker: 'Halloran Yards', tagline: 'Everyone starts as a speck.' },
+  { id: 'tinderbox', name: 'Tinderbox', hold: 15, systems: 5, missionKm: 2, price: 1000, maker: 'Halloran Yards', tagline: 'Cramped, loud, patched. And yours.' },
+  { id: 'kestrin', name: 'Kestrin', hold: 20, systems: 8, missionKm: 3, price: 3500, maker: 'Halloran Yards', tagline: 'Halloran’s first real trader: lean, quick, honest.' },
+  { id: 'grindle', name: 'Grindle', hold: 30, systems: 12, missionKm: 4, price: 7000, maker: 'Frontier-built', tagline: 'Bolted together from whatever the frontier had. Ugly. Unkillable.' },
+  { id: 'rookhaul', name: 'Rookhaul', hold: 40, systems: 17, missionKm: 5, price: 11000, maker: 'Frontier-built', tagline: 'The armored workhorse of the mining camps.' },
+  { id: 'bulwark', name: 'Bulwark', hold: 55, systems: 23, missionKm: 6, price: 17000, maker: 'Orrim hull', tagline: 'A dreadnought of the Orrim. Its plates still carry the scars of their wars.' },
+  { id: 'lightbarque', name: 'Lightbarque', hold: 70, systems: 30, missionKm: 7, price: 24000, maker: 'Lumenari hull', tagline: 'Lumenari sails that drink starlight and remember every road.' },
+  { id: 'choirship', name: 'Choirship', hold: 85, systems: 38, missionKm: 8, price: 32000, maker: 'Vael hull', tagline: 'A living crystal hull of the Vael. On quiet nights it sings.' },
+  { id: 'discovery', name: 'Discovery', hold: 100, systems: Infinity, missionKm: 9, price: 55000, maker: 'Unknown makers', tagline: 'The ship of legends. Nobody knows who built it.' },
 ];
 
-// Trade ranks by lifetime profit (GDD 7.5).
-export const RANKS = [
-  { name: 'Stowaway', profit: 0 },
-  { name: 'Drifter', profit: 1000 },
-  { name: 'Haggler', profit: 5000 },
-  { name: 'Trader', profit: 15000 },
-  { name: 'Merchant', profit: 40000 },
-  { name: 'Shipowner', profit: 100000 },
-  { name: 'Magnate', profit: 200000 },
-  { name: 'Tycoon', profit: 400000 },
-  { name: 'Elite', profit: 650000 },
-];
+// The Glutta Vault (GDD 7.6): fat, glistening grub-bankers who lend credits for
+// a bigger ship and wait to be paid back out of the captain's profits.
+export const BANK = {
+  name: 'Glutta Vault',
+  banker: 'Ossumar the Ample',
+  title: 'Glutta banker',
+  art: 'glutta-banker',
+  line: 'A bigger ship, little trader? The Glutta lend. We never chase. We simply wait, and eat.',
+  paidOff: 'The Glutta are satisfied. For now.',
+};
+
+// Credits are on a calorie scale, about this many per km walked (GDD 7.1),
+// so prices can be read as distance.
+export const CREDITS_PER_KM = 70;
 
 // Each event comes in a few variants (GDD 8.6): a character, a line, and
 // small changes to the numbers. The player never picks the variant.
@@ -123,7 +135,7 @@ export const EVENT_VARIANTS = {
       name: 'The Lantern',
       title: 'Shady dealer',
       weight: 2,
-      price: 300,
+      price: 60,
       units: [2, 6],
       line: "Sealed crate, no manifest, no questions. Fair price, if you don't ask what hums inside.",
     },
@@ -132,7 +144,7 @@ export const EVENT_VARIANTS = {
       name: 'Rusk Halloran',
       title: 'Scrap merchant',
       weight: 2,
-      price: 150,
+      price: 30,
       units: [1, 3],
       line: 'Pulled this box off a dead freighter, still sealed. Could be gold, could be gas. Want it?',
     },
@@ -141,7 +153,7 @@ export const EVENT_VARIANTS = {
       name: 'Ziss Calloran',
       title: 'Smuggler',
       weight: 1,
-      price: 600,
+      price: 120,
       units: [4, 12],
       line: "Customs never saw this one, and neither did you. Cash only, and I'm gone before you open it.",
     },

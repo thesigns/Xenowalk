@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 320">
+  <!-- Capsule (class 0, escape pod), hold 5 -->
+  <defs>
+    <linearGradient id="capsule-hull" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#5fe6ff" stop-opacity="0.16"/>
+      <stop offset="1" stop-color="#5fe6ff" stop-opacity="0.06"/>
+    </linearGradient>
+    <linearGradient id="capsule-plume" x1="1" y1="0" x2="0" y2="0">
+      <stop offset="0" stop-color="#5fe6ff" stop-opacity="0.32"/>
+      <stop offset="1" stop-color="#5fe6ff" stop-opacity="0"/>
+    </linearGradient>
+    <radialGradient id="capsule-glow">
+      <stop offset="0" stop-color="#e9f2ff"/>
+      <stop offset="0.5" stop-color="#5fe6ff" stop-opacity="0.9"/>
+      <stop offset="1" stop-color="#5fe6ff" stop-opacity="0.35"/>
+    </radialGradient>
+  </defs>
+  <g fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Exhaust -->
+    <path fill="url(#capsule-plume)" d="M116 224l110-59 8 0 8 8 5 11 2 13-2 11-5 5Z"/>
+    <!-- Hull panels -->
+    <path fill="url(#capsule-hull)" d="M221 158l3-26 13-28 50-27 26-10 48-7 40 18 18 10 17 22 9 29 0 29-9 19-23 37-44 20-26 10-56 4-27-13-18-21-13-19-8-24Z
+         M244 117l15-32 26-10 16-5 31 16 26 36 15 48 0 46-15 32-26 10-16 4-31-15-26-37-15-47Z
+         M215 173l3-9 22-18 9-1 9 5 9 10 7 13 3 15 0 14-3 11-7 7-9 1-20-1-8-4-7-8-5-11-3-12Z
+         M293 86l2-16 2-6 8-5 12-1 13 8 1 16-2 5-11 4-15-1Z"/>
+    <path fill="#5fe6ff" fill-opacity="0.08" d="M271 163l-13-19 29-35 22 32ZM258 144l-16-8 18-40 27 13ZM242 136l-13 5 8-37 23-8ZM309 141l-22-32 56-26 26 36Z
+         M287 109l-27-13 53-29 30 16ZM369 119l-26-36 46-8 24 33ZM343 83l-30-16 48-7 28 15ZM413 108l-24-33 30 13 17 22Z
+         M342 127l-26-36 16-5 26 36ZM316 91l-31-16 16-5 31 16ZM250 181l-5-11 22-10 7 13ZM245 170l-7-8 20-12 9 10Z"/>
+    <path fill="#5fe6ff" fill-opacity="0.3" d="M423 129C419 117 408 110 398 113C388 116 383 128 387 140C391 152 402 159 412 156C422 153 427 141 423 129Z"/>
+    <path stroke="#9fb1c8" stroke-width="1.5" d="M430 127C424 110 409 100 395 105C381 109 374 126 380 142C385 159 401 169 414 165C428 160 435 144 430 127Z"/>
+    <!-- Facets -->
+    <path stroke="#9fb1c8" stroke-width="1.5" opacity="0.75" d="M279 187l-8-24 38-22 14 41-44 5 0 24-8 16-13 5-10-5M271 163l-13-19 29-35 22 32 31-11M258 144l-16-8 18-40 27 13 28-13
+         M242 136l-13 5 6-26M251 99l9-3 27-15M229 141l-5 10M258 232l22 20M271 227l38 23-14 5M279 211l44 11-14 28 30-3
+         M354 174l-31 8 0 40 31-5M358 123l11-4 16 48-27 8-16-48 16-5M332 88l11-5 26 36 44-11 14 44-42 15 0 45-12 2M331 76l12 7 45-8
+         M423 202l4-8-42 18-14 30M390 75l23 33 21 2M443 141l-16 11 0 42 8-12M342 127l-26-36 16-5M316 91l-9-5M294 80l-6-4M343 252l15-31 15-5
+         M358 221l0-46M240 220l5-1 5-5 3-10 0-11-3-12-5-11-7-8-8-4-7 1"/>
+    <path stroke="#9fb1c8" stroke-width="2" d="M257 93l5-3M309 257l6-1M327 84l5 2 26 36 15 48 0 46-14 30M223 159l14-11M241 220l13 1M330 66l1 12M308 91l-15-5 2-12"/>
+    <!-- Details -->
+    <path stroke="#9fb1c8" stroke-width="2" opacity="0.9" d="M363 198l8 4 10-3-8-4M355 149l10-3M334 105l3-8 10-3-4 8M304 77l0-5M274 75l-4-12 9-3 4 12M252 97l-7-10 10-3 3 5M244 137l-3-1
+         M304 258l0 11 9-2 0-7M334 261l3 12 10-3-4-12M355 239l7 9 10-2-7-10"/>
+    <path stroke="#9fb1c8" stroke-width="2" d="M266 93l-12-63"/>
+    <!-- Outline -->
+    <path stroke="#e9f2ff" stroke-width="4" d="M235 115l2-11 14-5M224 151l-3 7 3-26 13-28 20-11M221 158l0 4M238 219l22 26 27 13-7-6M242 224l6 3M295 255l-8 3 22-1
+         M337 254l6 0 26-10-10 1M371 242l42-18 10-22M328 65l33-5 28 15 30 13 17 22-2 0M436 110l9 29-2 2M361 60l58 28
+         M413 224l23-37 9-19-10 14M445 139l0 29M288 76l-3-1 10-3M285 75l-26 10-5 11M304 257l12 5 16-4 26-10-42 14M359 246l-1 2
+         M223 160l-5 4-3 9 0 12 3 12 5 11 7 8 11 4M238 220l2 0M295 74l2-10 8-5 12-1 13 8"/>
+    <!-- Engines -->
+    <g fill="url(#capsule-glow)" stroke="#5fe6ff" stroke-width="2" transform="rotate(73.2)">
+      <ellipse cx="248.5" cy="-169.2" rx="25.7" ry="14.4"/>
+    </g>
+    <g stroke="#e9f2ff" stroke-width="1.5" opacity="0.8" transform="rotate(73.2)">
+      <ellipse cx="250.8" cy="-169.8" rx="14.9" ry="8.3"/>
+    </g>
+    <!-- Lights -->
+    <g fill="#5fe6ff" stroke="none">
+      <circle cx="312" cy="58" r="3.5"/>
+      <circle cx="254" cy="30" r="2.5"/>
+    </g>
+  </g>
+</svg>
