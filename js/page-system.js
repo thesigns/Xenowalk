@@ -5,7 +5,6 @@ import { BANK, GOODS, SECTORS, SHIPS, economyById, goodById, kebab } from './dat
 import {
   buyPrice,
   galacticDay,
-  MINE_MIN_DISTANCE,
   newsFor,
   newsItem,
   loanOffers,
@@ -442,7 +441,7 @@ function deepSpaceView(app) {
         'p.muted',
         { style: { margin: 0 } },
         nearest
-          ? `Walk into a system to dock: trade, meet whoever waits there, buy ships. Out here, ${MINE_MIN_DISTANCE} m or more from your systems, tap Mine on the map for Substances.`
+          ? 'Walk into a system to dock: trade, meet whoever waits there, buy ships. On the way, tap Mine on the map for Substances.'
           : 'Go home and tap Discover System on the map. Your first two systems are free.',
       ),
     ),

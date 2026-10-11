@@ -477,7 +477,7 @@ img {
   color: var(--ink-2);
 }
 
-/* Asteroid mining, beside Discover System in deep space: one tap, no decisions. */
+/* Asteroid mining, beside the action button: one tap, no decisions. */
 .mine {
   display: flex;
   flex: none;

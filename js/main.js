@@ -687,7 +687,7 @@ function updateAction() {
 
 function updateMine() {
   const button = $('mine');
-  button.hidden = Boolean(app.docked) || state.systems.length === 0;
+  button.hidden = state.systems.length === 0;
   if (button.hidden) return;
   const check = miningCheck(state, tracker.position, { goodSignal: tracker.hasGoodSignal }, now());
   button.classList.toggle('disabled', !check.ok);

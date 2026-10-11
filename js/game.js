@@ -73,7 +73,6 @@ export const COUNTED_MAX_SPEED_KMH = 40;
 // counts as mined where the influences add up to at least 1. A lone one
 // covers a disc of MINE_RADIUS; ones close together flow into one field.
 export const MINE_GOOD = 'substances';
-export const MINE_MIN_DISTANCE = 200;
 export const MINE_RADIUS = 200;
 export const MINE_INFLUENCE = 1.5 * MINE_RADIUS;
 const MINE_THRESHOLD = (1 - (MINE_RADIUS / MINE_INFLUENCE) ** 2) ** 2;
@@ -321,19 +320,14 @@ function isMined(areas, point) {
   return false;
 }
 
-// Can the captain mine here? { ok, reason, point }. Only out in deep space,
-// away from every system, where nothing was mined in the last hours.
+// Can the captain mine here? { ok, reason, point }. Anywhere, systems
+// included, where nothing was mined in the last hours: at home that is one
+// unit every few hours, too little to matter.
 export function miningCheck(state, position, { goodSignal }, now) {
   if (!position) return { ok: false, reason: 'Waiting for GPS' };
   if (!goodSignal) return { ok: false, reason: 'GPS signal too weak' };
   if (state.systems.length === 0) return { ok: false, reason: 'Chart your first system first' };
   const point = toWorld(position);
-  const nearest = state.systems
-    .map((system) => ({ system, d: distance(system, point) }))
-    .sort((a, b) => a.d - b.d)[0];
-  if (nearest.d < MINE_MIN_DISTANCE) {
-    return { ok: false, point, reason: `No asteroids this close to ${nearest.system.name}`, short: `${Math.ceil((MINE_MIN_DISTANCE - nearest.d) / 10) * 10} m out` };
-  }
   if (isMined(activeMinedAreas(state, now), point)) return { ok: false, point, reason: 'Mined out here. Walk on to fresh rock.', short: 'Mined out' };
   if (freeHold(state) < 1) return { ok: false, point, reason: 'Cargo hold full', short: 'Hold full' };
   return { ok: true, point };

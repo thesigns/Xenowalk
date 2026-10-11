@@ -125,8 +125,8 @@ export const PARAM_GROUPS = [
   {
     title: 'Mining',
     params: [
-      { key: 'miningDistance', label: 'Asteroids from this far from any system', unit: 'm, 0 = no mining', def: 0, step: 50 },
-      { key: 'miningSpacing', label: 'One Substances per', unit: 'm walked out there', def: 200, step: 25 },
+      { key: 'miningDistance', label: 'Asteroids from this far from any system', unit: 'm, 0 = everywhere', def: 0, step: 50 },
+      { key: 'miningSpacing', label: 'One Substances per', unit: 'm walked out there, 0 = no mining', def: 0, step: 25 },
     ],
   },
   {
@@ -203,7 +203,7 @@ PRESETS['Proposal v0.3'] = {
   artifactKmPerWeekendDay: 15,
   weekendWalkMinutes: 150,
   newAreaKm: 3,
-  miningDistance: 200,
+  miningDistance: 0,
   miningSpacing: 200,
   days: 400,
 };
@@ -648,17 +648,18 @@ function runEvent(st, sys, ctx, p) {
 }
 
 // Asteroid mining (v0.3): one Substances for every miningSpacing meters walked
-// further than miningDistance from all systems, while the hold has room. The
-// mined areas don't last to the next walk, so only the leg itself matters.
+// at least miningDistance from all systems (0: anywhere), while the hold has
+// room. The mined areas don't last to the next walk, so only the leg itself
+// matters.
 function mine(st, from, to, p) {
-  if (!(p.miningDistance > 0)) return;
+  if (!(p.miningSpacing > 0)) return;
   const length = dist(from, to);
   const steps = Math.ceil(length / 25);
   let far = 0;
   for (let k = 0; k < steps; k++) {
     const t = (k + 0.5) / steps;
     const point = { x: from.x + (to.x - from.x) * t, y: from.y + (to.y - from.y) * t };
-    if (st.systems.every((s) => dist(s, point) > p.miningDistance)) far += length / steps;
+    if (st.systems.every((s) => dist(s, point) >= p.miningDistance)) far += length / steps;
   }
   st.minedCarry += far / p.miningSpacing;
   const units = Math.min(Math.floor(st.minedCarry), Math.max(0, Math.floor(holdOf(st, p) - cargoUsed(st))));

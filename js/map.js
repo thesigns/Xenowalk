@@ -6,7 +6,7 @@
 
 import { hasWorld, sectorField, starsInCell } from './galaxy.js';
 import { createSimplex } from './noise.js';
-import { MINE_MIN_DISTANCE, SYSTEM_RADIUS, mineWeight } from './game.js';
+import { MINE_INFLUENCE, SYSTEM_RADIUS, mineWeight } from './game.js';
 
 const MIN_VIEW_METERS = 300;
 const MAX_VIEW_METERS = 9000;
@@ -21,12 +21,11 @@ const NEBULA_MOVING_STEP_PX = 9;
 const SETTLE_MS = 160;
 const EDGE_GLOW_PX = 11;
 const FOLLOW_EASING = 0.18;
-// The asteroid layer is this much bigger than the screen, so it can slide
-// with the camera a while before it is drawn again.
-const FIELD_PAD_PX = 80;
-// One rock per cell of at least this many meters and pixels.
-const FIELD_ROCK_METERS = 25;
-const FIELD_ROCK_PX = 8;
+// Mined areas are outlined on a grid of 2 to 4 pixels' worth of meters (a
+// power of two, so it changes only in steps), traced this far past the screen.
+const OUTLINE_CELL_PX = 4;
+const OUTLINE_PAD_PX = 120;
+const SCANLINE_PX = 4;
 
 // Mirrors the palette in css/style.css.
 export const COLORS = {
@@ -37,7 +36,6 @@ export const COLORS = {
   cyan: '#5fe6ff',
   gold: '#ffd479',
   substances: '#ffc04d',
-  rock: '#9fb1c8',
   sectors: ['#5b9dff', '#b77dff', '#ffb24d'],
   // The same as rgb triples, for the nebula's pixels.
   sectorRgb: [
@@ -75,7 +73,6 @@ export class MapView {
     // cached layers are then drawn again.
     const restored = () => {
       this.nebulaKey = '';
-      this.asteroids = null;
       if (!this.running) this.draw();
     };
     canvas.addEventListener('contextrestored', restored);
@@ -103,7 +100,6 @@ export class MapView {
     this.canvas.height = Math.round(this.height * ratio);
     this.ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
     this.nebulaKey = '';
-    this.asteroids = null;
   }
 
   get metersPerPixel() {
@@ -304,7 +300,7 @@ export class MapView {
     this.drawStars(time, this.center);
     if (hasWorld()) this.drawNebula(time);
     this.drawGrid();
-    if (hasWorld() && this.scene.systems.length) this.drawAsteroids();
+    if (this.scene.minedAreas?.length) this.drawMinedAreas(time);
     if (this.scene.showArea && player) this.drawArea(player, time);
     this.drawRoutes(time);
     for (const system of this.scene.systems) this.drawSystem(system, time);
@@ -415,98 +411,81 @@ export class MapView {
     ctx.globalAlpha = 1;
   }
 
-  // Asteroids fill deep space: none within MINE_MIN_DISTANCE of a system, and
-  // none where the captain mined, until the rock grows back. Where mining is
-  // possible can be seen at a glance. The rocks are pinned to the world and
-  // drawn into a layer a bit bigger than the screen, redrawn only when the
-  // view moves past its margin or zooms, or the fields change.
-  drawAsteroids() {
-    const { ctx, width, height, ratio } = this;
-    const { systems, minedAreas = [] } = this.scene;
+  // Mined areas are ringed in amber, merged just as the rule merges them, so
+  // the line is exactly where Mine says "Mined out": a crisp line with a glow,
+  // a spark running along it, scanlines inside. The outline is traced in world
+  // meters on a grid pinned to the world, so it holds still while the map
+  // pans, and is traced again only when the zoom steps, the view moves past
+  // the margin, or the areas change.
+  drawMinedAreas(time) {
+    const { ctx, width, height } = this;
+    const { minedAreas } = this.scene;
     const mpp = this.metersPerPixel;
-    const origin = this.toScreen({ x: 0, y: 0 });
-    const signature = `${mpp.toFixed(4)},${width},${height},${ratio},${systems.length},${minedAreas.length},${minedAreas[0]?.minedAt},${minedAreas[minedAreas.length - 1]?.minedAt}`;
-    let layer = this.asteroids;
-    if (!layer || layer.signature !== signature || Math.abs(origin.x - layer.origin.x) > FIELD_PAD_PX / 2 || Math.abs(origin.y - layer.origin.y) > FIELD_PAD_PX / 2) {
-      layer = this.asteroids = { signature, origin, canvas: this.asteroids?.canvas ?? this.layerCanvas() };
-      this.renderAsteroids(layer.canvas, systems, minedAreas);
-    }
-    ctx.drawImage(layer.canvas, origin.x - layer.origin.x - FIELD_PAD_PX, origin.y - layer.origin.y - FIELD_PAD_PX, width + 2 * FIELD_PAD_PX, height + 2 * FIELD_PAD_PX);
-  }
+    const cell = 2 ** Math.floor(Math.log2(OUTLINE_CELL_PX * mpp));
+    const block = cell * 32;
+    const tl = this.toWorld(-OUTLINE_PAD_PX, -OUTLINE_PAD_PX);
+    const br = this.toWorld(width + OUTLINE_PAD_PX, height + OUTLINE_PAD_PX);
+    const xs = minedAreas.map((area) => area.x);
+    const ys = minedAreas.map((area) => area.y);
+    const bounds = {
+      left: Math.floor(Math.max(tl.x, Math.min(...xs) - MINE_INFLUENCE) / block) * block,
+      right: Math.ceil(Math.min(br.x, Math.max(...xs) + MINE_INFLUENCE) / block) * block,
+      bottom: Math.floor(Math.max(br.y, Math.min(...ys) - MINE_INFLUENCE) / block) * block,
+      top: Math.ceil(Math.min(tl.y, Math.max(...ys) + MINE_INFLUENCE) / block) * block,
+    };
+    if (bounds.left >= bounds.right || bounds.bottom >= bounds.top) return;
+    const key = [cell, bounds.left, bounds.right, bounds.bottom, bounds.top, ...minedAreas.map((area) => area.minedAt)].join();
+    if (this.minedOutline?.key !== key) this.minedOutline = { key, contours: traceMinedOutline(minedAreas, cell, bounds) };
+    const { contours } = this.minedOutline;
+    if (contours.length === 0) return;
 
-  // The layer's canvas is kept between redraws: resizing it would allocate
-  // its memory again every time.
-  layerCanvas() {
-    const canvas = document.createElement('canvas');
-    canvas.addEventListener('contextrestored', () => {
-      this.asteroids = null;
-    });
-    return canvas;
-  }
+    const outline = new Path2D();
+    for (const contour of contours) {
+      contour.forEach((point, index) => {
+        const p = this.toScreen(point);
+        if (index === 0) outline.moveTo(p.x, p.y);
+        else outline.lineTo(p.x, p.y);
+      });
+      outline.closePath();
+    }
+    const amber = COLORS.substances;
+    ctx.save();
+    ctx.fillStyle = amber;
+    ctx.globalAlpha = 0.05;
+    ctx.fill(outline, 'evenodd');
+    // Scanlines pinned to the world, so they don't slide as the map moves.
+    ctx.clip(outline, 'evenodd');
+    const phase = ((this.toScreen({ x: 0, y: 0 }).y % SCANLINE_PX) + SCANLINE_PX) % SCANLINE_PX;
+    ctx.beginPath();
+    for (let y = phase; y < height; y += SCANLINE_PX) {
+      ctx.moveTo(0, y + 0.5);
+      ctx.lineTo(width, y + 0.5);
+    }
+    ctx.strokeStyle = amber;
+    ctx.globalAlpha = 0.07;
+    ctx.lineWidth = 1;
+    ctx.stroke();
+    ctx.restore();
 
-  renderAsteroids(canvas, systems, minedAreas) {
-    const { width, height } = this;
-    // Thin rocks look the same at 2× as at 3×, for less memory.
-    const ratio = Math.min(this.ratio, 2);
-    const pad = FIELD_PAD_PX;
-    const w = Math.round((width + 2 * pad) * ratio);
-    const hgt = Math.round((height + 2 * pad) * ratio);
-    if (canvas.width !== w || canvas.height !== hgt) {
-      canvas.width = w;
-      canvas.height = hgt;
-    }
-    const lctx = canvas.getContext('2d');
-    lctx.setTransform(1, 0, 0, 1, 0, 0);
-    lctx.clearRect(0, 0, w, hgt);
-    lctx.setTransform(ratio, 0, 0, ratio, pad * ratio, pad * ratio);
-    const mpp = this.metersPerPixel;
-    // Zoomed out, the cells double in size so the belt never turns into noise.
-    const cell = FIELD_ROCK_METERS * 2 ** Math.max(0, Math.ceil(Math.log2((FIELD_ROCK_PX * mpp) / FIELD_ROCK_METERS)));
-    const tl = this.toWorld(-pad, -pad);
-    const br = this.toWorld(width + pad, height + pad);
-    const clear = MINE_MIN_DISTANCE;
-    const fade = Math.max(60, 12 * mpp);
-    // Three brightness steps, each drawn as one path.
-    const paths = [new Path2D(), new Path2D(), new Path2D()];
-    const glints = new Path2D();
-    for (let i = Math.floor(tl.x / cell); i <= Math.ceil(br.x / cell); i++) {
-      for (let j = Math.floor(br.y / cell); j <= Math.ceil(tl.y / cell); j++) {
-        const h = hash2(i, j);
-        const x = (i + h[0]) * cell;
-        const y = (j + h[1]) * cell;
-        let nearest = Infinity;
-        for (const system of systems) nearest = Math.min(nearest, (system.x - x) ** 2 + (system.y - y) ** 2);
-        nearest = Math.sqrt(nearest);
-        if (nearest < clear) continue;
-        let field = 0;
-        for (const area of minedAreas) field += mineWeight((area.x - x) ** 2 + (area.y - y) ** 2);
-        if (field >= 1) continue;
-        // Soft edges: thinning out toward a system and toward a mined field.
-        const presence = Math.min(1, (nearest - clear) / fade) * Math.min(1, (1 - field) * 2.5);
-        if (h[2] > presence) continue;
-        const p = this.toScreen({ x, y });
-        const size = 1 + h[3] * 2;
-        const path = h[4] < 0.08 ? glints : paths[Math.floor(h[4] * 3)];
-        const spin = h[3] * Math.PI * 2;
-        for (let k = 0; k < 4; k++) {
-          const a = spin + (k * Math.PI) / 2 + (h[k] - 0.5) * 0.9;
-          const r = size * (0.6 + h[(k + 2) % 5] * 0.6);
-          if (k === 0) path.moveTo(p.x + Math.cos(a) * r, p.y + Math.sin(a) * r);
-          else path.lineTo(p.x + Math.cos(a) * r, p.y + Math.sin(a) * r);
-        }
-        path.closePath();
-      }
-    }
-    lctx.lineWidth = 1;
-    lctx.lineJoin = 'round';
-    lctx.strokeStyle = COLORS.rock;
-    paths.forEach((path, index) => {
-      lctx.globalAlpha = 0.2 + index * 0.13;
-      lctx.stroke(path);
-    });
-    lctx.strokeStyle = COLORS.substances;
-    lctx.globalAlpha = 0.5;
-    lctx.stroke(glints);
+    ctx.save();
+    ctx.strokeStyle = amber;
+    ctx.lineJoin = 'round';
+    ctx.lineCap = 'round';
+    ctx.globalAlpha = 0.14;
+    ctx.lineWidth = 6;
+    ctx.stroke(outline);
+    // The line itself is pale, so it can't be taken for a sector's border.
+    ctx.strokeStyle = COLORS.ink;
+    ctx.globalAlpha = 0.75;
+    ctx.lineWidth = 1.2;
+    ctx.stroke(outline);
+    ctx.strokeStyle = amber;
+    ctx.setLineDash([18, 260]);
+    ctx.lineDashOffset = -time / 25;
+    ctx.globalAlpha = 0.9;
+    ctx.lineWidth = 2.4;
+    ctx.stroke(outline);
+    ctx.restore();
   }
 
   // The area around the player in which at most 8 systems fit.
@@ -796,16 +775,105 @@ export class MapView {
   }
 }
 
-// Five stable numbers in [0, 1) for a grid cell.
-function hash2(i, j) {
-  let h = Math.imul(i, 374761393) ^ Math.imul(j, 668265263);
-  const out = [];
-  for (let k = 0; k < 5; k++) {
-    h = Math.imul(h ^ (h >>> 13), 1274126177);
-    h ^= h >>> 16;
-    out.push((h >>> 0) / 4294967296);
+// Marching squares: which cell edges the outline crosses, by which corners of
+// the cell are inside (1: top left, 2: top right, 4: bottom right, 8: bottom
+// left). Edges are 0: top, 1: right, 2: bottom, 3: left. The two saddle cases
+// (5 and 10) depend on the middle of the cell and are resolved separately.
+const CELL_SEGMENTS = [
+  [], [[3, 0]], [[0, 1]], [[3, 1]], [[1, 2]], null, [[0, 2]], [[3, 2]],
+  [[2, 3]], [[0, 2]], null, [[1, 2]], [[3, 1]], [[0, 1]], [[3, 0]], [],
+];
+
+// Traces the outline of mined areas, where their influences add up to 1 (see
+// mineWeight), on a grid of cells over the bounds (world meters, top above
+// bottom), as Tinwalk traces its searched areas. Returns closed polygons in
+// world meters; holes are polygons too, so fill them with the even-odd rule.
+function traceMinedOutline(areas, cell, bounds) {
+  const columns = Math.round((bounds.right - bounds.left) / cell) + 1;
+  const rows = Math.round((bounds.top - bounds.bottom) / cell) + 1;
+  const field = new Float32Array(columns * rows);
+  const reach = Math.ceil(MINE_INFLUENCE / cell);
+  for (const area of areas) {
+    const ci = Math.round((area.x - bounds.left) / cell);
+    const cj = Math.round((bounds.top - area.y) / cell);
+    // The border stays empty, so every outline closes, off screen where it
+    // runs into the border.
+    for (let j = Math.max(1, cj - reach); j <= Math.min(rows - 2, cj + reach); j++) {
+      const dy = bounds.top - j * cell - area.y;
+      for (let i = Math.max(1, ci - reach); i <= Math.min(columns - 2, ci + reach); i++) {
+        const dx = bounds.left + i * cell - area.x;
+        field[j * columns + i] += mineWeight(dx * dx + dy * dy);
+      }
+    }
   }
-  return out;
+
+  // Where the outline crosses each grid edge, keyed by the edge, and which
+  // crossings the outline connects it to.
+  const crossings = new Map();
+  const links = new Map();
+  const value = (i, j) => field[j * columns + i];
+  const crossing = (edge, i, j) => {
+    // Horizontal edges get even keys, vertical ones odd keys.
+    const horizontal = edge === 0 || edge === 2;
+    const ei = edge === 1 ? i + 1 : i;
+    const ej = edge === 2 ? j + 1 : j;
+    const key = 2 * (ej * columns + ei) + (horizontal ? 0 : 1);
+    if (!crossings.has(key)) {
+      const a = value(ei, ej);
+      const b = horizontal ? value(ei + 1, ej) : value(ei, ej + 1);
+      const t = (1 - a) / (b - a);
+      crossings.set(key, {
+        x: bounds.left + (ei + (horizontal ? t : 0)) * cell,
+        y: bounds.top - (ej + (horizontal ? 0 : t)) * cell,
+      });
+    }
+    return key;
+  };
+  const link = (a, b) => {
+    if (!links.has(a)) links.set(a, []);
+    if (!links.has(b)) links.set(b, []);
+    links.get(a).push(b);
+    links.get(b).push(a);
+  };
+
+  const inside = new Uint8Array(field.length);
+  for (let k = 0; k < field.length; k++) inside[k] = field[k] >= 1 ? 1 : 0;
+  for (let j = 0; j < rows - 1; j++) {
+    for (let i = 0; i < columns - 1; i++) {
+      const k = j * columns + i;
+      const index = inside[k] | (inside[k + 1] << 1) | (inside[k + columns + 1] << 2) | (inside[k + columns] << 3);
+      if (index === 0 || index === 15) continue;
+      let segments = CELL_SEGMENTS[index];
+      if (!segments) {
+        const middleInside = (field[k] + field[k + 1] + field[k + columns + 1] + field[k + columns]) / 4 >= 1;
+        // Separate the two outside corners if the middle is inside, the two inside ones otherwise.
+        const cutTopRight = (index === 5) === middleInside;
+        segments = cutTopRight ? [[0, 1], [2, 3]] : [[3, 0], [1, 2]];
+      }
+      for (const [a, b] of segments) link(crossing(a, i, j), crossing(b, i, j));
+    }
+  }
+
+  // Every crossing is shared by two neighboring cells, so following the links
+  // walks around a closed outline.
+  const contours = [];
+  const visited = new Set();
+  for (const start of links.keys()) {
+    if (visited.has(start)) continue;
+    const contour = [];
+    let previous = null;
+    let current = start;
+    while (!visited.has(current)) {
+      visited.add(current);
+      contour.push(crossings.get(current));
+      const [a, b] = links.get(current);
+      const next = a === previous ? b : a;
+      previous = current;
+      current = next;
+    }
+    contours.push(contour);
+  }
+  return contours;
 }
 
 function clamp(value, min, max) {
