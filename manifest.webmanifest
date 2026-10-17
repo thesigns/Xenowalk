@@ -2,7 +2,7 @@
   "name": "Xenowalk",
   "short_name": "Xenowalk",
   "description": "Your places are star systems. Your walks are trade runs.",
-  "id": "./",
+  "id": "/Xenowalk/",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
